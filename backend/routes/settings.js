@@ -14,11 +14,12 @@ const router  = express.Router();
 
 const db = require('../data/db');
 const { authMiddleware } = require('../middleware/auth');
+const { UPLOADS_DIR } = require('../config/paths');
 
 // ---- Multer for music ----
 const musicStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const dir = path.join(__dirname, '../data/uploads');
+    const dir = path.join(UPLOADS_DIR, 'music');
     cb(null, dir);
   },
   filename: (req, file, cb) => {
@@ -59,11 +60,11 @@ router.post('/music', authMiddleware, uploadMusic.single('music'), (req, res) =>
 
     const settings = db.getDoc('settings');
     if (settings.musicUrl) {
-      const oldPath = path.join(__dirname, '../data/uploads', path.basename(settings.musicUrl));
+      const oldPath = path.join(UPLOADS_DIR, 'music', path.basename(settings.musicUrl));
       if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
     }
 
-    const musicUrl = `/uploads/${req.file.filename}`;
+    const musicUrl = `/uploads/music/${req.file.filename}`;
     const updated  = db.setDoc('settings', { musicUrl, musicName: req.file.originalname });
     res.json({ success: true, musicUrl: updated.musicUrl });
   } catch (err) {
@@ -76,7 +77,7 @@ router.delete('/music', authMiddleware, (req, res) => {
   try {
     const settings = db.getDoc('settings');
     if (settings.musicUrl) {
-      const oldPath = path.join(__dirname, '../data/uploads', path.basename(settings.musicUrl));
+      const oldPath = path.join(UPLOADS_DIR, 'music', path.basename(settings.musicUrl));
       if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
     }
     db.setDoc('settings', { musicUrl: null, musicName: null });

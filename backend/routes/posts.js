@@ -17,11 +17,12 @@ const router  = express.Router();
 
 const db = require('../data/db');
 const { authMiddleware } = require('../middleware/auth');
+const { UPLOADS_DIR } = require('../config/paths');
 
 // ---- File upload config ----
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const dir = path.join(__dirname, '../data/uploads/posts');
+    const dir = path.join(UPLOADS_DIR, 'posts');
     cb(null, dir);
   },
   filename: (req, file, cb) => {
@@ -140,7 +141,7 @@ router.put('/:id', authMiddleware, upload.single('image'), (req, res) => {
     if (req.file) {
       // Delete old image
       if (existing.imageUrl) {
-        const oldPath = path.join(__dirname, '../data', existing.imageUrl);
+        const oldPath = path.join(UPLOADS_DIR, path.basename(existing.imageUrl));
         if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
       }
       imageUrl = `/uploads/posts/${req.file.filename}`;
@@ -174,7 +175,7 @@ router.delete('/:id', authMiddleware, (req, res) => {
 
   // Delete image file
   if (existing.imageUrl) {
-    const imgPath = path.join(__dirname, '../data', existing.imageUrl);
+    const imgPath = path.join(UPLOADS_DIR, 'posts', path.basename(existing.imageUrl));
     if (fs.existsSync(imgPath)) fs.unlinkSync(imgPath);
   }
 

@@ -1,12 +1,19 @@
 // =============================================
 // data/seed.js — Seed default data on first run
+// Uses /tmp on Vercel, __dirname locally
 // =============================================
 
 const fs   = require('fs');
 const path = require('path');
 const bcrypt = require('bcryptjs');
 
-const DATA_DIR = path.join(__dirname);
+const IS_VERCEL = !!process.env.VERCEL;
+const DATA_DIR  = IS_VERCEL ? '/tmp/nham-data' : __dirname;
+
+// Ensure data dir exists on Vercel
+if (IS_VERCEL && !fs.existsSync(DATA_DIR)) {
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+}
 
 const FILES = {
   posts:    path.join(DATA_DIR, 'posts.json'),

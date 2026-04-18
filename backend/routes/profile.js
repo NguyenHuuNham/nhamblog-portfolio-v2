@@ -16,10 +16,11 @@ const router  = express.Router();
 
 const db = require('../data/db');
 const { authMiddleware } = require('../middleware/auth');
+const { UPLOADS_DIR } = require('../config/paths');
 
 // ---- Multer for avatar ----
 const avatarStorage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, path.join(__dirname, '../data/uploads/avatars')),
+  destination: (req, file, cb) => cb(null, path.join(UPLOADS_DIR, 'avatars')),
   filename:    (req, file, cb) => cb(null, `avatar-${Date.now()}${path.extname(file.originalname)}`),
 });
 const uploadAvatar = multer({
@@ -33,7 +34,7 @@ const uploadAvatar = multer({
 
 // ---- Multer for CV PDF ----
 const cvStorage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, path.join(__dirname, '../data/uploads/cv')),
+  destination: (req, file, cb) => cb(null, path.join(UPLOADS_DIR, 'cv')),
   filename:    (req, file, cb) => cb(null, `cv-${Date.now()}.pdf`),
 });
 const uploadCv = multer({
@@ -70,7 +71,7 @@ router.post('/avatar', authMiddleware, uploadAvatar.single('avatar'), (req, res)
     const profile = db.getDoc('profile');
     // Delete old avatar
     if (profile.avatarUrl) {
-      const oldPath = path.join(__dirname, '../data', profile.avatarUrl);
+      const oldPath = path.join(UPLOADS_DIR, 'avatars', path.basename(profile.avatarUrl));
       if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
     }
 
@@ -87,7 +88,7 @@ router.delete('/avatar', authMiddleware, (req, res) => {
   try {
     const profile = db.getDoc('profile');
     if (profile.avatarUrl) {
-      const oldPath = path.join(__dirname, '../data', profile.avatarUrl);
+      const oldPath = path.join(UPLOADS_DIR, 'avatars', path.basename(profile.avatarUrl));
       if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
     }
     db.setDoc('profile', { avatarUrl: null });
@@ -105,7 +106,7 @@ router.post('/cv', authMiddleware, uploadCv.single('cv'), (req, res) => {
     const profile = db.getDoc('profile');
     // Delete old CV
     if (profile.cvUrl) {
-      const oldPath = path.join(__dirname, '../data', profile.cvUrl);
+      const oldPath = path.join(UPLOADS_DIR, 'cv', path.basename(profile.cvUrl));
       if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
     }
 
@@ -123,7 +124,7 @@ router.delete('/cv', authMiddleware, (req, res) => {
   try {
     const profile = db.getDoc('profile');
     if (profile.cvUrl) {
-      const oldPath = path.join(__dirname, '../data', profile.cvUrl);
+      const oldPath = path.join(UPLOADS_DIR, 'cv', path.basename(profile.cvUrl));
       if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
     }
     db.setDoc('profile', { cvUrl: null, cvName: null });

@@ -15,11 +15,12 @@ const router  = express.Router();
 
 const db = require('../data/db');
 const { authMiddleware } = require('../middleware/auth');
+const { UPLOADS_DIR } = require('../config/paths');
 
 // ---- File upload config ----
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const dir = path.join(__dirname, '../data/uploads/projects');
+    const dir = path.join(UPLOADS_DIR, 'projects');
     cb(null, dir);
   },
   filename: (req, file, cb) => {
@@ -119,7 +120,7 @@ router.put('/:id', authMiddleware, upload.single('image'), (req, res) => {
     let imageUrl = existing.imageUrl;
     if (req.file) {
       if (existing.imageUrl) {
-        const old = path.join(__dirname, '../data', existing.imageUrl);
+        const old = path.join(UPLOADS_DIR, 'projects', path.basename(existing.imageUrl));
         if (fs.existsSync(old)) fs.unlinkSync(old);
       }
       imageUrl = `/uploads/projects/${req.file.filename}`;
@@ -152,7 +153,7 @@ router.delete('/:id', authMiddleware, (req, res) => {
   if (!existing) return res.status(404).json({ error: 'Project not found' });
 
   if (existing.imageUrl) {
-    const imgPath = path.join(__dirname, '../data', existing.imageUrl);
+    const imgPath = path.join(UPLOADS_DIR, 'projects', path.basename(existing.imageUrl));
     if (fs.existsSync(imgPath)) fs.unlinkSync(imgPath);
   }
 
