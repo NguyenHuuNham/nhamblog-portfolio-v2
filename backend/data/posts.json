@@ -1,0 +1,102 @@
+[
+  {
+    "id": 1,
+    "slug": "flutter-bloc-vs-riverpod",
+    "title": "Flutter BLoC vs Riverpod: Chọn gì cho dự án 2026?",
+    "summary": "So sánh chi tiết hai state management phổ biến nhất trong Flutter ecosystem. Khi nào dùng BLoC, khi nào dùng Riverpod?",
+    "content": "## Giới thiệu\n\nKhi phát triển ứng dụng Flutter, việc chọn state management phù hợp là rất quan trọng...\n\n## BLoC Pattern\n\nBLoC (Business Logic Component) là một pattern được Google giới thiệu...\n\n## Riverpod\n\nRiverpod là phiên bản cải tiến của Provider, được tạo ra bởi Remi Rousselet...\n\n## Kết luận\n\n- Dùng **BLoC** khi: team lớn, cần strict structure\n- Dùng **Riverpod** khi: linh hoạt, ít boilerplate hơn",
+    "date": "2026-04-08",
+    "tags": [
+      "flutter",
+      "dart"
+    ],
+    "readTime": "8 phút",
+    "likes": 0,
+    "comments": [],
+    "imageUrl": null,
+    "createdAt": "2026-04-16T02:11:33.077Z"
+  },
+  {
+    "id": 2,
+    "slug": "react-native-new-architecture",
+    "title": "React Native New Architecture — Tất cả những gì bạn cần biết",
+    "summary": "Kiến trúc mới của React Native (JSI, Fabric, TurboModules) đã thay đổi hoàn toàn cách hoạt động của framework.",
+    "content": "## New Architecture là gì?\n\nReact Native New Architecture là một bộ cải tiến lớn bao gồm JSI, Fabric Renderer, và TurboModules...\n\n## JSI (JavaScript Interface)\n\nJSI thay thế bridge cũ bằng giao tiếp trực tiếp...",
+    "date": "2026-03-25",
+    "tags": [
+      "react-native"
+    ],
+    "readTime": "12 phút",
+    "likes": 0,
+    "comments": [],
+    "imageUrl": null,
+    "createdAt": "2026-04-16T02:11:33.078Z"
+  },
+  {
+    "id": 3,
+    "slug": "flutter-animation-tips",
+    "title": "10 Animation tips trong Flutter để app trông \"xịn\" hơn",
+    "summary": "Những kỹ thuật animation đơn giản nhưng hiệu quả để cải thiện UX của ứng dụng Flutter.",
+    "content": "## 1. AnimatedContainer\n\nSử dụng AnimatedContainer để tự động animate...\n\n## 2. Hero Animation\n\nHero animation tạo ra hiệu ứng chuyển tiếp mượt mà giữa hai màn hình...",
+    "date": "2026-03-10",
+    "tags": [
+      "flutter",
+      "tips"
+    ],
+    "readTime": "6 phút",
+    "likes": 0,
+    "comments": [],
+    "imageUrl": null,
+    "createdAt": "2026-04-16T02:11:33.078Z"
+  },
+  {
+    "id": 4,
+    "slug": "kotlin-flow-vs-livedata",
+    "title": "Kotlin Flow vs LiveData — Bao giờ dùng cái nào?",
+    "summary": "Hướng dẫn thực tế về sự khác nhau giữa Kotlin Flow và LiveData trong Android development.",
+    "content": "## LiveData\n\nLiveData là một observable data holder class...\n\n## Kotlin Flow\n\nFlow là một cold observable stream trong Kotlin Coroutines...",
+    "date": "2026-02-20",
+    "tags": [
+      "kotlin"
+    ],
+    "readTime": "10 phút",
+    "likes": 0,
+    "comments": [],
+    "imageUrl": null,
+    "createdAt": "2026-04-16T02:11:33.078Z"
+  },
+  {
+    "id": 5,
+    "slug": "mobile-app-ci-cd",
+    "title": "CI/CD cho Mobile App với GitHub Actions — Hướng dẫn từ A-Z",
+    "summary": "Tự động hóa việc build, test và deploy ứng dụng Flutter/React Native bằng GitHub Actions.",
+    "content": "## Tại sao cần CI/CD?\n\n...\n\n## Setup GitHub Actions\n\n...",
+    "date": "2026-02-05",
+    "tags": [
+      "tips",
+      "flutter",
+      "react-native"
+    ],
+    "readTime": "15 phút",
+    "likes": 0,
+    "comments": [],
+    "imageUrl": null,
+    "createdAt": "2026-04-16T02:11:33.078Z"
+  },
+  {
+    "id": 6,
+    "slug": "flutter-deep-links",
+    "title": "Deep Links trong Flutter — Firebase Dynamic Links hay App Links?",
+    "summary": "Hướng dẫn triển khai deep linking trong Flutter app từ cơ bản đến nâng cao.",
+    "content": "## Deep Linking là gì?\n\n...\n\n## Firebase Dynamic Links\n\n...",
+    "date": "2026-01-18",
+    "tags": [
+      "flutter"
+    ],
+    "readTime": "9 phút",
+    "likes": 0,
+    "comments": [],
+    "imageUrl": null,
+    "createdAt": "2026-04-16T02:11:33.078Z"
+  }
+]

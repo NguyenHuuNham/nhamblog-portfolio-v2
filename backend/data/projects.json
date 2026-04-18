@@ -1,0 +1,108 @@
+[
+  {
+    "id": 1,
+    "icon": "🛍️",
+    "title": "ShopeeClone Mobile",
+    "description": "Clone đầy đủ giao diện Shopee bằng Flutter. Tích hợp REST API, giỏ hàng, thanh toán giả lập và tìm kiếm sản phẩm real-time.",
+    "tech": [
+      "flutter",
+      "dart"
+    ],
+    "techLabels": [
+      "Flutter",
+      "Dart",
+      "BLoC",
+      "REST API"
+    ],
+    "status": "completed",
+    "github": "https://github.com/NguyenHuuNham/shopee-clone",
+    "demo": null,
+    "featured": true,
+    "imageUrl": null,
+    "createdAt": "2026-04-16T02:11:33.078Z"
+  },
+  {
+    "id": 2,
+    "icon": "💘",
+    "title": "TinderClone",
+    "description": "Ứng dụng hẹn hò với swipe gesture, real-time chat bằng Firebase, push notifications và màn hình match animation.",
+    "tech": [
+      "flutter",
+      "dart"
+    ],
+    "techLabels": [
+      "Flutter",
+      "Firebase",
+      "Riverpod",
+      "Firestore"
+    ],
+    "status": "completed",
+    "github": "https://github.com/NguyenHuuNham/tinder-clone",
+    "demo": null,
+    "featured": true,
+    "imageUrl": null,
+    "createdAt": "2026-04-16T02:11:33.078Z"
+  },
+  {
+    "id": 3,
+    "icon": "🎮",
+    "title": "Flappy Bird (Dart)",
+    "description": "Remake trò chơi Flappy Bird bằng thuần Dart + Flutter Canvas, sử dụng game loop tùy chỉnh và vật lý đơn giản.",
+    "tech": [
+      "flutter",
+      "dart"
+    ],
+    "techLabels": [
+      "Flutter",
+      "Dart",
+      "Canvas API"
+    ],
+    "status": "completed",
+    "github": "https://github.com/NguyenHuuNham/flappy-bird-flutter",
+    "demo": null,
+    "featured": true,
+    "imageUrl": null,
+    "createdAt": "2026-04-16T02:11:33.078Z"
+  },
+  {
+    "id": 4,
+    "icon": "📝",
+    "title": "Task Manager (React Native)",
+    "description": "Ứng dụng quản lý công việc đa nền tảng với drag & drop, reminders, và đồng bộ cloud qua AsyncStorage.",
+    "tech": [
+      "react-native"
+    ],
+    "techLabels": [
+      "React Native",
+      "Redux",
+      "AsyncStorage"
+    ],
+    "status": "completed",
+    "github": "https://github.com/NguyenHuuNham/task-manager-rn",
+    "demo": null,
+    "featured": false,
+    "imageUrl": null,
+    "createdAt": "2026-04-16T02:11:33.078Z"
+  },
+  {
+    "id": 5,
+    "icon": "🤖",
+    "title": "Chat AI App (Android Native)",
+    "description": "Ứng dụng Android native tích hợp Gemini API, hỗ trợ voice-to-text và chat history persistence với Room DB.",
+    "tech": [
+      "kotlin"
+    ],
+    "techLabels": [
+      "Kotlin",
+      "Jetpack Compose",
+      "Gemini API",
+      "Room"
+    ],
+    "status": "inprogress",
+    "github": "https://github.com/NguyenHuuNham/ai-chat-android",
+    "demo": null,
+    "featured": false,
+    "imageUrl": null,
+    "createdAt": "2026-04-16T02:11:33.078Z"
+  }
+]

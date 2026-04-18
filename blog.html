@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog — Nhâm Mobile Dev</title>
+  <meta name="description" content="Bài viết về Flutter, React Native, Kotlin, Swift và kinh nghiệm phát triển ứng dụng mobile." />
+  <script>document.documentElement.setAttribute('data-theme',localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'));</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body>
+  <div class="page-bg-blog"></div>
+  <nav class="nav" id="navbar">
+    <div class="nav-container">
+      <a href="./index.html" class="nav-logo">
+        <div class="logo-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18" stroke-linecap="round" stroke-width="3.5"/></svg>
+        </div>
+        <span>Nhâm <span class="logo-accent">Mobile Dev</span></span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="./index.html" class="nav-link">Trang chủ</a>
+        <a href="./blog.html" class="nav-link active">Bài viết</a>
+        <a href="./projects.html" class="nav-link">Dự án</a>
+        <a href="./about.html" class="nav-link">Về tôi</a>
+        <a href="#" class="nav-link" id="nav-cv-link">CV</a>
+        <a href="./admin/login.html" class="nav-link nav-link-admin" id="nav-admin-link" title="Trang quản trị">
+          🔐 ADMIN
+        </a>
+      </div>
+      <div class="nav-actions">
+        <button class="theme-toggle" id="themeToggle" aria-label="Chuyển giao diện">
+          <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </button>
+        <button class="music-toggle hidden" id="musicToggle" aria-label="Bật/Tắt nhạc" style="width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:transparent;border:1px solid var(--border);color:var(--text);cursor:pointer;transition:var(--ease);">
+          <svg class="icon-music-on hidden" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+          <svg class="icon-music-off" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
+        </button>
+        <button class="hamburger" id="hamburger" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section class="page-header">
+      <div class="container">
+        <div class="section-eyebrow" style="text-align:center;margin-bottom:0.5rem">📝 Kiến thức</div>
+        <h1 class="page-title">Bài <span class="gradient-text">viết</span></h1>
+        <p class="page-subtitle">Chia sẻ kiến thức, kinh nghiệm về Mobile Development</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="blog-controls">
+          <div class="search-box">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="searchInput" placeholder="Tìm kiếm bài viết..." class="search-input" />
+          </div>
+          <div class="filter-tags" id="filterTags">
+            <button class="filter-btn active" data-tag="all" id="filter-all">Tất cả</button>
+            <button class="filter-btn" data-tag="flutter" id="filter-flutter">⚡ Flutter</button>
+            <button class="filter-btn" data-tag="react-native" id="filter-react-native">⚛ React Native</button>
+            <button class="filter-btn" data-tag="kotlin" id="filter-kotlin">🎯 Kotlin</button>
+            <button class="filter-btn" data-tag="tips" id="filter-tips">💡 Tips</button>
+          </div>
+        </div>
+        <div class="post-list" id="blogPostList"></div>
+        <div class="no-results hidden" id="noResults">
+          <p>Không tìm thấy bài viết nào 🤔</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-left">
+          <div class="footer-logo">
+            <div class="logo-icon small">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18" stroke-linecap="round" stroke-width="3.5"/></svg>
+            </div>
+            Nhâm <span class="logo-accent">Mobile Dev</span>
+          </div>
+          <p class="footer-desc">Mobile App Developer · Sinh viên IT</p>
+        </div>
+        <div class="footer-links">
+          <a href="https://github.com/NguyenHuuNham" class="footer-link" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+
+
+  <!-- API Client -->
+  <script src="./js/api-config.js"></script>
+  <script src="./js/main.js"></script>
+  <script src="./js/blog.js"></script>
+</body>
+</html>

@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel — Nhâm Mobile Dev</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/admin.css" />
+</head>
+<body class="admin-body">
+
+  <!-- Admin Sidebar -->
+  <aside class="admin-sidebar" id="adminSidebar">
+    <div class="admin-brand">
+      <span class="logo-dot"></span>
+      <div>
+        <div class="admin-brand-name">Nhâm <span class="logo-accent">Mobile Dev</span></div>
+        <div class="admin-brand-sub">Admin Panel</div>
+      </div>
+    </div>
+
+    <nav class="admin-nav">
+      <button class="admin-nav-item active" data-tab="dashboard" id="tab-dashboard">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </button>
+      <button class="admin-nav-item" data-tab="posts" id="tab-posts">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        Bài viết
+        <span class="admin-badge" id="posts-count-badge">0</span>
+      </button>
+      <button class="admin-nav-item" data-tab="projects" id="tab-projects">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+        Dự án
+        <span class="admin-badge" id="projects-count-badge">0</span>
+      </button>
+      <button class="admin-nav-item" data-tab="profile" id="tab-profile">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Thông tin cá nhân
+      </button>
+    </nav>
+
+    <div class="admin-sidebar-footer">
+      <a href="/" class="admin-back-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        Về trang chủ
+      </a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" style="margin-top:0.5rem;width:100%;">
+        <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <span>Đổi giao diện</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="admin-main">
+
+    <!-- Mobile Header -->
+    <div class="admin-mobile-header">
+      <button class="admin-hamburger" id="adminHamburger">☰</button>
+      <span class="admin-mobile-title">Admin Panel</span>
+    </div>
+
+    <!-- ===== TAB: DASHBOARD ===== -->
+    <section class="admin-tab active" id="panel-dashboard">
+      <div class="admin-page-header">
+        <h1 class="admin-page-title">Dashboard</h1>
+        <p class="admin-page-sub">Tổng quan nội dung của bạn</p>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-card-icon" style="background:rgba(99,102,241,0.15);color:var(--accent)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div>
+            <div class="stat-card-number" id="dash-posts-count">0</div>
+            <div class="stat-card-label">Bài viết</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-icon" style="background:rgba(34,197,94,0.15);color:#22c55e">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/></svg>
+          </div>
+          <div>
+            <div class="stat-card-number" id="dash-projects-count">0</div>
+            <div class="stat-card-label">Dự án</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-icon" style="background:rgba(245,158,11,0.15);color:#f59e0b">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div>
+            <div class="stat-card-number" id="dash-inprogress-count">0</div>
+            <div class="stat-card-label">Đang làm</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-icon" style="background:rgba(96,165,250,0.15);color:#60a5fa">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div>
+            <div class="stat-card-number" id="dash-completed-count">0</div>
+            <div class="stat-card-label">Hoàn thành</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-quick-actions">
+        <h2 class="admin-section-title">Thao tác nhanh</h2>
+        <div class="quick-action-grid">
+          <button class="quick-action-btn" onclick="switchTab('posts'); setTimeout(()=>document.getElementById('btn-new-post').click(), 100)" id="qa-new-post">
+            <span style="font-size:1.5rem">✍️</span>
+            <span>Viết bài mới</span>
+          </button>
+          <button class="quick-action-btn" onclick="switchTab('projects'); setTimeout(()=>document.getElementById('btn-new-project').click(), 100)" id="qa-new-project">
+            <span style="font-size:1.5rem">🚀</span>
+            <span>Thêm dự án</span>
+          </button>
+          <button class="quick-action-btn" onclick="switchTab('profile')" id="qa-edit-profile">
+            <span style="font-size:1.5rem">✏️</span>
+            <span>Sửa thông tin</span>
+          </button>
+          <a href="/" class="quick-action-btn" target="_blank" id="qa-view-site">
+            <span style="font-size:1.5rem">🌐</span>
+            <span>Xem trang web</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="admin-recent-activity">
+        <h2 class="admin-section-title">Bài viết gần đây</h2>
+        <div id="dash-recent-posts"></div>
+      </div>
+    </section>
+
+    <!-- ===== TAB: POSTS ===== -->
+    <section class="admin-tab" id="panel-posts">
+      <div class="admin-page-header">
+        <div>
+          <h1 class="admin-page-title">Bài viết</h1>
+          <p class="admin-page-sub">Quản lý tất cả bài viết của bạn</p>
+        </div>
+        <button class="btn btn-primary" id="btn-new-post" onclick="openPostModal()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Thêm bài viết
+        </button>
+      </div>
+
+      <div class="admin-table-card">
+        <div class="admin-table-toolbar">
+          <div class="search-box" style="max-width:320px">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="adminPostSearch" placeholder="Tìm bài viết..." class="search-input" />
+          </div>
+          <span class="table-count" id="posts-table-count"></span>
+        </div>
+        <div class="table-wrapper">
+          <table class="admin-table" id="postsTable">
+            <thead>
+              <tr>
+                <th>Tiêu đề</th>
+                <th>Tags</th>
+                <th>Ngày đăng</th>
+                <th>Đọc</th>
+                <th style="width:120px">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="postsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TAB: PROJECTS ===== -->
+    <section class="admin-tab" id="panel-projects">
+      <div class="admin-page-header">
+        <div>
+          <h1 class="admin-page-title">Dự án</h1>
+          <p class="admin-page-sub">Quản lý portfolio dự án của bạn</p>
+        </div>
+        <button class="btn btn-primary" id="btn-new-project" onclick="openProjectModal()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Thêm dự án
+        </button>
+      </div>
+
+      <div class="admin-table-card">
+        <div class="admin-table-toolbar">
+          <div class="search-box" style="max-width:320px">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="adminProjectSearch" placeholder="Tìm dự án..." class="search-input" />
+          </div>
+          <span class="table-count" id="projects-table-count"></span>
+        </div>
+        <div class="table-wrapper">
+          <table class="admin-table" id="projectsTable">
+            <thead>
+              <tr>
+                <th>Tên dự án</th>
+                <th>Công nghệ</th>
+                <th>Trạng thái</th>
+                <th>Nổi bật</th>
+                <th style="width:120px">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="projectsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TAB: PROFILE ===== -->
+    <section class="admin-tab" id="panel-profile">
+      <div class="admin-page-header">
+        <h1 class="admin-page-title">Thông tin cá nhân</h1>
+        <p class="admin-page-sub">Chỉnh sửa thông tin hiển thị trên trang web</p>
+      </div>
+
+      <div class="admin-form-card">
+        <form id="profileForm" onsubmit="saveProfile(event)">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label" for="prof-name">Họ tên</label>
+              <input type="text" id="prof-name" class="form-input" placeholder="Nguyễn Hữu Nhậm" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="prof-title">Chức danh</label>
+              <input type="text" id="prof-title" class="form-input" placeholder="Mobile App Developer" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="prof-email">Email</label>
+              <input type="email" id="prof-email" class="form-input" placeholder="nham@email.com" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="prof-location">Địa điểm</label>
+              <input type="text" id="prof-location" class="form-input" placeholder="Hà Nội, Việt Nam" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="prof-github">GitHub URL</label>
+              <input type="url" id="prof-github" class="form-input" placeholder="https://github.com/nham" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="prof-linkedin">LinkedIn URL</label>
+              <input type="url" id="prof-linkedin" class="form-input" placeholder="https://linkedin.com/in/nham" />
+            </div>
+            <div class="form-group" style="grid-column: 1 / -1;">
+              <label class="form-label" for="prof-hero">Hero subtitle</label>
+              <input type="text" id="prof-hero" class="form-input" placeholder="Sinh viên IT năm 3 · Mobile App Developer" />
+            </div>
+            <div class="form-group" style="grid-column: 1 / -1;">
+              <label class="form-label" for="prof-bio">Bio (Mô tả ngắn)</label>
+              <textarea id="prof-bio" class="form-input form-textarea" placeholder="Xin chào! Tôi là..."></textarea>
+            </div>
+            <div class="form-group" style="grid-column: 1 / -1;">
+              <label class="form-label" for="prof-status">Trạng thái tìm việc</label>
+              <input type="text" id="prof-status" class="form-input" placeholder="Đang tìm kiếm cơ hội thực tập" />
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="save-profile-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Lưu thông tin
+            </button>
+            <button type="button" class="btn btn-secondary" onclick="loadProfile()" id="reset-profile-btn">Khôi phục</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== MODAL: POST ===== -->
+  <div class="modal-overlay" id="postModalOverlay" onclick="closePostModal()"></div>
+  <div class="modal" id="postModal" role="dialog" aria-modal="true" aria-labelledby="postModalTitle">
+    <div class="modal-header">
+      <h2 class="modal-title" id="postModalTitle">Thêm bài viết mới</h2>
+      <button class="modal-close" onclick="closePostModal()" aria-label="Đóng">✕</button>
+    </div>
+    <div class="modal-body">
+      <form id="postForm" onsubmit="savePost(event)">
+        <input type="hidden" id="post-edit-id" />
+        <div class="form-group">
+          <label class="form-label" for="post-title">Tiêu đề <span class="required">*</span></label>
+          <input type="text" id="post-title" class="form-input" placeholder="Ví dụ: Flutter BLoC vs Riverpod" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="post-slug">Slug (URL key)</label>
+          <input type="text" id="post-slug" class="form-input" placeholder="flutter-bloc-vs-riverpod" />
+          <span class="form-hint">Tự động tạo từ tiêu đề nếu để trống</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="post-summary">Tóm tắt <span class="required">*</span></label>
+          <textarea id="post-summary" class="form-input form-textarea" placeholder="Mô tả ngắn về bài viết..." rows="3" required></textarea>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label" for="post-date">Ngày đăng</label>
+            <input type="date" id="post-date" class="form-input" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="post-readtime">Thời gian đọc</label>
+            <input type="text" id="post-readtime" class="form-input" placeholder="8 phút" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tags</label>
+          <div class="tag-selector" id="postTagSelector">
+            <label class="tag-checkbox"><input type="checkbox" value="flutter" /><span class="tag flutter">Flutter</span></label>
+            <label class="tag-checkbox"><input type="checkbox" value="react-native" /><span class="tag react-native">React Native</span></label>
+            <label class="tag-checkbox"><input type="checkbox" value="kotlin" /><span class="tag kotlin">Kotlin</span></label>
+            <label class="tag-checkbox"><input type="checkbox" value="swift" /><span class="tag swift">Swift</span></label>
+            <label class="tag-checkbox"><input type="checkbox" value="dart" /><span class="tag dart">Dart</span></label>
+            <label class="tag-checkbox"><input type="checkbox" value="tips" /><span class="tag tips">Tips & Tricks</span></label>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" onclick="closePostModal()" id="cancel-post-btn">Hủy</button>
+          <button type="submit" class="btn btn-primary" id="submit-post-btn">Lưu bài viết</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: PROJECT ===== -->
+  <div class="modal-overlay" id="projectModalOverlay" onclick="closeProjectModal()"></div>
+  <div class="modal" id="projectModal" role="dialog" aria-modal="true" aria-labelledby="projectModalTitle">
+    <div class="modal-header">
+      <h2 class="modal-title" id="projectModalTitle">Thêm dự án mới</h2>
+      <button class="modal-close" onclick="closeProjectModal()" aria-label="Đóng">✕</button>
+    </div>
+    <div class="modal-body">
+      <form id="projectForm" onsubmit="saveProject(event)">
+        <input type="hidden" id="project-edit-id" />
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label" for="project-icon">Icon (emoji)</label>
+            <input type="text" id="project-icon" class="form-input" placeholder="🚀" maxlength="4" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="project-title">Tên dự án <span class="required">*</span></label>
+            <input type="text" id="project-title" class="form-input" placeholder="Ví dụ: ShopeeClone Mobile" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="project-desc">Mô tả <span class="required">*</span></label>
+          <textarea id="project-desc" class="form-input form-textarea" placeholder="Mô tả chi tiết về dự án..." rows="3" required></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="project-tech-labels">Công nghệ (nhập cách nhau bằng dấu phẩy)</label>
+          <input type="text" id="project-tech-labels" class="form-input" placeholder="Flutter, Dart, BLoC, REST API" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phân loại chính</label>
+          <div class="tag-selector">
+            <label class="tag-checkbox"><input type="checkbox" name="proj-tech" value="flutter" /><span class="tag flutter">Flutter</span></label>
+            <label class="tag-checkbox"><input type="checkbox" name="proj-tech" value="react-native" /><span class="tag react-native">React Native</span></label>
+            <label class="tag-checkbox"><input type="checkbox" name="proj-tech" value="kotlin" /><span class="tag kotlin">Kotlin</span></label>
+            <label class="tag-checkbox"><input type="checkbox" name="proj-tech" value="swift" /><span class="tag swift">Swift</span></label>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label" for="project-status">Trạng thái</label>
+            <select id="project-status" class="form-input form-select">
+              <option value="completed">✓ Hoàn thành</option>
+              <option value="inprogress">⬡ Đang làm</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="project-github">GitHub URL</label>
+            <input type="url" id="project-github" class="form-input" placeholder="https://github.com/..." />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label checkbox-label">
+            <input type="checkbox" id="project-featured" />
+            <span>Đánh dấu là dự án nổi bật (hiện ở trang chủ)</span>
+          </label>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" onclick="closeProjectModal()" id="cancel-project-btn">Hủy</button>
+          <button type="submit" class="btn btn-primary" id="submit-project-btn">Lưu dự án</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== DELETE CONFIRM MODAL ===== -->
+  <div class="modal-overlay" id="deleteModalOverlay" onclick="closeDeleteModal()"></div>
+  <div class="modal modal-sm" id="deleteModal" role="dialog">
+    <div class="modal-header">
+      <h2 class="modal-title" style="color:#ef4444">🗑️ Xác nhận xóa</h2>
+      <button class="modal-close" onclick="closeDeleteModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <p id="deleteModalMsg" style="color:var(--text-secondary);margin-bottom:1.5rem;"></p>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeDeleteModal()" id="cancel-delete-btn">Hủy</button>
+        <button class="btn btn-danger" id="confirmDeleteBtn" onclick="confirmDelete()" id="confirm-delete-btn">Xóa</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast"></div>
+
+  <script type="module" src="/js/admin.js"></script>
+</body>
+</html>
