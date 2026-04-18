@@ -12,9 +12,12 @@ const fs        = require('fs');
 const app  = express();
 const PORT = process.env.PORT || 3000;
 
+// ---- Root of the project ----
+const ROOT_DIR = process.cwd();
+
 // ---- On Vercel, uploads go to /tmp (writable); locally use data/uploads ----
 const IS_VERCEL   = !!process.env.VERCEL;
-const DATA_DIR    = path.join(__dirname, 'data');
+const DATA_DIR    = path.join(ROOT_DIR, 'backend', 'data');
 const UPLOADS_DIR = IS_VERCEL ? '/tmp/nham-uploads' : path.join(DATA_DIR, 'uploads');
 
 // Ensure upload directories exist (writable on both local and Vercel /tmp)
@@ -40,8 +43,8 @@ app.use('/uploads', (req, res, next) => {
   next();
 }, express.static(UPLOADS_DIR));
 
-// Serve frontend static files from parent directory
-app.use(express.static(path.join(__dirname, '..')));
+// Serve frontend static files from root directory
+app.use(express.static(ROOT_DIR));
 
 // ---- API Routes ----
 app.use('/api/auth',     require('./routes/auth'));
@@ -52,7 +55,7 @@ app.use('/api/settings', require('./routes/settings'));
 
 // ---- Health check ----
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', time: new Date().toISOString(), version: '1.0.0', env: IS_VERCEL ? 'vercel' : 'local' });
+  res.json({ status: 'ok', time: new Date().toISOString(), version: '1.0.0', env: IS_VERCEL ? 'vercel' : 'local', cwd: ROOT_DIR });
 });
 
 // ---- Catch all — serve HTML pages ----
@@ -61,12 +64,13 @@ app.get('*', (req, res) => {
     return res.status(404).json({ error: 'API endpoint not found' });
   }
   // Try to serve the specific HTML file first
-  const htmlFile = path.join(__dirname, '..', req.path);
+  const htmlFile = path.join(ROOT_DIR, req.path);
   if (!req.path.includes('.') && fs.existsSync(htmlFile + '.html')) {
     return res.sendFile(htmlFile + '.html');
   }
-  res.sendFile(path.join(__dirname, '..', 'index.html'));
+  res.sendFile(path.join(ROOT_DIR, 'index.html'));
 });
+
 
 // ---- Start server (only when running directly, not on Vercel) ----
 if (!IS_VERCEL && require.main === module) {
