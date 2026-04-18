@@ -15,18 +15,15 @@ const PORT = process.env.PORT || 3000;
 // ---- On Vercel, uploads go to /tmp (writable); locally use data/uploads ----
 const IS_VERCEL   = !!process.env.VERCEL;
 const DATA_DIR    = path.join(__dirname, 'data');
-const UPLOADS_DIR = IS_VERCEL
-  ? path.join('/tmp', 'nham-uploads')
-  : path.join(DATA_DIR, 'uploads');
+const UPLOADS_DIR = IS_VERCEL ? '/tmp/nham-uploads' : path.join(DATA_DIR, 'uploads');
 
-// Ensure directories exist
-[UPLOADS_DIR,
-  path.join(UPLOADS_DIR, 'avatars'),
-  path.join(UPLOADS_DIR, 'cv'),
-  path.join(UPLOADS_DIR, 'posts'),
-  path.join(UPLOADS_DIR, 'projects'),
-  path.join(UPLOADS_DIR, 'music'),
-].forEach(dir => { if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true }); });
+// Ensure upload directories exist (writable on both local and Vercel /tmp)
+const uploadSubdirs = ['', 'avatars', 'cv', 'posts', 'projects', 'music'];
+uploadSubdirs.forEach(sub => {
+  const dir = path.join(UPLOADS_DIR, sub);
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+});
+
 
 // ---- Seed default data if not exists ----
 require('./data/seed');

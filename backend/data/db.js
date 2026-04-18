@@ -1,12 +1,31 @@
 // =============================================
 // data/db.js — JSON File Database Helper
-// All data stored as JSON files in ./data/
+// On Vercel (serverless): data lives in /tmp (writable)
+// Locally: data lives in this same directory
 // =============================================
 
 const fs   = require('fs');
 const path = require('path');
 
-const DATA_DIR = path.join(__dirname);
+const IS_VERCEL  = !!process.env.VERCEL;
+const BUNDLE_DIR = __dirname; // always points to backend/data/ in the bundle
+
+// On Vercel, write to /tmp; locally write to backend/data/
+const DATA_DIR = IS_VERCEL ? '/tmp/nham-data' : __dirname;
+
+// On Vercel: ensure /tmp/nham-data exists and seed initial JSON files from bundle
+if (IS_VERCEL) {
+  if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+
+  // Copy committed JSON files to /tmp on cold start (if not already there)
+  ['posts', 'projects', 'profile', 'settings'].forEach(name => {
+    const src = path.join(BUNDLE_DIR, `${name}.json`);
+    const dst = path.join(DATA_DIR, `${name}.json`);
+    if (fs.existsSync(src) && !fs.existsSync(dst)) {
+      fs.copyFileSync(src, dst);
+    }
+  });
+}
 
 const FILES = {
   posts:    path.join(DATA_DIR, 'posts.json'),
@@ -40,34 +59,25 @@ function write(name, data) {
 // Collection helpers (arrays)
 // ========================
 
-/** Get all items from a collection */
-function getAll(name) {
-  return read(name) || [];
-}
+function getAll(name) { return read(name) || []; }
 
-/** Get single item by id */
 function getById(name, id) {
-  const arr = getAll(name);
-  return arr.find(item => String(item.id) === String(id)) || null;
+  return getAll(name).find(item => String(item.id) === String(id)) || null;
 }
 
-/** Get single item by field value */
 function getByField(name, field, value) {
-  const arr = getAll(name);
-  return arr.find(item => String(item[field]) === String(value)) || null;
+  return getAll(name).find(item => String(item[field]) === String(value)) || null;
 }
 
-/** Create new item (auto-generates id) */
 function create(name, data) {
-  const arr = getAll(name);
+  const arr   = getAll(name);
   const maxId = arr.length ? Math.max(...arr.map(i => Number(i.id) || 0)) : 0;
   const newItem = { ...data, id: maxId + 1, createdAt: new Date().toISOString() };
-  arr.unshift(newItem); // newest first
+  arr.unshift(newItem);
   write(name, arr);
   return newItem;
 }
 
-/** Update item by id (merge patch) */
 function update(name, id, patch) {
   const arr = getAll(name);
   const idx = arr.findIndex(item => String(item.id) === String(id));
@@ -77,7 +87,6 @@ function update(name, id, patch) {
   return arr[idx];
 }
 
-/** Delete item by id */
 function remove(name, id) {
   const arr = getAll(name);
   const idx = arr.findIndex(item => String(item.id) === String(id));
@@ -88,18 +97,14 @@ function remove(name, id) {
 }
 
 // ========================
-// Single-doc helpers (profile, settings)
+// Single-doc helpers (profile, settings, admin)
 // ========================
 
-/** Get single document */
-function getDoc(name) {
-  return read(name) || {};
-}
+function getDoc(name) { return read(name) || {}; }
 
-/** Set/merge single document */
 function setDoc(name, data) {
   const current = getDoc(name);
-  const merged   = { ...current, ...data, updatedAt: new Date().toISOString() };
+  const merged  = { ...current, ...data, updatedAt: new Date().toISOString() };
   write(name, merged);
   return merged;
 }
