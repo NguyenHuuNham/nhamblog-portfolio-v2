@@ -1,18 +1,18 @@
-# Dependencies
+# Dependencies (Vercel sẽ tự install từ package.json)
 node_modules/
 backend/node_modules/
 
-# Environment variables — NEVER commit these!
+# Environment variables — KHÔNG BAO GIỜ commit!
 .env
 .env.local
 .env.production
 .env*.local
 
-# Backend data — sensitive & ephemeral
+# Backend data nhạy cảm
 backend/data/admin.json
 backend/data/uploads/
 
-# Vercel
+# Vercel build cache
 .vercel
 
 # OS files
@@ -24,14 +24,6 @@ desktop.ini
 *.log
 npm-debug.log*
 
-# Build output
-dist/
-build/
-
 # Editor
-.vscode/
+.vscode/settings.json
 .idea/
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
