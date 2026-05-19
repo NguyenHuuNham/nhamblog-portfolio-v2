@@ -3,325 +3,299 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Về tôi — Nhâm Mobile Dev</title>
+  <title>Về tôi — Aurora Glassmorphism</title>
   <meta name="description" content="Sinh viên IT năm 3, đam mê mobile development với Flutter và React Native." />
   <script>document.documentElement.setAttribute('data-theme',localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'));</script>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./css/style.css" />
   <style>
-    /* About-specific extras */
-    .about-bio p { color: var(--text2); line-height: 1.8; margin-bottom: 1rem; font-size: 0.95rem; }
-    .about-bio p strong { color: var(--text); }
-    .about-bio { margin-bottom: 0.5rem; }
+    /* ---- About page overrides ---- */
+    .about-grid { display: grid; grid-template-columns: 300px 1fr; gap: 2rem; align-items: start; padding-top: 6rem; padding-bottom: 4rem; }
+    @media(max-width:860px){ .about-grid { grid-template-columns: 1fr; } }
+    .about-sidebar .glass-panel { padding: 2rem 1.5rem; }
+    .about-content { padding: 2rem 2.5rem !important; }
 
-    .subsection-title {
-      font-size: 1.15rem; font-weight: 800; letter-spacing: -0.02em;
-      margin-bottom: 1.25rem;
-    }
+    /* Sidebar card */
+    .ab-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 2rem 1.5rem; backdrop-filter: blur(16px); }
+    .ab-avatar { width: 100px; height: 100px; border-radius: 50%; margin: 0 auto 1.25rem; overflow: hidden; border: 3px solid rgba(0,212,255,0.4); box-shadow: 0 0 30px rgba(0,212,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 3rem; background: linear-gradient(135deg,#00d4ff22,#7a00ff22); }
+    .ab-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .ab-name { font-size: 1.15rem; font-weight: 800; text-align: center; color: var(--text-main); margin-bottom: 0.25rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .ab-role { text-align: center; font-size: 0.78rem; font-weight: 700; letter-spacing: 2px; color: #00d4ff; margin-bottom: 1.5rem; text-transform: uppercase; }
+    .about-sidebar-info { text-align: center; overflow: hidden; }
+    .ab-divider { height: 1px; background: var(--glass-border); margin: 1.25rem 0; }
+    .ab-info-row { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0; font-size: 0.88rem; color: var(--text-muted); }
+    .ab-info-row svg { flex-shrink: 0; color: #00d4ff; }
+    .ab-info-row a, .ab-info-row span { color: var(--text-muted); text-decoration: none; word-break: break-all; }
+    .ab-info-row a:hover { color: #00d4ff; }
+    .ab-cta { display: block; text-align: center; margin-top: 1.5rem; padding: 0.75rem 1.5rem; background: linear-gradient(135deg,#00d4ff,#7a00ff); color: #fff; border-radius: 50px; font-weight: 700; font-size: 0.9rem; text-decoration: none; transition: opacity .2s, transform .2s; }
+    .ab-cta:hover { opacity: .85; transform: translateY(-2px); }
+    .ab-badge { display: inline-flex; align-items: center; gap: 0.4rem; background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.25); border-radius: 50px; padding: 0.3rem 0.85rem; font-size: 0.78rem; color: #00d4ff; font-weight: 600; margin: 0 0.25rem 0.5rem; }
 
-    /* Skills cloud */
-    .skills-section { display: flex; flex-direction: column; gap: 1.25rem; }
-    .skill-categories { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    .skill-category { display: flex; flex-direction: column; gap: 0.625rem; }
-    .skill-cat-title { font-size: 0.8rem; font-weight: 700; color: var(--text2); margin-bottom: 0.25rem; }
-    .skill-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; }
-    .skill-tag {
-      padding: 0.25rem 0.7rem;
-      border-radius: 100px;
-      font-size: 0.72rem; font-weight: 600;
-      border: 1px solid var(--border);
-      background: var(--card);
-      color: var(--text2);
-      transition: var(--t);
-    }
-    .skill-tag:hover { color: var(--text); border-color: var(--border-h); }
-    .skill-tag.primary {
-      color: var(--accent2);
-      background: var(--accent-dim);
-      border-color: rgba(124,109,250,0.25);
-    }
+    /* Main content */
+    .ab-section-title { font-size: 1.1rem; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); margin: 2.5rem 0 1.25rem; display: flex; align-items: center; gap: 0.75rem; }
+    .ab-section-title::after { content: ''; flex: 1; height: 1px; background: var(--glass-border); }
 
-    /* Timeline */
-    .timeline-section { display: flex; flex-direction: column; gap: 0.5rem; }
-    .timeline { display: flex; flex-direction: column; }
-    .timeline-item {
-      display: flex; gap: 1rem;
-      padding-bottom: 1.75rem; position: relative;
+    /* Professional skills */
+    .skill-matrix { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+    .skill-card {
+      position: relative;
+      padding: 1.15rem;
+      border: 1px solid var(--glass-border);
+      border-radius: 18px;
+      background: linear-gradient(145deg, rgba(255,255,255,0.075), rgba(255,255,255,0.025));
+      overflow: hidden;
+      transition: transform .22s ease, border-color .22s ease, background .22s ease;
     }
-    .timeline-item::before {
-      content: ''; position: absolute;
-      left: 5px; top: 22px; bottom: 0;
-      width: 1px; background: var(--border);
-    }
-    .timeline-item:last-child::before { display: none; }
-    .timeline-dot {
-      width: 11px; height: 11px; border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent), var(--accent3));
-      flex-shrink: 0; margin-top: 0.3rem;
-      box-shadow: 0 0 10px var(--accent-glow);
-      position: relative; z-index: 1;
-    }
-    .timeline-content { flex: 1; }
-    .timeline-date { font-size: 0.7rem; color: var(--text3); font-weight: 600; display: block; margin-bottom: 0.2rem; }
-    .timeline-content h3 { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.3rem; }
-    .timeline-content p { font-size: 0.82rem; color: var(--text2); line-height: 1.65; }
+    .skill-card::before { content: ''; position: absolute; inset: 0 0 auto; height: 3px; background: linear-gradient(90deg, #38bdf8, #818cf8); opacity: .9; }
+    .skill-card:hover { transform: translateY(-3px); border-color: rgba(56,189,248,.35); background: linear-gradient(145deg, rgba(56,189,248,.08), rgba(129,140,248,.04)); }
+    .skill-card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: .85rem; margin-bottom: .55rem; }
+    .skill-name { font-size: .98rem; font-weight: 800; color: var(--text-main); line-height: 1.35; }
+    .skill-level { font-family: var(--font-mono); font-size: .68rem; font-weight: 800; letter-spacing: .08em; color: #38bdf8; text-transform: uppercase; white-space: nowrap; }
+    .skill-desc { color: var(--text-muted); font-size: .84rem; line-height: 1.65; margin: 0 0 .85rem; }
+    .skill-bar-bg { height: 7px; background: rgba(255,255,255,0.12); border-radius: 99px; overflow: hidden; }
+    [data-theme="light"] .skill-bar-bg { background: rgba(79,70,229,0.12); }
+    .skill-bar-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #38bdf8, #818cf8); }
+    [data-theme="light"] .skill-bar-fill { background: linear-gradient(90deg, #4f46e5, #7c3aed); }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: .85rem; }
+    .skill-tags span { font-size: .72rem; font-weight: 700; color: var(--text-muted); border: 1px solid var(--glass-border); border-radius: 999px; padding: .28rem .58rem; background: rgba(255,255,255,.04); }
+    .skill-summary { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: .75rem; margin-top: 1rem; }
+    .skill-summary-item { border: 1px solid var(--glass-border); border-radius: 14px; padding: .85rem; background: rgba(255,255,255,.045); }
+    .skill-summary-num { display: block; color: var(--text-main); font-size: 1.15rem; font-weight: 900; line-height: 1; margin-bottom: .35rem; }
+    .skill-summary-label { display: block; color: var(--text-muted); font-size: .75rem; line-height: 1.35; }
 
-    /* Contact CTA */
-    .contact-cta {
-      background: linear-gradient(135deg, rgba(124,109,250,0.1), rgba(96,165,250,0.07));
-      border: 1px solid rgba(124,109,250,0.2);
-      border-radius: var(--r-md); padding: 2rem;
-      display: flex; flex-direction: column; gap: 1rem;
-    }
-    .contact-cta p { font-size: 0.9rem; color: var(--text2); line-height: 1.7; }
+    /* Professional timeline */
+    .tl { display: flex; flex-direction: column; gap: .9rem; position: relative; }
+    .tl::before { content: ''; position: absolute; left: 13px; top: 18px; bottom: 18px; width: 2px; background: linear-gradient(180deg, rgba(56,189,248,.75), rgba(129,140,248,.18)); }
+    .tl-item { display: grid; grid-template-columns: 28px 1fr; gap: 1rem; position: relative; }
+    .tl-dot { width: 28px; height: 28px; border-radius: 50%; background: var(--panel, linear-gradient(135deg,#38bdf8,#818cf8)); border: 4px solid rgba(10,10,18,.9); box-shadow: 0 0 0 1px rgba(56,189,248,.28), 0 0 18px rgba(56,189,248,.22); z-index: 1; margin-top: .45rem; }
+    [data-theme="light"] .tl-dot { border-color: rgba(255,255,255,.95); }
+    .tl-card { border: 1px solid var(--glass-border); border-radius: 18px; padding: 1.1rem 1.2rem; background: linear-gradient(145deg, rgba(255,255,255,.07), rgba(255,255,255,.025)); transition: transform .22s ease, border-color .22s ease; }
+    .tl-card:hover { transform: translateY(-2px); border-color: rgba(56,189,248,.32); }
+    .tl-top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: .45rem; }
+    .tl-date { font-size: 0.76rem; font-weight: 800; color: #38bdf8; letter-spacing: 1px; font-family: var(--font-mono); display: block; }
+    .tl-status { font-size: .68rem; font-weight: 800; color: var(--text-main); border: 1px solid rgba(56,189,248,.24); background: rgba(56,189,248,.08); border-radius: 999px; padding: .25rem .55rem; white-space: nowrap; }
+    .tl-title { font-size: 1rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.35rem; }
+    .tl-desc { font-size: 0.88rem; color: var(--text-muted); line-height: 1.65; margin-bottom: .75rem; }
+    .tl-stack { display: flex; flex-wrap: wrap; gap: .45rem; }
+    .tl-stack span { font-size: .7rem; font-weight: 700; color: var(--text-muted); border: 1px solid var(--glass-border); border-radius: 999px; padding: .25rem .55rem; }
 
-    /* Avatar */
-    .avatar-status {
-      display: flex; align-items: center; gap: 0.5rem;
-      font-size: 0.78rem; color: var(--green); font-weight: 500;
-    }
-    .status-dot {
-      width: 7px; height: 7px; border-radius: 50%;
-      background: var(--green); box-shadow: 0 0 7px var(--green);
-      animation: pulse 2s ease-in-out infinite;
-    }
-    @keyframes pulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.4);opacity:0.7} }
+    /* Highlight bio */
+    .bio-text { font-size: 1rem; color: var(--text-muted); line-height: 1.8; }
+    .bio-text strong { color: var(--text-main); }
+    .bio-highlight { background: linear-gradient(135deg,rgba(0,212,255,0.08),rgba(122,0,255,0.08)); border: 1px solid rgba(0,212,255,0.15); border-radius: 12px; padding: 1rem 1.25rem; margin: 1.25rem 0; }
 
-    .quick-info { display: flex; flex-direction: column; gap: 0.625rem; }
-    .info-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: var(--text2); }
-    .info-item svg { color: var(--text3); flex-shrink: 0; }
-
-    .social-links { display: flex; flex-direction: column; gap: 0.5rem; }
-    .social-btn {
-      display: flex; align-items: center; gap: 0.625rem;
-      padding: 0.625rem 0.875rem;
-      border-radius: var(--r-sm);
-      background: var(--card); border: 1px solid var(--border);
-      font-size: 0.82rem; font-weight: 500; color: var(--text2); transition: var(--t);
-    }
-    .social-btn:hover { color: var(--text); border-color: var(--border-h); transform: translateX(3px); }
-
-    @media (max-width: 600px) {
-      .skill-categories { grid-template-columns: 1fr; }
+    @media(max-width:720px){
+      .about-content { padding: 1.5rem !important; }
+      .skill-matrix, .skill-summary { grid-template-columns: 1fr; }
+      .tl-top { align-items: flex-start; flex-direction: column; gap: .45rem; }
+      .tl-card { padding: 1rem; }
     }
   </style>
 </head>
 <body>
-  <div class="page-bg-about">
-    <div class="bokeh-dot" style="width: 30vw; height: 30vw; background: rgba(124,109,250,0.15); top: -10%; left: -10%; --bdur: 12s; --bx: 10vw; --by: 5vh; --bsc: 1.2;"></div>
-    <div class="bokeh-dot" style="width: 25vw; height: 25vw; background: rgba(14,165,233,0.1); top: 40%; right: -5%; --bdur: 15s; --bdelay: 2s; --bx: -5vw; --by: -15vh; --bsc: 1.1;"></div>
-    <div class="bokeh-dot" style="width: 35vw; height: 35vw; background: rgba(52,211,153,0.08); bottom: -15%; left: 20%; --bdur: 18s; --bdelay: -5s; --bx: 8vw; --by: -10vh; --bsc: 0.9;"></div>
-  </div>
-  <nav class="nav" id="navbar">
-    <div class="nav-container">
-      <a href="./index.html" class="nav-logo">
-        <div class="logo-icon">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18" stroke-linecap="round" stroke-width="3.5"/></svg>
-        </div>
-        <span>Nhâm <span class="logo-accent">Mobile Dev</span></span>
+
+  <!-- FLOATING TOPBAR -->
+  <div class="topbar-wrapper">
+    <nav class="floating-nav"><a href="./index.html" class="nav-logo" title="NH"><svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="lgNav" x1="0" y1="0" x2="34" y2="34" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#00d4ff"/><stop offset="100%" stop-color="#7a00ff"/></linearGradient></defs><rect width="34" height="34" rx="10" fill="url(#lgNav)"/><rect x="10" y="5" width="14" height="24" rx="3" stroke="white" stroke-width="2" fill="none"/><line x1="14" y1="9" x2="20" y2="9" stroke="white" stroke-width="1.5" stroke-linecap="round"/><circle cx="17" cy="25.5" r="1.5" fill="white"/></svg></a><div class="nav-divider"></div>
+      <a href="./index.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Trang chủ</span>
       </a>
-      <div class="nav-links" id="navLinks">
-        <a href="./index.html" class="nav-link">Trang chủ</a>
-        <a href="./blog.html" class="nav-link">Bài viết</a>
-        <a href="./projects.html" class="nav-link">Dự án</a>
-        <a href="./about.html" class="nav-link active">Về tôi</a>
-        <a href="#" class="nav-link" id="nav-cv-link">CV</a>
-        <a href="./admin/login.html" class="nav-link nav-link-admin" id="nav-admin-link" title="Trang quản trị">
-          🔐 ADMIN
-        </a>
-      </div>
-      <div class="nav-actions">
-        <button class="theme-toggle" id="themeToggle" aria-label="Chuyển giao diện">
-          <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-          <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-        </button>
-        <button class="music-toggle hidden" id="musicToggle" aria-label="Bật/Tắt nhạc" style="width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:transparent;border:1px solid var(--border);color:var(--text);cursor:pointer;transition:var(--ease);">
-          <svg class="icon-music-on hidden" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
-          <svg class="icon-music-off" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
-        </button>
-        <button class="hamburger" id="hamburger" aria-label="Menu">
-          <span></span><span></span><span></span>
-        </button>
-      </div>
-    </div>
-  </nav>
+      <a href="./projects.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <span>Dự án</span>
+      </a>
+      <a href="./blog.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        <span>Bài viết</span>
+      </a>
+      <a href="./about.html" class="nav-item active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span>Về tôi</span>
+      </a>
+      
+      <div class="nav-divider"></div>
+      
+      <button class="theme-btn" id="themeToggle" title="Đổi giao diện">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+    </nav>
+  </div>
 
-  <main>
-    <section class="about-section">
-      <div class="container about-container">
-        <!-- Left Sidebar -->
-        <div class="about-sidebar">
-          <div class="avatar-wrapper">
-            <div class="avatar-ring">
-              <div class="avatar-circle" id="about-avatar-display-circle">
-                <span id="about-avatar-initials">🧑‍💻</span>
-                <img id="about-avatar-image" src="" alt="Avatar" style="display: none;" />
-              </div>
-            </div>
-            <div class="about-name">Nguyễn Hữu Nhâm</div>
-            <div class="about-role">Mobile App Developer</div>
-            <div class="avatar-status">
-              <span class="status-dot"></span>
-              <span>Mở cơ hội thực tập</span>
-            </div>
+  <div class="container">
+    <div class="about-grid">
+      <!-- SIDEBAR -->
+      <div class="about-sidebar">
+        <div class="glass-panel hover-glow">
+          <div class="about-avatar">
+            <img id="about-avatar-image" src="https://avatars.githubusercontent.com/u/100000000?v=4" alt="Avatar" onerror="this.style.display='none'; this.previousElementSibling.style.display='flex';" style="display:none;" />
+            <div style="width:100%; height:100%; background: linear-gradient(135deg, #00d4ff, #7a00ff); display:flex; align-items:center; justify-content:center; font-size:4rem;">👨‍💻</div>
           </div>
-
-          <div class="quick-info">
-            <div class="info-item">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-              <a href="tel:0987654321" id="about-phone" style="color:inherit;text-decoration:none;">0987.654.321</a>
-            </div>
-            <div class="info-item">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-              <a href="mailto:nham@email.com" id="about-email" style="color:inherit;text-decoration:none;">nham@email.com</a>
-            </div>
-            <div class="info-item">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              <span id="about-location">Hà Nội, Việt Nam</span>
-            </div>
-            <div class="info-item">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-              <a href="https://github.com/nham" id="about-github-text" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">github.com/nham</a>
-            </div>
-          </div>
-
-          <div class="social-links">
-            <a href="https://github.com/NguyenHuuNham" class="social-btn" target="_blank" rel="noopener" id="about-github">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-              GitHub Profile
-            </a>
-          </div>
-        </div>
-
-        <!-- Right Content -->
-        <div class="about-content">
-          <h1 class="page-title" style="font-size:2rem;margin-bottom:1.5rem;text-align:left">
-            Về <span class="gradient-text">tôi</span>
-          </h1>
-
-          <div class="about-bio">
-            <p>Xin chào! Tôi là <strong>Nguyễn Hữu Nhâm</strong>, sinh viên IT năm 3 với đam mê cháy bỏng về phát triển ứng dụng mobile. Tôi tin rằng một app tốt không chỉ phải chạy đúng — mà còn phải <strong>đẹp</strong> và mang lại trải nghiệm tuyệt vời.</p>
-            <p>Tôi chuyên về <strong>Flutter</strong> và <strong>React Native</strong>, đồng thời đang học thêm native development với <strong>Kotlin</strong> và <strong>Swift</strong>.</p>
-          </div>
-
-          <!-- Skills -->
-          <div class="skills-section">
-            <h2 class="subsection-title">⚡ Kỹ năng</h2>
-            <div class="skill-categories">
-              <div class="skill-category">
-                <div class="skill-cat-title">📱 Mobile Framework</div>
-                <div class="skill-tags">
-                  <span class="skill-tag primary">Flutter</span>
-                  <span class="skill-tag primary">Dart</span>
-                  <span class="skill-tag">React Native</span>
-                  <span class="skill-tag">Kotlin</span>
-                  <span class="skill-tag">Swift</span>
-                </div>
+          <div class="about-sidebar-info">
+            <p class="ab-name">Nguyễn Hữu Nhâm</p>
+            <p style="color: #00d4ff; font-weight: 500; letter-spacing: 1px;">MOBILE APP DEVELOPER</p>
+            
+            <div style="margin: 2rem 0;">
+              <div class="detail-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.19 11.8 19.79 19.79 0 0 1 1.12 3.18 2 2 0 0 1 3.1 1h3a2 2 0 0 1 2 1.72A12.84 12.84 0 0 0 8.8 5.53a2 2 0 0 1-.45 2.11L7.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21 16z"/></svg>
+                <a href="tel:0987654321">0987.654.321</a>
               </div>
-              <div class="skill-category">
-                <div class="skill-cat-title">⚙️ State Management</div>
-                <div class="skill-tags">
-                  <span class="skill-tag">BLoC / Cubit</span>
-                  <span class="skill-tag">Riverpod</span>
-                  <span class="skill-tag">Provider</span>
-                  <span class="skill-tag">Redux</span>
-                </div>
+              <div class="detail-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                <a href="mailto:nham@email.com">nham@email.com</a>
               </div>
-              <div class="skill-category">
-                <div class="skill-cat-title">🔧 Backend & Tools</div>
-                <div class="skill-tags">
-                  <span class="skill-tag">Firebase</span>
-                  <span class="skill-tag">REST API</span>
-                  <span class="skill-tag">Git / GitHub</span>
-                  <span class="skill-tag">SQL Server</span>
-                </div>
+              <div class="detail-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span>Hà Nội, Việt Nam</span>
               </div>
-              <div class="skill-category">
-                <div class="skill-cat-title">🌐 Web (phụ)</div>
-                <div class="skill-tags">
-                  <span class="skill-tag">ASP.NET Core</span>
-                  <span class="skill-tag">HTML / CSS</span>
-                  <span class="skill-tag">JavaScript</span>
-                </div>
+              <div class="detail-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                <a href="https://github.com/NguyenHuuNham" target="_blank" rel="noopener">github.com/NguyenHuuNham</a>
               </div>
             </div>
-          </div>
-
-          <!-- Timeline -->
-          <div class="timeline-section">
-            <h2 class="subsection-title">🗺️ Hành trình</h2>
-            <div class="timeline">
-              <div class="timeline-item">
-                <div class="timeline-dot"></div>
-                <div class="timeline-content">
-                  <span class="timeline-date">2026 — Hiện tại</span>
-                  <h3>Tìm kiếm internship Mobile Dev</h3>
-                  <p>Đang ứng tuyển Flutter / React Native Intern tại các startup và công ty tech.</p>
-                </div>
-              </div>
-              <div class="timeline-item">
-                <div class="timeline-dot"></div>
-                <div class="timeline-content">
-                  <span class="timeline-date">2025</span>
-                  <h3>TinderClone & Flappy Bird (Flutter)</h3>
-                  <p>Xây dựng app hẹn hò với Firebase real-time, BLoC pattern và game engine bằng Canvas.</p>
-                </div>
-              </div>
-              <div class="timeline-item">
-                <div class="timeline-dot"></div>
-                <div class="timeline-content">
-                  <span class="timeline-date">2024</span>
-                  <h3>ShopeeClone (Flutter)</h3>
-                  <p>Clone giao diện Shopee với REST API và cart management.</p>
-                </div>
-              </div>
-              <div class="timeline-item">
-                <div class="timeline-dot"></div>
-                <div class="timeline-content">
-                  <span class="timeline-date">2023</span>
-                  <h3>Bắt đầu học Flutter & Mobile Dev</h3>
-                  <p>Khám phá thế giới mobile development, xây dựng các app nhỏ để nắm vững nền tảng.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Contact -->
-          <div class="contact-cta">
-            <h2 class="subsection-title" style="margin-bottom:0">✉️ Liên hệ với tôi</h2>
-            <p>Tôi luôn sẵn sàng nghe về các cơ hội thú vị hoặc chỉ đơn giản là nói chuyện về mobile dev!</p>
-            <div>
-              <a href="mailto:nham@email.com" class="btn btn-primary" id="contact-email-btn">Gửi email ngay</a>
-            </div>
+            
+            <a href="mailto:nham@email.com" class="cta-btn" style="display: block; text-align: center; margin-bottom: 0.75rem;">Liên hệ ngay ✉️</a>
+            <a href="#" id="nav-cv-link" class="cta-btn" style="display: block; text-align: center; background: rgba(0,212,255,0.12); border: 1px solid rgba(0,212,255,0.3); color: #00d4ff;">📄 Xem CV / Hồ sơ</a>
           </div>
         </div>
       </div>
-    </section>
-  </main>
+      
+      <!-- MAIN CONTENT -->
+      <div class="glass-panel about-content" style="padding: 2rem 2.5rem;">
 
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-left">
-          <div class="footer-logo">
-            <div class="logo-icon small">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18" stroke-linecap="round" stroke-width="3.5"/></svg>
+        <!-- Bio -->
+        <div class="ab-section-title">Về tôi</div>
+        <div class="bio-highlight">
+          <p class="bio-text">Xin chào! Tôi là <strong>Nguyễn Hữu Nhâm</strong> — sinh viên IT năm 3, đam mê xây dựng ứng dụng mobile đẹp và hiệu năng cao.</p>
+        </div>
+        <p class="bio-text">Chuyên môn chính của tôi là <strong>Flutter & Dart</strong> và <strong>React Native</strong>. Tôi yêu thích việc tạo ra những UI mượt mà, trải nghiệm người dùng tự nhiên như native — và luôn học hỏi để bắt kịp xu hướng mới nhất của ngành mobile.</p>
+        <p class="bio-text" style="margin-top: 0.875rem;">Hiện tôi đang <strong>tìm kiếm cơ hội thực tập 2026</strong> tại các công ty product/startup để đóng góp thực tế và phát triển bản thân.</p>
+
+        <!-- Skills -->
+        <div class="ab-section-title" style="margin-top: 2.5rem;">Kỹ năng chuyên môn</div>
+
+        <div class="skill-matrix">
+          <article class="skill-card">
+            <div class="skill-card-head">
+              <span class="skill-name">Mobile UI Development</span>
+              <span class="skill-level">Advanced</span>
             </div>
-            Nhâm <span class="logo-accent">Mobile Dev</span>
+            <p class="skill-desc">Xây dựng giao diện mobile mượt, responsive, ưu tiên trải nghiệm giống native và khả năng tái sử dụng component.</p>
+            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width:88%"></div></div>
+            <div class="skill-tags"><span>Flutter</span><span>Dart</span><span>Widget Tree</span><span>Animation</span></div>
+          </article>
+
+          <article class="skill-card">
+            <div class="skill-card-head">
+              <span class="skill-name">Cross-platform App</span>
+              <span class="skill-level">Intermediate</span>
+            </div>
+            <p class="skill-desc">Triển khai app đa nền tảng, tổ chức navigation, state và luồng dữ liệu rõ ràng cho các tính năng thực tế.</p>
+            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width:72%"></div></div>
+            <div class="skill-tags"><span>React Native</span><span>Expo</span><span>Navigation</span><span>State</span></div>
+          </article>
+
+          <article class="skill-card">
+            <div class="skill-card-head">
+              <span class="skill-name">Backend Integration</span>
+              <span class="skill-level">Proficient</span>
+            </div>
+            <p class="skill-desc">Kết nối API, Firebase, auth, upload media và xử lý dữ liệu bất đồng bộ cho app/blog/portfolio.</p>
+            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width:80%"></div></div>
+            <div class="skill-tags"><span>REST API</span><span>Firebase</span><span>Auth</span><span>JSON</span></div>
+          </article>
+
+          <article class="skill-card">
+            <div class="skill-card-head">
+              <span class="skill-name">Product Design Sense</span>
+              <span class="skill-level">Growing</span>
+            </div>
+            <p class="skill-desc">Thiết kế màn hình có hierarchy rõ, màu sắc nhất quán, chú ý spacing, empty state và hành vi tương tác.</p>
+            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width:65%"></div></div>
+            <div class="skill-tags"><span>Figma</span><span>UI System</span><span>Prototype</span><span>UX Flow</span></div>
+          </article>
+        </div>
+
+        <div class="skill-summary">
+          <div class="skill-summary-item"><span class="skill-summary-num">Mobile-first</span><span class="skill-summary-label">Tập trung giao diện và hiệu năng trên thiết bị di động</span></div>
+          <div class="skill-summary-item"><span class="skill-summary-num">API-ready</span><span class="skill-summary-label">Biết kết nối dữ liệu thật, auth, upload và realtime cơ bản</span></div>
+          <div class="skill-summary-item"><span class="skill-summary-num">Product mindset</span><span class="skill-summary-label">Làm tính năng theo trải nghiệm người dùng, không chỉ theo code</span></div>
+        </div>
+
+        <!-- Timeline -->
+        <div class="ab-section-title" style="margin-top: 2.5rem;">Hành trình</div>
+        <div class="tl">
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-card">
+              <div class="tl-top">
+                <span class="tl-date">2026 — Hiện tại</span>
+                <span class="tl-status">Intern-ready</span>
+              </div>
+              <div class="tl-title">Sẵn sàng tham gia dự án Mobile thực tế</div>
+              <p class="tl-desc">Tập trung hoàn thiện portfolio, quy trình làm việc với Git/API và khả năng triển khai tính năng từ UI đến dữ liệu để ứng tuyển Flutter / React Native Intern.</p>
+              <div class="tl-stack"><span>Flutter</span><span>React Native</span><span>REST API</span><span>Team workflow</span></div>
+            </div>
           </div>
-          <p class="footer-desc">Mobile App Developer · Sinh viên IT</p>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-card">
+              <div class="tl-top">
+                <span class="tl-date">2025</span>
+                <span class="tl-status">Project builder</span>
+              </div>
+              <div class="tl-title">Mở rộng portfolio qua các app cá nhân</div>
+              <p class="tl-desc">Xây dựng Tinder Clone với real-time chat, game Flappy Bird bằng Flutter Canvas và nhiều side project để rèn UI, animation, state và xử lý dữ liệu.</p>
+              <div class="tl-stack"><span>Realtime chat</span><span>Canvas</span><span>Animation</span><span>State management</span></div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-card">
+              <div class="tl-top">
+                <span class="tl-date">2024</span>
+                <span class="tl-status">App architecture</span>
+              </div>
+              <div class="tl-title">Thực hành kiến trúc ứng dụng thương mại điện tử</div>
+              <p class="tl-desc">Nghiên cứu Shopee Clone và e-commerce flow: danh sách sản phẩm, giỏ hàng, trạng thái đơn hàng, tích hợp API và tổ chức code dễ bảo trì.</p>
+              <div class="tl-stack"><span>E-commerce</span><span>BLoC/Riverpod</span><span>Cart flow</span><span>Payment flow</span></div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-card">
+              <div class="tl-top">
+                <span class="tl-date">2023</span>
+                <span class="tl-status">Foundation</span>
+              </div>
+              <div class="tl-title">Bắt đầu nền tảng lập trình mobile</div>
+              <p class="tl-desc">Khởi đầu với Flutter, hoàn thành các bài thực hành nền tảng và xây dựng những app đầu tiên như To-do, Weather để nắm layout, routing và xử lý dữ liệu.</p>
+              <div class="tl-stack"><span>Flutter basics</span><span>Layout</span><span>Routing</span><span>Local state</span></div>
+            </div>
+          </div>
         </div>
-        <div class="footer-links">
-          <a href="https://github.com/NguyenHuuNham" class="footer-link" target="_blank" rel="noopener">GitHub</a>
-        </div>
+
       </div>
     </div>
-  </footer>
+  </div>
 
-  <!-- API Client + Main logic -->
+  <script>
+    // Animate skill bars on scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.querySelectorAll('.skill-bar-fill').forEach(bar => {
+            bar.style.width = bar.style.width; // trigger CSS transition
+          });
+        }
+      });
+    }, { threshold: 0.2 });
+    document.querySelectorAll('.about-content').forEach(el => observer.observe(el));
+  </script>
+
+
   <script src="./js/api-config.js"></script>
   <script src="./js/main.js"></script>
+  <script src="./js/bg-canvas.js"></script>
 </body>
 </html>

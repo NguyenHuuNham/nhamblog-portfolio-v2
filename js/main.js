@@ -5,22 +5,30 @@
 
 // ============ THEME (no-flicker already set by inline script in <head>) ============
 function initTheme() {
-  const saved      = localStorage.getItem('theme');
+  const saved       = localStorage.getItem('theme');
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const theme      = saved || (prefersDark ? 'dark' : 'light');
+  const theme       = saved || (prefersDark ? 'dark' : 'light');
   document.documentElement.setAttribute('data-theme', theme);
+  updateThemeIcons();
+}
+
+function updateThemeIcons() {
+  // CSS handles the animation and visibility based on data-theme attribute
+  document.querySelectorAll('.icon-moon, .icon-sun').forEach(el => el.style.display = '');
 }
 
 function toggleTheme() {
   const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
   document.documentElement.setAttribute('data-theme', next);
   localStorage.setItem('theme', next);
+  updateThemeIcons();
 }
 
 // Sync theme change across open tabs
 window.addEventListener('storage', e => {
   if (e.key === 'theme' && e.newValue) {
     document.documentElement.setAttribute('data-theme', e.newValue);
+    updateThemeIcons();
   }
 });
 
@@ -45,11 +53,11 @@ async function initMusicPlayer() {
     globalAudio.volume = 0.5;
     window.__bgAudioInstance = globalAudio;
 
-    document.querySelectorAll('.music-toggle').forEach(btn => {
-      btn.classList.remove('hidden');
-      btn.removeEventListener('click', toggleMusic);
-      btn.addEventListener('click', toggleMusic);
-    });
+    const musicBox = document.getElementById('musicToggle');
+    if (musicBox) {
+      musicBox.removeEventListener('click', toggleMusic);
+      musicBox.addEventListener('click', toggleMusic);
+    }
 
     const shouldPlay   = sessionStorage.getItem('music_playing') === 'true';
     const resumeTime   = parseFloat(sessionStorage.getItem('music_time') || '0');
@@ -77,11 +85,12 @@ async function initMusicPlayer() {
 }
 
 function updateMusicIcons() {
-  document.querySelectorAll('.music-toggle').forEach(btn => {
-    btn.querySelector('.icon-music-on')?.classList.toggle('hidden', !isMusicPlaying);
-    btn.querySelector('.icon-music-off')?.classList.toggle('hidden',  isMusicPlaying);
-    btn.classList.toggle('playing', isMusicPlaying);
-  });
+  const musicBox = document.getElementById('musicToggle');
+  if (musicBox) {
+    musicBox.classList.toggle('playing', isMusicPlaying);
+    const infoP = musicBox.querySelector('.music-info p');
+    if (infoP) infoP.textContent = isMusicPlaying ? 'Đang phát...' : 'Nhấp để phát';
+  }
 }
 
 function toggleMusic() {
@@ -93,17 +102,18 @@ function toggleMusic() {
 
 function showMusicPrompt() {
   const overlay = document.createElement('div');
-  Object.assign(overlay.style, { position:'fixed', inset:'0', zIndex:'9999999', background:'rgba(8,8,16,0.8)', backdropFilter:'blur(8px)', display:'flex', alignItems:'center', justifyContent:'center', opacity:'0', animation:'fadeIn 0.4s ease forwards' });
+  Object.assign(overlay.style, { position:'fixed', inset:'0', zIndex:'9999999', background:'rgba(0,0,0,0.75)', backdropFilter:'blur(12px)', display:'flex', alignItems:'center', justifyContent:'center', animation:'fadeIn 0.25s ease forwards' });
   overlay.innerHTML = `
-    <div style="background:var(--card);border:1px solid var(--border);padding:2.5rem 2rem;border-radius:var(--radius-lg);text-align:center;max-width:400px;width:90%;box-shadow:0 25px 50px -12px rgba(0,0,0,0.5);transform:translateY(20px);animation:slideUp 0.4s 0.1s ease forwards;opacity:0;">
-      <div style="font-size:4rem;margin-bottom:1rem">🎧🧸</div>
-      <h3 style="font-size:1.5rem;color:var(--text);margin-bottom:0.75rem;font-weight:800;">Trải nghiệm tuyệt vời hơn?</h3>
-      <p style="color:var(--text2);line-height:1.6;margin-bottom:2rem;">Bạn có muốn bật một chút nhạc nền lofi chill chill không? ✨</p>
-      <div style="display:flex;flex-direction:column;gap:10px;">
-        <button id="btn-music-yes" style="background:linear-gradient(135deg,var(--accent),var(--accent3));color:#fff;border:none;padding:12px;border-radius:100px;font-weight:600;font-size:1rem;cursor:pointer;">Có, bật nhạc nhé! 🎵</button>
-        <button id="btn-music-no"  style="background:transparent;color:var(--text2);border:1px solid var(--border);padding:12px;border-radius:100px;font-weight:600;font-size:1rem;cursor:pointer;">Hãy để lần sau 🤫</button>
+    <div style="background:#111111;border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:2.25rem 2rem;text-align:center;max-width:360px;width:90%;position:relative;animation:slideUp 0.3s cubic-bezier(0.34,1.56,0.64,1) forwards;">
+      <div style="position:absolute;top:0;left:15%;right:15%;height:1px;background:linear-gradient(90deg,transparent,#e8ff8b,transparent);border-radius:0 0 100px 100px;"></div>
+      <div style="font-size:2.5rem;margin-bottom:1rem">🎧</div>
+      <h3 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.25rem;color:#f5f5f5;margin-bottom:0.5rem;font-weight:800;letter-spacing:-0.03em;">Bật nhạc nền không?</h3>
+      <p style="color:#737373;line-height:1.65;margin-bottom:1.75rem;font-size:0.85rem;">Lofi chill chill để coding thêm phê hơn ✨</p>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <button id="btn-music-yes" style="background:#e8ff8b;color:#0a0a0a;border:none;padding:11px;border-radius:8px;font-weight:700;font-size:0.9rem;cursor:pointer;transition:all 0.15s;font-family:'Plus Jakarta Sans',sans-serif;">Có, bật nhạc nhé! 🎵</button>
+        <button id="btn-music-no" style="background:transparent;color:#737373;border:1px solid rgba(255,255,255,0.08);padding:11px;border-radius:8px;font-weight:500;font-size:0.85rem;cursor:pointer;font-family:'JetBrains Mono',monospace;">Thôi lần sau vậy</button>
       </div>
-      <style>@keyframes fadeIn{to{opacity:1}}@keyframes slideUp{to{opacity:1;transform:translateY(0)}}</style>
+      <style>@keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}</style>
     </div>`;
   document.body.appendChild(overlay);
   overlay.querySelector('#btn-music-yes').addEventListener('click', () => { sessionStorage.setItem('nhamblog_music_prompted','true'); overlay.remove(); if (!isMusicPlaying) toggleMusic(); });
@@ -119,6 +129,37 @@ function initNavScroll() {
   onScroll();
 }
 
+function initActiveNav() {
+  const current = (window.location.pathname.split('/').pop() || 'index.html').toLowerCase();
+  document.querySelectorAll('.nav-item').forEach(link => {
+    const href = (link.getAttribute('href') || '').split('/').pop().toLowerCase() || 'index.html';
+    const isPost = current === 'post.html' && href === 'blog.html';
+    link.classList.toggle('active', href === current || isPost);
+  });
+}
+
+function initBackToTop() {
+  let btn = document.getElementById('backToTop');
+  if (!btn) {
+    btn = document.createElement('button');
+    btn.id = 'backToTop';
+    btn.className = 'back-to-top';
+    btn.type = 'button';
+    btn.title = 'Lên đầu trang';
+    btn.setAttribute('aria-label', 'Lên đầu trang');
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>';
+    btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    document.body.appendChild(btn);
+  }
+
+  const sync = () => btn.classList.toggle('visible', window.scrollY > 520);
+  if (!window.__backToTopBound) {
+    window.__backToTopBound = true;
+    window.addEventListener('scroll', sync, { passive: true });
+  }
+  sync();
+}
+
 // ============ HAMBURGER ============
 function initHamburger() {
   const btn   = document.getElementById('hamburger');
@@ -131,23 +172,199 @@ function initHamburger() {
 
 // ============ SCROLL ANIMATIONS ============
 function initScrollAnimations() {
-  const els = document.querySelectorAll('.project-card, .post-item, .section-header, .hero-stats');
+  const selector = [
+    '.glass-panel',
+    '.page-header',
+    '.filter-bar',
+    '.blog-search-wrap',
+    '.blog-card',
+    '.app-item',
+    '.mini-post-row',
+    '.mini-app-item',
+    '.comment-form-wrap',
+    '.comment-item-card',
+    '.about-sidebar',
+    '.about-content'
+  ].join(',');
+  const els = document.querySelectorAll(selector);
   if (!els.length) return;
-  els.forEach((el, i) => { el.style.opacity = '0'; el.style.transform = 'translateY(22px)'; el.style.transition = `opacity 0.55s ease ${i * 0.04}s, transform 0.55s ease ${i * 0.04}s`; });
+
+  els.forEach((el, i) => {
+    el.classList.add('scroll-reveal');
+    el.style.setProperty('--reveal-delay', `${Math.min(i, 10) * 45}ms`);
+  });
+
   const obs = new IntersectionObserver(entries => {
-    entries.forEach(en => { if (en.isIntersecting) { en.target.style.opacity = '1'; en.target.style.transform = 'none'; obs.unobserve(en.target); } });
-  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
-  els.forEach(el => obs.observe(el));
+    entries.forEach(en => {
+      if (!en.isIntersecting) return;
+      en.target.classList.add('is-visible');
+      obs.unobserve(en.target);
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -64px 0px' });
+
+  els.forEach(el => {
+    if (!el.classList.contains('is-visible')) obs.observe(el);
+  });
+
+  initKineticScrollEffects();
 }
 
-// ============ ADMIN LINK ============
+function initKineticScrollEffects() {
+  const root = document.documentElement;
+
+  const update = () => {
+    const maxScroll = Math.max(1, root.scrollHeight - window.innerHeight);
+    const progress = Math.min(1, Math.max(0, window.scrollY / maxScroll));
+    root.style.setProperty('--page-scroll-progress', progress.toFixed(4));
+
+    document.querySelectorAll('.glass-panel.is-visible, .blog-card.is-visible, .app-item.is-visible').forEach(el => {
+      const rect = el.getBoundingClientRect();
+      if (rect.bottom < -80 || rect.top > window.innerHeight + 80) return;
+
+      const centerOffset = ((rect.top + rect.height / 2) - window.innerHeight / 2) / window.innerHeight;
+      const lift = Math.max(-18, Math.min(18, centerOffset * -16));
+      const tilt = Math.max(-1.4, Math.min(1.4, centerOffset * -1.2));
+      el.style.setProperty('--scroll-shift', `${lift.toFixed(2)}px`);
+      el.style.setProperty('--scroll-tilt', `${tilt.toFixed(2)}deg`);
+    });
+  };
+
+  if (window.__kineticScrollBound) {
+    update();
+    return;
+  }
+
+  let ticking = false;
+  const requestUpdate = () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      ticking = false;
+      update();
+    });
+  };
+
+  window.__kineticScrollBound = true;
+  window.addEventListener('scroll', requestUpdate, { passive: true });
+  window.addEventListener('resize', requestUpdate);
+  requestUpdate();
+}
+
+// ============ SECRET ADMIN LOGIN MODAL ============
 function initAdminLink() {
-  if (sessionStorage.getItem('nhamblog_admin_auth') !== 'true') return;
-  const navLinks = document.getElementById('navLinks');
-  if (!navLinks || navLinks.querySelector('.nav-link-admin')) return;
-  const a = document.createElement('a');
-  a.href = '/admin/'; a.className = 'nav-link nav-link-admin'; a.textContent = '⚙ Admin';
-  navLinks.appendChild(a);
+  // --- Build modal HTML (once) ---
+  if (!document.getElementById('secretAdminModal')) {
+    const modal = document.createElement('div');
+    modal.id = 'secretAdminModal';
+    modal.innerHTML = `
+      <div class="sam-overlay" id="samOverlay"></div>
+      <div class="sam-box" id="samBox">
+        <div class="sam-icon">🔐</div>
+        <h2 class="sam-title">Đăng nhập quản trị</h2>
+        <p class="sam-sub">Chỉ dành cho admin của trang</p>
+        <form class="sam-form" id="samForm" autocomplete="off">
+          <div class="sam-field">
+            <label class="sam-label">Tài khoản</label>
+            <input id="samUser" type="text" class="sam-input" placeholder="Nhập username..." autocomplete="off"/>
+          </div>
+          <div class="sam-field">
+            <label class="sam-label">Mật khẩu</label>
+            <div class="sam-pw-wrap">
+              <input id="samPass" type="password" class="sam-input" placeholder="Nhập mật khẩu..." autocomplete="off"/>
+              <button type="button" class="sam-eye" id="samEye" tabindex="-1">
+                <svg id="samEyeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="sam-error hidden" id="samError"></div>
+          <button type="submit" class="sam-btn" id="samSubmit">
+            <span id="samBtnText">Đăng nhập</span>
+            <span id="samBtnLoader" class="hidden">⏳</span>
+          </button>
+        </form>
+        <button class="sam-close" id="samClose" aria-label="Đóng">✕</button>
+      </div>`;
+    document.body.appendChild(modal);
+
+    // --- Toggle password visibility ---
+    const samEye  = document.getElementById('samEye');
+    const samPass = document.getElementById('samPass');
+    samEye.addEventListener('click', () => {
+      const show = samPass.type === 'password';
+      samPass.type = show ? 'text' : 'password';
+      samEye.querySelector('svg').style.opacity = show ? '1' : '0.4';
+    });
+
+    // --- Close modal ---
+    const closeModal = () => {
+      modal.classList.remove('sam-visible');
+      document.getElementById('samUser').value = '';
+      document.getElementById('samPass').value = '';
+      document.getElementById('samError').classList.add('hidden');
+    };
+    document.getElementById('samClose').addEventListener('click', closeModal);
+    document.getElementById('samOverlay').addEventListener('click', closeModal);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    // --- Login form submit ---
+    document.getElementById('samForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const username = document.getElementById('samUser').value.trim();
+      const password = document.getElementById('samPass').value;
+      const errEl    = document.getElementById('samError');
+      const btnText  = document.getElementById('samBtnText');
+      const btnLoad  = document.getElementById('samBtnLoader');
+      const submitBtn = document.getElementById('samSubmit');
+
+      errEl.classList.add('hidden');
+      btnText.classList.add('hidden'); btnLoad.classList.remove('hidden');
+      submitBtn.disabled = true;
+
+      try {
+        const res  = await fetch('/api/auth/login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ username, password }) });
+        const data = await res.json();
+        if (res.ok && data.token) {
+          localStorage.setItem('nhamblog_jwt_token', data.token);
+          // Small success animation
+          document.getElementById('samBox').style.transform = 'scale(0.96)';
+          setTimeout(() => { window.location.href = '/admin/'; }, 350);
+        } else {
+          errEl.textContent = data.error || 'Tài khoản hoặc mật khẩu không đúng.';
+          errEl.classList.remove('hidden');
+          document.getElementById('samBox').classList.add('sam-shake');
+          setTimeout(() => document.getElementById('samBox').classList.remove('sam-shake'), 500);
+        }
+      } catch (err) {
+        errEl.textContent = 'Không kết nối được server. Thử lại sau.';
+        errEl.classList.remove('hidden');
+      } finally {
+        btnText.classList.remove('hidden'); btnLoad.classList.add('hidden');
+        submitBtn.disabled = false;
+      }
+    });
+  }
+
+  // --- Logo click: KHÔNG navigate, 1 click → mở modal admin ---
+  const logo = document.getElementById('navLogo');
+  if (logo && !logo.dataset.adminBound) {
+    logo.dataset.adminBound = '1';
+    let clickCount = 0;
+    let clickTimer = null;
+    logo.addEventListener('click', e => {
+      e.preventDefault(); // Luôn chặn navigate
+      clickCount++;
+      clearTimeout(clickTimer);
+      if (clickCount >= 3) {
+        // Đủ 3 lần → mở modal admin
+        clickCount = 0;
+        document.getElementById('secretAdminModal').classList.add('sam-visible');
+        setTimeout(() => document.getElementById('samUser').focus(), 250);
+      } else {
+        // Chưa đủ → reset sau 1.5s
+        clickTimer = setTimeout(() => { clickCount = 0; }, 1500);
+      }
+    });
+  }
 }
 
 // ============ PARTICLES ============
@@ -200,34 +417,67 @@ function initTerminalMode() {
 
 // ============ RENDER HELPERS ============
 function buildPostItem(post) {
-  const tagHTML  = (post.tags || []).map(t => `<span class="tag ${t}">${tagLabel(t)}</span>`).join('');
-  const imageHTML = post.image ? `<div class="post-item-cover"><img src="${post.image}" alt="${post.title}" loading="lazy"/></div>` : '';
-  return `<article class="post-item ${post.image ? 'has-cover' : ''}" role="article" tabindex="0" data-tags="${(post.tags||[]).join(',')}" onclick="window.location.href='./post.html?id=${post.id}'" onkeydown="if(event.key==='Enter')window.location.href='./post.html?id=${post.id}'">
-    ${imageHTML}
-    <div class="post-item-body">
-      <div class="post-item-header"><h3 class="post-item-title">${post.title}</h3><time class="post-item-date" datetime="${post.date}">${formatDate(post.date)}</time></div>
-      <p class="post-item-summary">${post.summary}</p>
-      <div class="post-item-tags">${tagHTML}<span class="tag" style="color:var(--text3);background:none;border-color:transparent">⏱ ${post.readTime}</span></div>
+  // Tag colors
+  const tagClass = { flutter:'flutter', 'react-native':'react-native', kotlin:'kotlin', swift:'swift', tips:'tips' };
+  const tagsHtml = (post.tags||[]).map(t => `<span class="blog-tag ${tagClass[t]||'default'}">${tagLabel(t)}</span>`).join('');
+
+  // Thumbnail
+  const imgSrc = post.imageUrl || post.image || null;
+  const thumbHtml = imgSrc
+    ? `<div class="blog-card-thumb"><img src="${imgSrc}" alt="${post.title}" loading="lazy"/></div>`
+    : `<div class="blog-card-thumb"><div class="blog-card-thumb-placeholder">${getPostEmoji(post.tags)}</div></div>`;
+
+  const dateStr = (post.date||'').substring(0,10).replace(/-/g,'/');
+  const likes    = post.likes    || 0;
+  const comments = (post.comments||[]).length;
+  const readTime = post.readTime || '5 phút đọc';
+
+  return `
+  <a class="blog-card" href="./post.html?id=${post.id}" data-tags="${(post.tags||[]).join(',')}">
+    ${thumbHtml}
+    <div class="blog-card-body">
+      <div class="blog-card-tags">${tagsHtml}</div>
+      <div class="blog-card-title">${post.title}</div>
+      <div class="blog-card-summary">${post.summary || ''}</div>
+      <div class="blog-card-footer">
+        <span class="blog-card-date">📅 ${dateStr}</span>
+        <div class="blog-card-stats">
+          <span class="blog-stat">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            ${likes}
+          </span>
+          <span class="blog-stat">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            ${comments}
+          </span>
+          <span class="blog-stat" style="color:var(--text-muted);">⏱ ${readTime}</span>
+        </div>
+      </div>
     </div>
-  </article>`;
+  </a>`;
+}
+
+// Pick an emoji based on the post's tags
+function getPostEmoji(tags) {
+  const map = { flutter:'📱', 'react-native':'⚛️', kotlin:'🤖', swift:'🍎', tips:'💡', dart:'🎯' };
+  for (const t of (tags||[])) { if (map[t]) return map[t]; }
+  return '📝';
 }
 
 function buildProjectCard(project) {
-  const techHTML    = (project.techLabels || []).map(t => `<span class="tag">${t}</span>`).join('');
-  const statusClass = project.status === 'completed' ? 'status-completed' : 'status-inprogress';
-  const statusLabel = project.status === 'completed' ? '✓ Hoàn thành' : '⬡ Đang làm';
-  const tech        = (project.tech || []).join(',');
-  const githubBtn   = project.github ? `<a href="${project.github}" class="project-link-btn" target="_blank" rel="noopener" onclick="event.stopPropagation()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg></a>` : '';
-  const playWebBtn  = project.id === 3 ? `<button class="project-link-btn" style="background:#fbbf24;color:#000;border:none;padding:4px 10px;font-weight:700;font-size:0.75rem;border-radius:100px;cursor:pointer;" onclick="event.stopPropagation();window.location.href='./flappy.html'">🎮 Chơi thử</button>` : '';
-  const coverHTML   = project.image ? `<div class="project-card-cover"><img src="${project.image}" alt="${project.title}" loading="lazy"/></div>` : '';
-  return `<div class="project-card ${project.image?'has-cover':''}" data-tech="${tech}">
-    ${coverHTML}
-    <div class="project-card-body">
-      <div class="project-card-header"><span class="project-icon" role="img">${project.icon}</span><div class="project-links">${playWebBtn}${githubBtn}</div></div>
-      <h3 class="project-title">${project.title}</h3>
-      <p class="project-desc">${project.description}</p>
-      <div class="project-tech-stack">${techHTML}</div>
-      <span class="project-status ${statusClass}">${statusLabel}</span>
+  const coverHTML = project.image ? `<img src="${project.image}" alt="${project.title}" loading="lazy"/>` : `<span>${project.icon}</span>`;
+  const techLabel = project.techLabels && project.techLabels.length > 0 ? project.techLabels[0] : '';
+  
+  let onclick = '';
+  if (project.id === 3) onclick = `onclick="window.location.href='./flappy.html'"`;
+  else if (project.github) onclick = `onclick="window.open('${project.github}', '_blank')"`
+
+  return `
+  <div class="app-item" ${onclick}>
+    <div class="app-icon-wrapper">${coverHTML}</div>
+    <div class="app-info">
+      <div class="app-name">${project.title}</div>
+      <div class="app-tech">${techLabel}</div>
     </div>
   </div>`;
 }
@@ -334,11 +584,41 @@ function initCvViewerModal() {
 }
 
 // ============ HOMEPAGE RENDER ============
+function buildMiniPostRow(post) {
+  return `<a class="mini-post-row" href="./post.html?id=${post.id}">
+    <span class="mini-post-date">${post.date.substring(0,10).replace(/-/g,'/')}</span>
+    <span class="mini-post-title">${post.title}</span>
+    <span class="mini-post-arrow">→</span>
+  </a>`;
+}
+
+function buildMiniProjectCard(project) {
+  const icon = project.image
+    ? `<img src="${project.image}" alt="${project.title}" style="width:100%;height:100%;object-fit:cover;border-radius:14px;">`
+    : `<span>${project.icon || '📱'}</span>`;
+  const tech = project.techLabels && project.techLabels.length > 0 ? project.techLabels[0] : '';
+  let onclick = '';
+  if (project.id === 3) onclick = `onclick="window.location.href='./flappy.html'"`;
+  else if (project.github) onclick = `onclick="window.open('${project.github}','_blank')"`;
+  return `<div class="mini-app-item" ${onclick}>
+    <div class="mini-app-icon">${icon}</div>
+    <div class="mini-app-name">${project.title}</div>
+    <div class="mini-app-tech">${tech}</div>
+  </div>`;
+}
+
 function initHomepage() {
-  const postList      = document.getElementById('postList');
-  const projectsGrid  = document.getElementById('featuredProjectsGrid');
-  if (postList)     postList.innerHTML     = POSTS.slice(0, 5).map(p => buildPostItem(p)).join('');
-  if (projectsGrid) projectsGrid.innerHTML = PROJECTS.filter(p => p.featured).map(p => buildProjectCard(p)).join('');
+  const postList = document.getElementById('postList');
+  const projectsGrid = document.getElementById('featuredProjectsGrid');
+  if (postList) {
+    const posts = POSTS.slice(0, 4);
+    postList.innerHTML = posts.length ? posts.map(p => buildMiniPostRow(p)).join('') : '<p style="color:var(--text-muted);font-size:0.85rem;text-align:center;padding:1rem;">Chưa có bài viết nào.</p>';
+  }
+  if (projectsGrid) {
+    const featured = PROJECTS.filter(p => p.featured);
+    const items = featured.length ? featured : PROJECTS.slice(0, 4);
+    projectsGrid.innerHTML = items.length ? items.map(p => buildMiniProjectCard(p)).join('') : '<p style="color:var(--text-muted);font-size:0.85rem;text-align:center;padding:1rem;grid-column:1/-1;">Chưa có dự án nào.</p>';
+  }
 }
 
 // ============ MAINTENANCE CHECK ============
@@ -369,16 +649,195 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // 4. Init UI
   initNavScroll();
+  initActiveNav();
   initHamburger();
   initHomepage();
   updateProfileUI();
   initAdminLink();
   initTerminalMode();
   initParticles();
+  initBackToTop();
   await initMusicPlayer();
 
   const themeToggle = document.getElementById('themeToggle');
   if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
 
+  initPJAX();
+
   requestAnimationFrame(() => setTimeout(initScrollAnimations, 100));
 });
+
+// ============ SPA NAVIGATION (PJAX) ============
+function initPJAX() {
+  document.addEventListener('click', async (e) => {
+    const link = e.target.closest('a');
+    if (!link) return;
+    
+    const url = new URL(link.href, window.location.origin);
+    // Only intercept internal navigation
+    if (url.origin !== window.location.origin) return;
+    if (link.target === '_blank' || link.hasAttribute('download')) return;
+    // Ignore admin and game links
+    if (url.pathname.startsWith('/admin') || url.pathname.includes('flappy.html')) return;
+    // post.html needs full page load (scripts won't execute via PJAX)
+    if (url.pathname.includes('post.html')) return;
+    // Ignore hash links on the same page
+    if (url.pathname === window.location.pathname && url.hash) return;
+    // Ignore API calls or uploads
+    if (url.pathname.startsWith('/api/') || url.pathname.startsWith('/uploads/')) return;
+
+    e.preventDefault();
+    const targetPath = url.pathname + url.search;
+    
+    if (targetPath === window.location.pathname + window.location.search) {
+      if (url.hash) window.location.hash = url.hash;
+      return;
+    }
+
+    try {
+      document.body.style.transition = 'opacity 0.2s';
+      document.body.style.opacity = '0.7';
+
+      const res = await fetch(targetPath);
+      const htmlText = await res.text();
+      const doc = new DOMParser().parseFromString(htmlText, 'text/html');
+
+      document.title = doc.title;
+
+      const oldTopbar = document.querySelector('.topbar-wrapper');
+      const newTopbar = doc.querySelector('.topbar-wrapper');
+      if (oldTopbar && newTopbar) oldTopbar.innerHTML = newTopbar.innerHTML;
+
+      const oldContainer = document.querySelector('.container');
+      const newContainer = doc.querySelector('.container');
+      if (oldContainer && newContainer) {
+        oldContainer.innerHTML = newContainer.innerHTML;
+        oldContainer.className = newContainer.className;
+      }
+
+      window.history.pushState({}, '', targetPath);
+      window.scrollTo(0, 0);
+
+      reinitPage(targetPath);
+      
+    } catch (err) {
+      console.error('PJAX error:', err);
+      window.location.href = targetPath; // Fallback
+    } finally {
+      document.body.style.opacity = '1';
+    }
+  });
+
+  window.addEventListener('popstate', async () => {
+    const targetPath = window.location.pathname + window.location.search;
+    // post.html needs full page load
+    if (targetPath.includes('post.html')) {
+      window.location.reload();
+      return;
+    }
+    try {
+      document.body.style.opacity = '0.7';
+      const res = await fetch(targetPath);
+      const htmlText = await res.text();
+      const doc = new DOMParser().parseFromString(htmlText, 'text/html');
+
+      document.title = doc.title;
+      
+      const oldTopbar = document.querySelector('.topbar-wrapper');
+      const newTopbar = doc.querySelector('.topbar-wrapper');
+      if (oldTopbar && newTopbar) oldTopbar.innerHTML = newTopbar.innerHTML;
+
+      const oldContainer = document.querySelector('.container');
+      const newContainer = doc.querySelector('.container');
+      if (oldContainer && newContainer) {
+        oldContainer.innerHTML = newContainer.innerHTML;
+        oldContainer.className = newContainer.className;
+      }
+      
+      reinitPage(targetPath);
+    } catch (err) {
+      window.location.reload();
+    } finally {
+      document.body.style.opacity = '1';
+    }
+  });
+}
+
+
+function reinitPage(path) {
+  // Common
+  updateProfileUI();
+  initTheme();
+  initActiveNav();
+  initBackToTop();
+  initScrollAnimations();
+  
+  // Re-bind music toggle because the DOM was replaced!
+  const musicBox = document.getElementById('musicToggle');
+  if (musicBox) {
+    musicBox.removeEventListener('click', toggleMusic);
+    musicBox.addEventListener('click', toggleMusic);
+    updateMusicIcons();
+  }
+
+  // Re-bind theme toggle!
+  const themeToggle = document.getElementById('themeToggle');
+  if (themeToggle) {
+    themeToggle.removeEventListener('click', toggleTheme);
+    themeToggle.addEventListener('click', toggleTheme);
+  }
+
+  // Page Specific
+  if (path.endsWith('index.html') || path === '/' || path.endsWith('/')) {
+    initHomepage();
+    initAdminLink(); 
+    if (!document.getElementById('hacker-terminal')) initTerminalMode();
+  } else if (path.includes('projects.html')) {
+    if (typeof window.setupProjectsPage === 'function') {
+      window.setupProjectsPage();
+    } else {
+      loadScript('./js/projects.js').then(() => { if(window.setupProjectsPage) window.setupProjectsPage(); });
+    }
+  } else if (path.includes('blog.html')) {
+    if (typeof window.setupBlogPage === 'function') {
+      window.setupBlogPage();
+    } else {
+      loadScript('./js/blog.js').then(() => { if(window.setupBlogPage) window.setupBlogPage(); });
+    }
+  } else if (path.includes('post.html')) {
+    if (typeof window.setupPostPage === 'function') {
+      window.setupPostPage();
+    } else {
+      loadScript('./js/post.js').then(() => { if(window.setupPostPage) window.setupPostPage(); });
+    }
+  }
+}
+
+function loadScript(src) {
+  return new Promise((resolve) => {
+    if (document.querySelector(`script[src="${src}"]`)) return resolve();
+    const script = document.createElement('script');
+    script.src = src;
+    script.onload = resolve;
+    document.body.appendChild(script);
+  });
+}
+
+// ============ NAV ALWAYS ON TOP ============
+// Di chuyển topbar xuống cuối DOM — element cuối trong stacking context
+// luôn paint trên cùng, bất kể backdrop-filter hay filter animation của glass panels
+function pinNavOnTop() {
+  const topbar = document.querySelector('.topbar-wrapper');
+  if (!topbar) return;
+  // Move to end of body so it's painted LAST (always on top in same stacking context)
+  document.body.appendChild(topbar);
+  // Nuclear z-index
+  topbar.style.zIndex = '2147483647';
+}
+
+// Run immediately + after any dynamic content loads
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', pinNavOnTop);
+} else {
+  pinNavOnTop();
+}

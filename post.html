@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
@@ -6,228 +6,98 @@
   <title>Chi tiết bài viết — Nhâm Mobile Dev</title>
   <script>document.documentElement.setAttribute('data-theme',localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'));</script>
   <link rel="stylesheet" href="./css/style.css" />
-  <style>
-    /* Styling for Post Detail Page */
-    .post-hero {
-      padding: calc(6rem + 60px) 0 4rem;
-      background: linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .post-hero::after {
-      content: ''; position: absolute; inset: 0;
-      background: radial-gradient(circle at center, var(--accent-glow) 0%, transparent 60%);
-      opacity: 0.1;
-      pointer-events: none;
-    }
-    .post-detail-tag {
-      display: inline-block;
-      margin-bottom: 1rem;
-      padding: 0.4rem 1rem;
-      background: var(--accent-dim);
-      color: var(--accent2);
-      border-radius: 100px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-    .post-detail-title {
-      font-size: 2.8rem;
-      font-weight: 900;
-      letter-spacing: -0.04em;
-      line-height: 1.2;
-      max-width: 900px;
-      margin: 0 auto 1.5rem;
-      color: var(--text);
-    }
-    .post-detail-meta {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 1.5rem;
-      color: var(--text2);
-      font-size: 0.95rem;
-      font-weight: 500;
-    }
-    .post-detail-cover {
-      width: 100%;
-      max-width: 900px;
-      margin: 0 auto 3rem;
-      border-radius: var(--r-md);
-      overflow: hidden;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-      aspect-ratio: 2/1;
-      border: 1px solid var(--border);
-    }
-    .post-detail-cover img {
-      width: 100%; height: 100%; object-fit: cover;
-    }
-    
-    .post-detail-content {
-      max-width: 800px;
-      margin: 0 auto 4rem;
-      font-size: 1.1rem;
-      line-height: 1.8;
-      color: var(--text);
-    }
-    .post-detail-content p { margin-bottom: 1.5rem; }
-    .post-detail-content h2 { margin: 2rem 0 1rem; font-size: 1.8rem; font-weight: 800; color: #fff; }
-    .post-detail-content ul, .post-detail-content ol { padding-left: 1.5rem; margin-bottom: 1.5rem; }
-    .post-detail-content li { margin-bottom: 0.5rem; }
-    
-    /* Post Actions */
-    .post-actions {
-      display: flex; justify-content: center; gap: 2rem;
-      margin: 3rem 0; padding: 2rem 0;
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      flex-wrap: wrap;
-    }
-    .action-btn {
-      display: flex; align-items: center; gap: 0.5rem;
-      background: var(--bg2); border: 1px solid var(--border);
-      padding: 0.8rem 1.5rem; border-radius: 100px;
-      font-size: 1rem; font-weight: 600; color: var(--text);
-      cursor: pointer; transition: var(--t);
-    }
-    .action-btn:hover { background: var(--bg3); transform: translateY(-2px); }
-    .action-btn.liked { color: #ef4444; border-color: rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.1); }
-    .action-btn.liked svg { fill: #ef4444; stroke: #ef4444; }
-    
-    .rating-wrap {
-      display: flex; align-items: center; gap: 0.8rem;
-    }
-    .stars { display: flex; gap: 0.2rem; cursor: pointer; }
-    .stars svg { width: 24px; height: 24px; fill: none; stroke: #fbbf24; stroke-width: 2; transition: var(--t); }
-    .stars svg.active { fill: #fbbf24; }
-    .stars svg:hover ~ svg { fill: none !important; }
-    .rating-info { font-size: 0.9rem; color: var(--text2); font-weight: 500; }
-    
-    /* Comments */
-    .comments-section {
-      max-width: 800px;
-      margin: 0 auto;
-      padding-bottom: 5rem;
-    }
-    .comments-title {
-      font-size: 1.5rem; font-weight: 800; margin-bottom: 2rem;
-      display: flex; align-items: center; gap: 0.8rem;
-    }
-    .comment-form {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: var(--r-md); padding: 1.5rem;
-      margin-bottom: 3rem;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    }
-    .comment-input {
-      width: 100%; min-height: 100px;
-      background: var(--bg); border: 1px solid var(--border);
-      border-radius: var(--r-sm); padding: 1rem;
-      font-family: inherit; font-size: 1rem; color: var(--text);
-      resize: vertical; margin-bottom: 1rem;
-      transition: var(--t);
-    }
-    .comment-input:focus { outline: none; border-color: var(--accent); }
-    .comment-submit {
-      background: linear-gradient(135deg, var(--accent), var(--accent3));
-      color: #fff; border: none; padding: 0.8rem 1.5rem;
-      border-radius: var(--r-sm); font-size: 0.95rem; font-weight: 600;
-      cursor: pointer; transition: var(--t);
-    }
-    .comment-submit:hover { opacity: 0.9; transform: translateY(-2px); }
-    
-    .comment-list { display: flex; flex-direction: column; gap: 1.5rem; }
-    .comment-item {
-      background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r-md);
-      padding: 1.5rem; display: flex; gap: 1.2rem;
-      animation: fadeIn 0.4s ease both;
-    }
-    .comment-avatar {
-      width: 45px; height: 45px; border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent3), var(--accent));
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.2rem; font-weight: 700; color: #fff; flex-shrink: 0;
-    }
-    .comment-body { flex: 1; }
-    .comment-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
-    .comment-author { font-weight: 700; font-size: 1rem; }
-    .comment-date { font-size: 0.8rem; color: var(--text3); }
-    .comment-text { font-size: 0.95rem; color: var(--text2); line-height: 1.6; }
-    
-    .not-found { text-align: center; padding: 10rem 1rem; }
-    .not-found h1 { font-size: 3rem; margin-bottom: 1rem; }
-
-    @media (max-width: 768px) {
-      .post-detail-title { font-size: 2rem; }
-      .post-actions { flex-direction: column; align-items: center; gap: 1.5rem; }
-      .comment-item { flex-direction: column; gap: 1rem; }
-    }
-  </style>
+  <meta name="description" content="Bài viết về Mobile Development từ Nhâm Dev." />
 </head>
-<body class="anim-ready">
-  <canvas id="particlesCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;"></canvas>
+<body>
 
-  <nav class="nav" id="navbar">
-    <div class="nav-container">
-      <a href="./index.html" class="nav-logo">
-        <div class="logo-icon">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18" stroke-linecap="round" stroke-width="3.5"/></svg>
-        </div>
-        <span>Nhâm <span class="logo-accent">Mobile Dev</span></span>
+  <!-- FLOATING TOPBAR -->
+  <div class="topbar-wrapper">
+    <nav class="floating-nav"><a href="./index.html" class="nav-logo" title="NH"><svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="lgNav" x1="0" y1="0" x2="34" y2="34" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#00d4ff"/><stop offset="100%" stop-color="#7a00ff"/></linearGradient></defs><rect width="34" height="34" rx="10" fill="url(#lgNav)"/><rect x="10" y="5" width="14" height="24" rx="3" stroke="white" stroke-width="2" fill="none"/><line x1="14" y1="9" x2="20" y2="9" stroke="white" stroke-width="1.5" stroke-linecap="round"/><circle cx="17" cy="25.5" r="1.5" fill="white"/></svg></a><div class="nav-divider"></div>
+      <a href="./index.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Trang chủ</span>
       </a>
-      <div class="nav-links" id="navLinks">
-        <a href="./index.html" class="nav-link">Trang chủ</a>
-        <a href="./blog.html" class="nav-link">Bài viết</a>
-        <a href="./projects.html" class="nav-link">Dự án</a>
-        <a href="./about.html" class="nav-link">Về tôi</a>
-        <a href="#" class="nav-link" id="nav-cv-link">CV</a>
-        <a href="./admin/login.html" class="nav-link nav-link-admin" id="nav-admin-link" title="Trang quản trị">
-          🔐 ADMIN
-        </a>
-      </div>
-      <div class="nav-actions">
-        <button class="theme-toggle" id="themeToggle" aria-label="Chuyển giao diện">
-          <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-          <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-        </button>
-        <button class="hamburger" id="hamburger" aria-label="Menu">
-          <span></span><span></span><span></span>
-        </button>
-      </div>
-    </div>
-  </nav>
+      <a href="./projects.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <span>Dự án</span>
+      </a>
+      <a href="./blog.html" class="nav-item active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        <span>Bài viết</span>
+      </a>
+      <a href="./about.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span>Về tôi</span>
+      </a>
+      
+      <div class="nav-divider"></div>
+      
+      <button class="theme-btn" id="themeToggle" title="Đổi giao diện">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+    </nav>
+  </div>
 
-  <main id="postRenderZone">
-    <div class="not-found">
-      <div style="width:40px;height:40px;border:3px solid var(--accent);border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto;"></div>
-      <p style="margin-top:1rem;color:var(--text2);">Đang tải dữ liệu bài viết...</p>
+  <div class="container" id="postRenderZone">
+    <!-- Loading state -->
+    <div style="min-height:60vh;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1rem;">
+      <div style="width:44px;height:44px;border:3px solid rgba(0,212,255,0.2);border-top-color:#00d4ff;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+      <p style="color:var(--text-muted);font-size:0.95rem;">Đang tải bài viết...</p>
     </div>
-  </main>
+  </div>
 
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-left">
-          <div class="footer-logo">
-            <div class="logo-icon small">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18" stroke-linecap="round" stroke-width="3.5"/></svg>
-            </div>
-            Nhâm <span class="logo-accent">Mobile Dev</span>
-          </div>
-          <p class="footer-desc">Mobile App Developer · Sinh viên IT</p>
-        </div>
-        <div class="footer-links">
-          <a href="https://github.com/NguyenHuuNham" class="footer-link" target="_blank" rel="noopener">GitHub</a>
-        </div>
-      </div>
-    </div>
-  </footer>
+  <style>
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+    .post-detail-content h2 { padding-bottom: 0.5rem; border-bottom: 1px solid var(--glass-border); }
+    .post-detail-content h3 { color: var(--text-main); }
+    .post-detail-content pre {
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      overflow-x: auto;
+      margin: 1.5rem 0;
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      line-height: 1.7;
+    }
+    [data-theme="light"] .post-detail-content pre { background: rgba(0,0,0,0.06); }
+    .post-detail-content code {
+      font-family: var(--font-mono);
+      font-size: 0.88em;
+      background: rgba(0,212,255,0.08);
+      color: #00d4ff;
+      padding: 0.15em 0.45em;
+      border-radius: 5px;
+    }
+    .post-detail-content pre code {
+      background: none; color: #e2e8f0; padding: 0; font-size: 0.9rem;
+    }
+    [data-theme="light"] .post-detail-content pre code { color: #1e293b; }
+    .post-detail-content blockquote {
+      border-left: 3px solid var(--accent);
+      padding: 0.75rem 1.25rem;
+      margin: 1.5rem 0;
+      background: rgba(0,212,255,0.05);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+    .post-detail-content a { color: var(--accent); text-decoration: underline; }
+    .post-detail-content table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+    .post-detail-content th, .post-detail-content td { padding: 0.75rem 1rem; border: 1px solid var(--glass-border); }
+    .post-detail-content th { background: rgba(255,255,255,0.05); font-weight: 600; }
+    [data-theme="light"] .comment-form-wrap { background: rgba(255,255,255,0.6); }
+    [data-theme="light"] .like-btn-main { background: rgba(0,0,0,0.03); }
+  </style>
 
+  <!-- Markdown parser -->
+  <script src="https://cdn.jsdelivr.net/npm/marked@9/marked.min.js"></script>
   <!-- API Client -->
   <script src="./js/api-config.js"></script>
   <script src="./js/main.js"></script>
   <script src="./js/post.js"></script>
+  <script src="./js/bg-canvas.js"></script>
 </body>
 </html>

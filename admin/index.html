@@ -3,12 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin CMS — Nhâm Mobile Dev</title>
+  <title>Admin Dashboard — Nhâm Mobile Dev</title>
   <meta name="robots" content="noindex, nofollow" />
-  <script>document.documentElement.setAttribute('data-theme',localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'));</script>
+  <meta name="description" content="Admin Dashboard - Quản lý nội dung website" />
+  
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  
   <link rel="stylesheet" href="./css/admin.css" />
 </head>
 <body>
@@ -18,65 +21,116 @@
     <div class="sidebar-header">
       <div class="sidebar-logo">
         <div class="sidebar-logo-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18" stroke-linecap="round" stroke-width="3"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+            <path d="M2 17l10 5 10-5"/>
+            <path d="M2 12l10 5 10-5"/>
+          </svg>
         </div>
         <div class="sidebar-logo-text">
-          <span class="sidebar-logo-name">Nhâm</span>
-          <span class="sidebar-logo-sub">Admin CMS</span>
+          <span class="sidebar-logo-name">NHÂM DEV</span>
+          <span class="sidebar-logo-sub">Admin Panel</span>
         </div>
       </div>
-      <button class="sidebar-collapse-btn" id="sidebarCollapseBtn" title="Thu nhỏ sidebar">
+      <button class="sidebar-collapse-btn" id="sidebarCollapseBtn" title="Thu nhỏ">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
       </button>
     </div>
 
     <div class="sidebar-search">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       <input type="text" placeholder="Tìm kiếm..." class="sidebar-search-input" id="globalSearch" />
-      <kbd class="kbd-hint">⌘K</kbd>
     </div>
 
     <nav class="sidebar-nav">
-      <div class="sidebar-nav-group">
-        <span class="sidebar-nav-label">TỔNG QUAN</span>
+      <div class="nav-section">
+        <span class="nav-section-title">TỔNG QUAN</span>
         <button class="sidebar-nav-item active" data-tab="dashboard" id="nav-dashboard">
           <span class="nav-icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="9" rx="1"/>
+              <rect x="14" y="3" width="7" height="5" rx="1"/>
+              <rect x="14" y="12" width="7" height="9" rx="1"/>
+              <rect x="3" y="16" width="7" height="5" rx="1"/>
+            </svg>
           </span>
           <span class="nav-text">Dashboard</span>
-          <span class="nav-indicator"></span>
         </button>
       </div>
 
-      <div class="sidebar-nav-group">
-        <span class="sidebar-nav-label">NỘI DUNG</span>
+      <div class="nav-section">
+        <span class="nav-section-title">QUẢN LÝ</span>
         <button class="sidebar-nav-item" data-tab="posts" id="nav-posts">
           <span class="nav-icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+            </svg>
           </span>
           <span class="nav-text">Bài viết</span>
           <span class="nav-badge" id="badge-posts">0</span>
         </button>
         <button class="sidebar-nav-item" data-tab="projects" id="nav-projects">
           <span class="nav-icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+              <polyline points="2 17 12 22 22 17"/>
+              <polyline points="2 12 12 17 22 12"/>
+            </svg>
           </span>
           <span class="nav-text">Dự án</span>
           <span class="nav-badge" id="badge-projects">0</span>
         </button>
+        <button class="sidebar-nav-item" data-tab="comments" id="nav-comments">
+          <span class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/>
+            </svg>
+          </span>
+          <span class="nav-text">Bình luận</span>
+          <span class="nav-badge" id="badge-comments">0</span>
+        </button>
       </div>
 
-      <div class="sidebar-nav-group">
-        <span class="sidebar-nav-label">HỆ THỐNG</span>
+      <div class="nav-section">
+        <span class="nav-section-title">HỆ THỐNG</span>
         <button class="sidebar-nav-item" data-tab="profile" id="nav-profile">
           <span class="nav-icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
           </span>
           <span class="nav-text">Hồ sơ</span>
         </button>
+        <button class="sidebar-nav-item" data-tab="edit-interface" id="nav-edit-interface">
+          <span class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="14" rx="2"/>
+              <path d="M7 20h10"/>
+              <path d="M9 16v4"/>
+              <path d="M15 16v4"/>
+            </svg>
+          </span>
+          <span class="nav-text">Sửa giao diện</span>
+        </button>
+        <button class="sidebar-nav-item" data-tab="edit-functionality" id="nav-edit-functionality">
+          <span class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="16 18 22 12 16 6"/>
+              <polyline points="8 6 2 12 8 18"/>
+            </svg>
+          </span>
+          <span class="nav-text">Sửa chức năng</span>
+        </button>
         <button class="sidebar-nav-item" data-tab="settings" id="nav-settings">
           <span class="nav-icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
           </span>
           <span class="nav-text">Cài đặt</span>
         </button>
@@ -87,156 +141,192 @@
       <div class="sidebar-user-info">
         <div class="sidebar-user-avatar">NH</div>
         <div class="sidebar-user-detail">
-          <span class="sidebar-user-name" id="sidebarUser">admin</span>
+          <span class="sidebar-user-name" id="sidebarUser">Admin</span>
           <span class="sidebar-user-role">Administrator</span>
         </div>
       </div>
-      <a href="../index.html" class="sidebar-footer-link" id="back-to-site" target="_blank">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        Xem trang web
-      </a>
       <button class="sidebar-footer-link logout-btn" onclick="logout()">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-        Đăng xuất
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+        <span>Đăng xuất</span>
       </button>
     </div>
   </aside>
 
-  <!-- ========== MAIN ========== -->
-  <div class="main-wrapper" id="mainWrapper">
-
-    <!-- Top Bar -->
+  <!-- ========== MAIN CONTENT ========== -->
+  <main class="main-content" id="mainWrapper">
+    
+    <!-- Top Navigation Bar -->
     <header class="topbar">
       <div class="topbar-left">
         <button class="mobile-menu-btn" id="mobileMenuBtn">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
         </button>
         <div class="topbar-breadcrumb" id="topbarBreadcrumb">
           <span class="bc-home">Admin</span>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <span class="bc-sep">/</span>
           <span class="bc-current" id="bcCurrent">Dashboard</span>
         </div>
       </div>
       <div class="topbar-right">
         <div class="topbar-clock" id="topbarClock"></div>
-        <button class="topbar-btn" id="themeToggleBtn" title="Đổi giao diện">
-          <svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-          <svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <button class="topbar-btn" id="themeToggleBtn" title="Đổi theme">
+          <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+          <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/>
+            <line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/>
+            <line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
         </button>
-        <div class="topbar-avatar" title="Nhâm — Admin">NH</div>
+        <div class="topbar-avatar" title="Admin">NH</div>
       </div>
     </header>
 
-    <!-- ===== TAB: DASHBOARD ===== -->
-    <section class="panel active" id="panel-dashboard">
-      <div class="panel-inner">
-        <div class="panel-head">
+    <!-- Content Area -->
+    <div class="content-area">
+
+      <!-- ===== DASHBOARD PANEL ===== -->
+      <section class="panel active" id="panel-dashboard">
+        <div class="panel-header">
           <div>
-            <h1 class="panel-title">Dashboard 👋</h1>
-            <p class="panel-sub">Chào mừng trở lại, Nhâm!</p>
+            <h1 class="panel-title">Xin chào, Nhâm! 👋</h1>
+            <p class="panel-subtitle">Tổng quan hệ thống của bạn</p>
           </div>
-          <div class="head-actions">
-            <button class="btn btn-ghost" onclick="switchTab('posts');setTimeout(()=>openPostModal(),100)" id="quick-post-btn">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <div class="header-actions">
+            <button class="btn btn-outline" onclick="switchTab('posts');setTimeout(()=>openPostModal(),100)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
               Bài viết mới
             </button>
-            <button class="btn btn-primary" onclick="switchTab('projects');setTimeout(()=>openProjectModal(),100)" id="quick-project-btn">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <button class="btn btn-primary" onclick="switchTab('projects');setTimeout(()=>openProjectModal(),100)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
               Dự án mới
             </button>
           </div>
         </div>
 
-        <!-- Stats Grid -->
-        <div class="stats-row">
-          <div class="stat-card" data-color="purple">
-            <div class="stat-card-bg"></div>
-            <div class="stat-icon purple">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+          <div class="stat-card gradient-purple">
+            <div class="stat-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+              </svg>
             </div>
-            <div class="stat-info">
-              <div class="stat-value" data-target="posts" id="statPosts">0</div>
-              <div class="stat-label">Bài viết</div>
+            <div class="stat-content">
+              <span class="stat-value" id="statPosts">0</span>
+              <span class="stat-label">Bài viết</span>
             </div>
-            <div class="stat-trend up">↑ 2 tuần</div>
+            <div class="stat-trend positive">+12%</div>
           </div>
-          <div class="stat-card" data-color="green">
-            <div class="stat-card-bg"></div>
-            <div class="stat-icon green">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/></svg>
+
+          <div class="stat-card gradient-blue">
+            <div class="stat-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+                <polyline points="2 17 12 22 22 17"/>
+              </svg>
             </div>
-            <div class="stat-info">
-              <div class="stat-value" data-target="projects" id="statProjects">0</div>
-              <div class="stat-label">Dự án</div>
+            <div class="stat-content">
+              <span class="stat-value" id="statProjects">0</span>
+              <span class="stat-label">Dự án</span>
             </div>
-            <div class="stat-trend up">↑ 1 mới</div>
+            <div class="stat-trend positive">+5%</div>
           </div>
-          <div class="stat-card" data-color="amber">
-            <div class="stat-card-bg"></div>
-            <div class="stat-icon amber">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+
+          <div class="stat-card gradient-orange">
+            <div class="stat-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
             </div>
-            <div class="stat-info">
-              <div class="stat-value" data-target="inprogress" id="statInprogress">0</div>
-              <div class="stat-label">Đang làm</div>
+            <div class="stat-content">
+              <span class="stat-value" id="statInprogress">0</span>
+              <span class="stat-label">Đang làm</span>
             </div>
-            <div class="stat-trend neutral">~ Active</div>
+            <div class="stat-trend neutral">Active</div>
           </div>
-          <div class="stat-card" data-color="blue">
-            <div class="stat-card-bg"></div>
-            <div class="stat-icon blue">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+
+          <div class="stat-card gradient-green">
+            <div class="stat-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
             </div>
-            <div class="stat-info">
-              <div class="stat-value" data-target="completed" id="statCompleted">0</div>
-              <div class="stat-label">Hoàn thành</div>
+            <div class="stat-content">
+              <span class="stat-value" id="statCompleted">0</span>
+              <span class="stat-label">Hoàn thành</span>
             </div>
-            <div class="stat-trend up">↑ Tốt</div>
+            <div class="stat-trend positive">+8%</div>
           </div>
         </div>
 
-        <!-- Activity & Chart Row -->
-        <div class="dash-grid">
-          <!-- Tag Chart -->
+        <!-- Dashboard Widgets -->
+        <div class="dashboard-grid">
+          <div class="widget widget-large">
+            <div class="widget-header">
+              <h3 class="widget-title">Bài viết gần đây</h3>
+              <button class="widget-action" onclick="switchTab('posts')">Xem tất cả →</button>
+            </div>
+            <div class="widget-content">
+              <div class="activity-list" id="recentPostsList"></div>
+            </div>
+          </div>
+
           <div class="widget">
             <div class="widget-header">
               <h3 class="widget-title">Tags phổ biến</h3>
-              <span class="widget-badge">Bài viết</span>
             </div>
-            <div class="tag-chart" id="tagChart"></div>
+            <div class="widget-content">
+              <div class="tag-chart" id="tagChart"></div>
+            </div>
           </div>
 
-          <!-- Recent Posts -->
           <div class="widget">
             <div class="widget-header">
-              <h3 class="widget-title">Bài viết gần đây</h3>
-              <button class="widget-link" onclick="switchTab('posts')" id="dash-view-posts">Xem tất cả →</button>
+              <h3 class="widget-title">Tiến độ dự án</h3>
             </div>
-            <div class="activity-list" id="recentPostsList"></div>
-          </div>
-
-          <!-- Projects Status -->
-          <div class="widget">
-            <div class="widget-header">
-              <h3 class="widget-title">Trạng thái dự án</h3>
-              <button class="widget-link" onclick="switchTab('projects')" id="dash-view-projects">Xem tất cả →</button>
+            <div class="widget-content">
+              <div class="project-progress-list" id="projectProgressList"></div>
             </div>
-            <div class="project-progress-list" id="projectProgressList"></div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- ===== TAB: POSTS ===== -->
-    <section class="panel" id="panel-posts">
-      <div class="panel-inner">
-        <div class="panel-head">
+      <!-- ===== POSTS PANEL ===== -->
+      <section class="panel" id="panel-posts">
+        <div class="panel-header">
           <div>
-            <h1 class="panel-title">Bài viết</h1>
-            <p class="panel-sub" id="posts-subtitle">Quản lý nội dung blog</p>
+            <h1 class="panel-title">Quản lý bài viết</h1>
+            <p class="panel-subtitle">Tạo, chỉnh sửa và xóa bài viết blog</p>
           </div>
-          <button class="btn btn-primary" onclick="openPostModal()" id="btn-new-post">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <button class="btn btn-primary" onclick="openPostModal()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
             Thêm bài viết
           </button>
         </div>
@@ -245,35 +335,39 @@
           <div class="card-toolbar">
             <div class="toolbar-left">
               <div class="search-field">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                <input type="text" placeholder="Tìm bài viết..." class="search-field-input" id="postSearchInput" />
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"/>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+                <input type="text" placeholder="Tìm bài viết..." class="search-input" id="postSearchInput" />
               </div>
-              <div class="filter-chips" id="postFilterChips">
-                <button class="chip active" data-tag="all">Tất cả</button>
-                <button class="chip" data-tag="flutter">Flutter</button>
-                <button class="chip" data-tag="react-native">React Native</button>
-                <button class="chip" data-tag="kotlin">Kotlin</button>
-                <button class="chip" data-tag="tips">Tips</button>
+              <div class="filter-tabs" id="postFilterChips">
+                <button class="filter-tab active" data-tag="all">Tất cả</button>
+                <button class="filter-tab" data-tag="flutter">Flutter</button>
+                <button class="filter-tab" data-tag="react-native">React Native</button>
+                <button class="filter-tab" data-tag="kotlin">Kotlin</button>
               </div>
             </div>
             <span class="toolbar-count" id="postsCount"></span>
           </div>
-
-          <div class="posts-grid" id="postsGrid"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== TAB: PROJECTS ===== -->
-    <section class="panel" id="panel-projects">
-      <div class="panel-inner">
-        <div class="panel-head">
-          <div>
-            <h1 class="panel-title">Dự án</h1>
-            <p class="panel-sub">Quản lý portfolio</p>
+          <div class="table-container">
+            <div class="posts-list" id="postsGrid"></div>
           </div>
-          <button class="btn btn-primary" onclick="openProjectModal()" id="btn-new-project">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </div>
+      </section>
+
+      <!-- ===== PROJECTS PANEL ===== -->
+      <section class="panel" id="panel-projects">
+        <div class="panel-header">
+          <div>
+            <h1 class="panel-title">Quản lý dự án</h1>
+            <p class="panel-subtitle">Portfolio projects của bạn</p>
+          </div>
+          <button class="btn btn-primary" onclick="openProjectModal()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
             Thêm dự án
           </button>
         </div>
@@ -282,435 +376,485 @@
           <div class="card-toolbar">
             <div class="toolbar-left">
               <div class="search-field">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                <input type="text" placeholder="Tìm dự án..." class="search-field-input" id="projectSearchInput" />
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"/>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+                <input type="text" placeholder="Tìm dự án..." class="search-input" id="projectSearchInput" />
               </div>
-              <div class="filter-chips" id="projectFilterChips">
-                <button class="chip active" data-tech="all">Tất cả</button>
-                <button class="chip" data-tech="flutter">Flutter</button>
-                <button class="chip" data-tech="react-native">React Native</button>
-                <button class="chip" data-tech="kotlin">Kotlin</button>
+              <div class="filter-tabs" id="projectFilterChips">
+                <button class="filter-tab active" data-tech="all">Tất cả</button>
+                <button class="filter-tab" data-tech="flutter">Flutter</button>
+                <button class="filter-tab" data-tech="react-native">React Native</button>
+                <button class="filter-tab" data-tech="kotlin">Kotlin</button>
               </div>
             </div>
             <span class="toolbar-count" id="projectsCount"></span>
           </div>
-
-          <div class="projects-admin-grid" id="projectsAdminGrid"></div>
+          <div class="projects-grid" id="projectsAdminGrid"></div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- ===== TAB: PROFILE ===== -->
-    <section class="panel" id="panel-profile">
-      <div class="panel-inner">
-        <div class="panel-head">
+      <!-- ===== COMMENTS PANEL ===== -->
+      <section class="panel" id="panel-comments">
+        <div class="panel-header">
+          <div>
+            <h1 class="panel-title">Quản lý bình luận</h1>
+            <p class="panel-subtitle">Theo dõi và gỡ bình luận không phù hợp trên blog</p>
+          </div>
+          <span class="toolbar-count" id="commentsCount"></span>
+        </div>
+
+        <div class="content-card">
+          <div class="comments-admin-list" id="commentsContainer"></div>
+        </div>
+      </section>
+
+      <!-- ===== PROFILE PANEL ===== -->
+      <section class="panel" id="panel-profile">
+        <div class="panel-header">
           <div>
             <h1 class="panel-title">Hồ sơ cá nhân</h1>
-            <p class="panel-sub">Thông tin hiển thị trên trang web</p>
+            <p class="panel-subtitle">Cập nhật thông tin hiển thị trên website</p>
           </div>
-          <button class="btn btn-primary" onclick="saveProfile(event)" id="save-profile-topbtn">
+          <button class="btn btn-primary" id="save-profile-topbtn" onclick="saveProfile(event)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            Lưu thay đổi
+          </button>
+        </div>
+
+        <div class="profile-layout">
+          <div class="profile-sidebar">
+            <div class="profile-card">
+              <!-- Avatar với nút upload -->
+              <div class="avatar-wrapper" style="position:relative; display:inline-block; cursor:pointer;" onclick="document.getElementById('avatarFileInput').click()" title="Click để thay ảnh đại diện">
+                <div class="avatar-ring"></div>
+                <div class="avatar-circle" id="avatar-display-circle">
+                  <span id="avatar-initials">NH</span>
+                  <img id="avatar-image" src="" alt="Avatar" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:50%;" />
+                </div>
+                <!-- Overlay hover -->
+                <div style="position:absolute;inset:0;border-radius:50%;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.2s;z-index:5;" id="avatar-overlay">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                </div>
+                <input type="file" id="avatarFileInput" accept="image/*" style="display:none;" onchange="handleAvatarUpload(event)" />
+              </div>
+              <p style="font-size:0.72rem;color:var(--text-2);margin-top:0.5rem;">Click vào ảnh để thay đổi</p>
+              <div class="profile-status">
+                <span class="status-dot"></span>
+                <span id="status-text-display">Đang tìm việc</span>
+              </div>
+              <h3 class="profile-name" id="avatar-name-display">Nguyễn Hữu Nhậm</h3>
+              <p class="profile-title" id="avatar-title-display">Mobile Developer</p>
+            </div>
+          </div>
+
+
+          <div class="profile-main">
+            <div class="content-card">
+              <form id="profileForm" onsubmit="saveProfile(event)">
+                <div class="form-section">
+                  <h3 class="section-title">Thông tin cơ bản</h3>
+                  <div class="form-grid">
+                    <div class="form-group">
+                      <label class="form-label">Họ và tên</label>
+                      <input type="text" id="prof-name" class="form-input" placeholder="Nguyễn Hữu Nhậm" />
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Chức danh</label>
+                      <input type="text" id="prof-title" class="form-input" placeholder="Mobile App Developer" />
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Email</label>
+                      <input type="email" id="prof-email" class="form-input" placeholder="nham@email.com" />
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Số điện thoại</label>
+                      <input type="tel" id="prof-phone" class="form-input" placeholder="0987.654.321" />
+                    </div>
+                    <div class="form-group full">
+                      <label class="form-label">Địa chỉ</label>
+                      <input type="text" id="prof-location" class="form-input" placeholder="Hà Nội, Việt Nam" />
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">GitHub</label>
+                      <input type="url" id="prof-github" class="form-input" placeholder="https://github.com/username" />
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Trạng thái</label>
+                      <input type="text" id="prof-status" class="form-input" placeholder="Đang tìm việc" />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-section">
+                  <h3 class="section-title">Thông tin website</h3>
+                  <div class="form-grid">
+                    <div class="form-group full">
+                      <label class="form-label">Hero Subtitle</label>
+                      <input type="text" id="prof-hero" class="form-input" placeholder="Mobile Developer · 3 năm kinh nghiệm" />
+                    </div>
+                    <div class="form-group full">
+                      <label class="form-label">Bio</label>
+                      <textarea id="prof-bio" class="form-input form-textarea" placeholder="Giới thiệu ngắn về bản thân..." rows="4"></textarea>
+                    </div>
+                    <div class="form-group full">
+                      <label class="form-label">CV</label>
+                      <div class="upload-zone" onclick="document.getElementById('cv-file-input').click()">
+                        <input type="file" id="cv-file-input" accept=".pdf,.doc,.docx" hidden />
+                        <span id="cv-status-label" style="display:none;">CV đã được tải lên</span>
+                        <span>Chọn file CV mới</span>
+                        <button type="button" class="btn btn-danger-sm" id="remove-cv-btn" onclick="event.stopPropagation();removeCVFile()" style="display:none;">Xóa CV</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== EDIT INTERFACE PANEL ===== -->
+      <section class="panel" id="panel-edit-interface">
+        <div class="panel-header">
+          <div>
+            <h1 class="panel-title">Sửa giao diện</h1>
+            <p class="panel-subtitle">Chỉnh HTML/CSS của website ngay trong admin</p>
+          </div>
+          <button class="btn btn-primary" id="btn-save-interface" onclick="saveCodeEditor('interface')">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
             Lưu thay đổi
           </button>
         </div>
 
-        <div class="profile-grid">
-          <!-- Avatar card -->
-          <div class="content-card profile-avatar-card">
-            <div class="avatar-display">
-              <div class="avatar-ring-wrap">
-                <div class="avatar-ring-anim"></div>
-                <div class="avatar-circle" id="avatar-display-circle">
-                  <span id="avatar-initials">NH</span>
-                  <img id="avatar-image" src="" alt="Avatar" style="display: none; width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" />
-                </div>
-              </div>
-              <div class="avatar-status-badge">
-                <span class="status-pulse"></span>
-                <span id="status-text-display">Đang tìm việc</span>
-              </div>
+        <div class="content-card code-editor-card">
+          <div class="card-toolbar">
+            <div class="toolbar-left">
+              <select id="interfaceFileSelect" class="form-input form-select file-select" onchange="loadCodeEditorFile('interface')">
+                <option value="">-- Chọn file giao diện cần sửa --</option>
+              </select>
             </div>
-            <div class="avatar-info">
-              <div class="avatar-name" id="avatar-name-display">Nguyễn Hữu Nhậm</div>
-              <div class="avatar-title" id="avatar-title-display">Mobile App Developer</div>
-            </div>
-            <div class="avatar-links">
-              <a href="#" class="avatar-link-item" id="avatar-github-link">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-                GitHub
-              </a>
-            </div>
+            <span class="editor-loading hidden" id="interfaceEditorLoading">Đang tải...</span>
           </div>
-
-          <!-- Profile Form -->
-          <div class="content-card">
-            <form id="profileForm" onsubmit="saveProfile(event)">
-              <div class="form-section">
-                <h3 class="form-section-title">Thông tin cơ bản</h3>
-                <div class="form-row">
-                  <div class="form-group full">
-                    <label class="form-label">Ảnh đại diện (Tùy chọn)</label>
-                    <div class="image-upload-zone" id="avatarImageZone" style="max-width: 200px; height: 200px; border-radius: 50%; margin: 0 auto 1.5rem auto;">
-                      <input type="file" id="avatar-image-input" accept="image/*" class="image-file-input" />
-                      <div class="image-upload-placeholder" id="avatarImagePlaceholder">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                        <span>Tải ảnh lên</span>
-                      </div>
-                      <div class="image-preview-wrap hidden" id="avatarImagePreview" style="border-radius: 50%; overflow: hidden;">
-                        <img id="avatarImagePreviewImg" alt="Preview" style="width: 100%; height: 100%; object-fit: cover;" />
-                        <button type="button" class="image-remove-btn" onclick="removeAvatarImage()" title="Xóa ảnh" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label">Họ tên</label>
-                    <input type="text" id="prof-name" class="form-input" placeholder="Nguyễn Hữu Nhậm" />
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label">Chức danh</label>
-                    <input type="text" id="prof-title" class="form-input" placeholder="Mobile App Developer" />
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label">Email</label>
-                    <input type="email" id="prof-email" class="form-input" placeholder="nham@email.com" />
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label">Số điện thoại</label>
-                    <input type="tel" id="prof-phone" class="form-input" placeholder="0987.654.321" />
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label">Địa điểm</label>
-                    <input type="text" id="prof-location" class="form-input" placeholder="Hà Nội, Việt Nam" />
-                  </div>
-                </div>
-              </div>
-              <div class="form-section">
-                <h3 class="form-section-title">Liên kết mạng xã hội</h3>
-                <div class="form-row">
-                  <div class="form-group full">
-                    <label class="form-label">GitHub URL</label>
-                    <input type="url" id="prof-github" class="form-input" placeholder="https://github.com/nham" />
-                  </div>
-                </div>
-              </div>
-              <div class="form-section">
-                <h3 class="form-section-title">Nội dung trang chủ</h3>
-                <div class="form-row">
-                  <div class="form-group full">
-                    <label class="form-label">Hero subtitle</label>
-                    <input type="text" id="prof-hero" class="form-input" placeholder="Sinh viên IT năm 3 · Mobile App Developer" />
-                  </div>
-                  <div class="form-group full">
-                    <label class="form-label">Trạng thái (badge)</label>
-                    <input type="text" id="prof-status" class="form-input" placeholder="Đang tìm kiếm cơ hội thực tập" />
-                  </div>
-                  <div class="form-group full">
-                    <label class="form-label">Bio</label>
-                    <textarea id="prof-bio" class="form-input form-textarea" placeholder="Giới thiệu ngắn về bản thân..." rows="4"></textarea>
-                  </div>
-                </div>
-              </div>
-              <div class="form-section">
-                <h3 class="form-section-title">Hồ sơ năng lực (CV)</h3>
-                <div class="form-row">
-                  <div class="form-group full">
-                    <label class="form-label">Tải lên định dạng PDF (Tối đa 3MB)</label>
-                    <div style="display:flex; gap:0.5rem; align-items:center;">
-                      <input type="file" id="cv-file-input" accept=".pdf, application/pdf" class="form-input" style="padding:0.4rem; cursor:pointer;" />
-                      <button type="button" class="btn btn-ghost" onclick="removeCVFile()" title="Xóa CV" id="remove-cv-btn" style="display:none; color:var(--red); padding:0.4rem 0.8rem;">
-                        Xóa CV
-                      </button>
-                    </div>
-                    <div id="cv-status-label" style="font-size:0.8rem; color:var(--green); margin-top:0.4rem; display:none; font-weight:500;">✅ Hiện tại đã có CV lưu trữ (Sẽ hiển thị trên website)</div>
-                  </div>
-                </div>
-              </div>
-            </form>
-          </div>
+          <textarea id="interfaceEditorTextarea" class="code-textarea" spellcheck="false" placeholder="Chọn một file để bắt đầu chỉnh sửa."></textarea>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- ===== TAB: SETTINGS ===== -->
-    <section class="panel" id="panel-settings">
-      <div class="panel-inner">
-        <div class="panel-head">
+      <!-- ===== EDIT FUNCTIONALITY PANEL ===== -->
+      <section class="panel" id="panel-edit-functionality">
+        <div class="panel-header">
+          <div>
+            <h1 class="panel-title">Sửa chức năng</h1>
+            <p class="panel-subtitle">Chỉnh JavaScript cho các tương tác và luồng xử lý</p>
+          </div>
+          <button class="btn btn-primary" id="btn-save-functionality" onclick="saveCodeEditor('functionality')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Lưu thay đổi
+          </button>
+        </div>
+
+        <div class="content-card code-editor-card">
+          <div class="card-toolbar">
+            <div class="toolbar-left">
+              <select id="functionalityFileSelect" class="form-input form-select file-select" onchange="loadCodeEditorFile('functionality')">
+                <option value="">-- Chọn file chức năng cần sửa --</option>
+              </select>
+            </div>
+            <span class="editor-loading hidden" id="functionalityEditorLoading">Đang tải...</span>
+          </div>
+          <textarea id="functionalityEditorTextarea" class="code-textarea" spellcheck="false" placeholder="Chọn một file để bắt đầu chỉnh sửa."></textarea>
+        </div>
+      </section>
+
+      <!-- ===== SETTINGS PANEL ===== -->
+      <section class="panel" id="panel-settings">
+        <div class="panel-header">
           <h1 class="panel-title">Cài đặt</h1>
-          <p class="panel-sub">Tuỳ chỉnh admin panel</p>
+          <p class="panel-subtitle">Tuỳ chỉnh hệ thống</p>
         </div>
-        <div class="settings-grid">
+
+        <div class="settings-layout">
           <div class="content-card">
-            <h3 class="form-section-title">Giao diện</h3>
-            <div class="setting-item">
-              <div>
-                <div class="setting-name">Chế độ tối / sáng</div>
-                <div class="setting-desc">Chuyển đổi giữa dark mode và light mode</div>
+            <h3 class="section-title">Giao diện</h3>
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-name">Dark Mode</span>
+                <span class="setting-desc">Chuyển đổi giữa dark và light theme</span>
               </div>
               <button class="toggle-switch" id="themeSwitch" onclick="toggleThemeSwitch()"></button>
             </div>
-            <div class="setting-item">
-              <div>
-                <div class="setting-name">Sidebar thu nhỏ</div>
-                <div class="setting-desc">Ẩn text trong sidebar, chỉ hiện icon</div>
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-name">Thu nhỏ sidebar</span>
+                <span class="setting-desc">Ẩn text, chỉ hiển thị icon</span>
               </div>
               <button class="toggle-switch" id="sidebarSwitch" onclick="toggleSidebar()"></button>
             </div>
           </div>
+
           <div class="content-card">
-            <h3 class="form-section-title">Hệ thống</h3>
-            <div class="setting-item">
-              <div>
-                <div class="setting-name">Chế độ bảo trì</div>
-                <div class="setting-desc">Đóng băng web chính, hiển thị màn hình bảo trì</div>
+            <h3 class="section-title">Hệ thống</h3>
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-name">Chế độ bảo trì</span>
+                <span class="setting-desc">Đóng website, hiển thị trang bảo trì</span>
               </div>
               <button class="toggle-switch" id="maintenanceSwitch" onclick="toggleMaintenance()"></button>
             </div>
-            <div class="setting-item" style="flex-direction:column;align-items:flex-start;margin-top:20px;border-top:1px solid var(--border);padding-top:20px;">
-              <div style="margin-bottom:10px;">
-                <div class="setting-name">Nhạc nền (Background Music)</div>
-                <div class="setting-desc">Upload file MP3/WAV từ thiết bị (Tối đa 2MB) để phát nhạc nền trên web.</div>
+          </div>
+
+          <div class="content-card">
+            <h3 class="section-title">Media</h3>
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-name">Nhạc nền</span>
+                <span class="setting-desc">Upload hoặc gỡ file nhạc đang phát trên website</span>
               </div>
-              <div class="image-upload-zone" id="musicUploadZone" style="aspect-ratio: auto; padding: 10px; height: 100px;" onclick="document.getElementById('music-file-input').click()">
-                <input type="file" id="music-file-input" accept="audio/*" class="image-file-input" onchange="handleMusicUpload(event)" />
-                <div class="image-upload-placeholder" id="musicFilePlaceholder">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
-                  <span>Click chọn file nhạc</span>
-                </div>
-                <div class="image-preview-wrap hidden" id="musicFilePreview" style="flex-direction:row;justify-content:space-between;padding:10px;">
-                  <span id="musicFileName" style="color:#fff;font-weight:600;font-size:0.9rem;"></span>
-                  <button type="button" class="btn btn-ghost" onclick="removeMusicFile(event)" style="padding:4px 8px;font-size:0.8rem;color:#f87171;">Xóa / Hủy</button>
-                </div>
+              <div class="upload-zone compact" onclick="document.getElementById('music-file-input').click()">
+                <input type="file" id="music-file-input" accept="audio/*" hidden onchange="handleMusicUpload(event)" />
+                <span id="musicFilePlaceholder">Chọn file audio</span>
+                <span id="musicFilePreview" class="hidden">
+                  <span id="musicFileName">music.mp3</span>
+                  <button type="button" class="btn btn-danger-sm" onclick="removeMusicFile(event)">Xóa</button>
+                </span>
               </div>
             </div>
           </div>
+
           <div class="content-card">
-            <h3 class="form-section-title">Dữ liệu</h3>
-            <div class="setting-item">
-              <div>
-                <div class="setting-name">Reset tất cả dữ liệu</div>
-                <div class="setting-desc">Xoá dữ liệu tự tạo, khôi phục dữ liệu mẫu</div>
+            <h3 class="section-title">Bảo mật</h3>
+            <form id="change-pw-form" onsubmit="changePassword(event)" class="settings-form-grid">
+              <div class="form-group">
+                <label class="form-label">Mật khẩu hiện tại</label>
+                <input type="password" id="current-pw" class="form-input" autocomplete="current-password" />
               </div>
-              <button class="btn btn-danger-sm" onclick="resetAllData()" id="reset-data-btn">Reset</button>
-            </div>
-            <div class="setting-item">
-              <div>
-                <div class="setting-name">Phím tắt</div>
-                <div class="setting-desc"><kbd class="kbd">N</kbd> Bài mới &nbsp; <kbd class="kbd">P</kbd> Dự án mới &nbsp; <kbd class="kbd">⌘K</kbd> Tìm kiếm</div>
+              <div class="form-group">
+                <label class="form-label">Mật khẩu mới</label>
+                <input type="password" id="new-pw" class="form-input" autocomplete="new-password" />
               </div>
-            </div>
+              <div class="form-group">
+                <label class="form-label">Xác nhận mật khẩu</label>
+                <input type="password" id="confirm-pw" class="form-input" autocomplete="new-password" />
+              </div>
+              <div class="form-group form-action">
+                <button type="submit" class="btn btn-primary" id="change-pw-btn">Đổi mật khẩu</button>
+              </div>
+            </form>
           </div>
+
           <div class="content-card">
-            <h3 class="form-section-title">Thông tin</h3>
-            <div class="setting-item">
-              <div class="setting-name">Admin CMS Version</div>
-              <span style="color:var(--text-muted);font-size:0.8rem;">v1.0.0</span>
-            </div>
-            <div class="setting-item">
-              <div class="setting-name">Tech stack</div>
-              <span style="color:var(--text-muted);font-size:0.8rem;">Vanilla JS + Vite</span>
+            <h3 class="section-title">Dữ liệu</h3>
+            <div class="setting-row danger">
+              <div class="setting-info">
+                <span class="setting-name">Reset dữ liệu</span>
+                <span class="setting-desc">Xóa tất cả dữ liệu, khôi phục mặc định</span>
+              </div>
+              <button class="btn btn-danger-sm" onclick="resetAllData()">Reset</button>
             </div>
           </div>
         </div>
-      </div>
-    </section>
-  </div>
+      </section>
+    </div>
+  </main>
 
-  <!-- ===== MODAL: POST ===== -->
-  <div class="modal-backdrop" id="postBackdrop"></div>
+  <!-- ===== MODALS ===== -->
+  
+  <!-- Post Modal -->
+  <div class="modal-overlay" id="postBackdrop"></div>
   <div class="modal" id="postModal">
-    <div class="modal-header">
-      <div>
-        <h2 class="modal-title" id="postModalTitle">Thêm bài viết mới</h2>
-        <p class="modal-sub">Điền đầy đủ thông tin bài viết</p>
-      </div>
-      <button class="modal-close-btn" onclick="closePostModal()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-    <form id="postForm" onsubmit="savePost(event)" class="modal-form">
-      <input type="hidden" id="post-edit-id" />
-      <div class="form-row">
-        <div class="form-group full">
-          <label class="form-label">Tiêu đề <span class="req">*</span></label>
-          <input type="text" id="post-title" class="form-input" placeholder="Ví dụ: Flutter BLoC vs Riverpod..." required />
+    <div class="modal-container">
+      <div class="modal-header">
+        <div>
+          <h2 class="modal-title" id="postModalTitle">Thêm bài viết mới</h2>
+          <p class="modal-subtitle">Điền thông tin bài viết</p>
         </div>
-        <div class="form-group full">
-          <label class="form-label">Slug (URL)</label>
-          <div class="input-prefix-wrap">
-            <span class="input-prefix">blog/</span>
-            <input type="text" id="post-slug" class="form-input input-with-prefix" placeholder="flutter-bloc-vs-riverpod" />
-          </div>
-        </div>
-        <div class="form-group full">
-          <label class="form-label">Tóm tắt <span class="req">*</span></label>
-          <textarea id="post-summary" class="form-input form-textarea" placeholder="Mô tả ngắn về bài viết..." rows="3" required></textarea>
-        </div>
-        <div class="form-group full">
-          <label class="form-label">Nội dung chi tiết (Markdown / Text)</label>
-          <textarea id="post-content" class="form-input form-textarea" placeholder="Bắt đầu viết nội dung tại đây..." rows="10"></textarea>
-        </div>
-        <div class="form-group full">
-          <label class="form-label">Ảnh bìa</label>
-          <div class="image-upload-zone" id="postImageZone">
-            <input type="file" id="post-image-input" accept="image/*" class="image-file-input" />
-            <div class="image-upload-placeholder" id="postImagePlaceholder">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-              <span>Kéo thả ảnh vào đây hoặc <strong>click để chọn</strong></span>
-              <span class="image-upload-hint">PNG, JPG, WebP — Tối đa 2MB</span>
-            </div>
-            <div class="image-preview-wrap hidden" id="postImagePreview">
-              <img id="postImagePreviewImg" alt="Preview" />
-              <button type="button" class="image-remove-btn" onclick="removePostImage()" title="Xóa ảnh">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-              </button>
-            </div>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Ngày đăng</label>
-          <input type="date" id="post-date" class="form-input" />
-        </div>
-        <div class="form-group">
-          <label class="form-label">Thời gian đọc</label>
-          <input type="text" id="post-readtime" class="form-input" placeholder="8 phút" />
-        </div>
-        <div class="form-group full">
-          <label class="form-label">Tags</label>
-          <div class="tag-picker" id="postTagPicker">
-            <label class="tag-pick"><input type="checkbox" value="flutter"/><span class="tp-tag flutter">Flutter</span></label>
-            <label class="tag-pick"><input type="checkbox" value="react-native"/><span class="tp-tag rn">React Native</span></label>
-            <label class="tag-pick"><input type="checkbox" value="kotlin"/><span class="tp-tag kotlin">Kotlin</span></label>
-            <label class="tag-pick"><input type="checkbox" value="swift"/><span class="tp-tag swift">Swift</span></label>
-            <label class="tag-pick"><input type="checkbox" value="dart"/><span class="tp-tag dart">Dart</span></label>
-            <label class="tag-pick"><input type="checkbox" value="tips"/><span class="tp-tag tips">Tips & Tricks</span></label>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-ghost" onclick="closePostModal()" id="cancel-post">Hủy</button>
-        <button type="submit" class="btn btn-primary" id="submit-post">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-          Lưu bài viết
+        <button class="modal-close" onclick="closePostModal()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
         </button>
       </div>
-    </form>
+      <form id="postForm" onsubmit="savePost(event)" class="modal-form">
+        <input type="hidden" id="post-edit-id" />
+        <div class="form-grid">
+          <div class="form-group full">
+            <label class="form-label">Tiêu đề <span class="required">*</span></label>
+            <input type="text" id="post-title" class="form-input" placeholder="Nhập tiêu đề bài viết..." required />
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Slug (URL)</label>
+            <div class="input-with-prefix">
+              <span class="prefix">blog/</span>
+              <input type="text" id="post-slug" class="form-input" placeholder="tieu-de-bai-viet" />
+            </div>
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Tóm tắt <span class="required">*</span></label>
+            <textarea id="post-summary" class="form-input form-textarea" placeholder="Mô tả ngắn về bài viết..." rows="3" required></textarea>
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Nội dung</label>
+            <textarea id="post-content" class="form-input form-textarea" placeholder="Viết nội dung chi tiết..." rows="8"></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Ngày đăng</label>
+            <input type="date" id="post-date" class="form-input" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Thời gian đọc</label>
+            <input type="text" id="post-readtime" class="form-input" placeholder="5 phút" />
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Ảnh bìa</label>
+            <div class="image-upload-zone" id="postImageZone" onclick="document.getElementById('post-image-input').click()">
+              <input type="file" id="post-image-input" accept="image/*" hidden />
+              <div id="postImagePlaceholder" class="image-placeholder">Chọn hoặc kéo ảnh vào đây</div>
+              <div id="postImagePreview" class="image-preview hidden">
+                <img id="postImagePreviewImg" alt="Post preview" />
+                <button type="button" class="btn btn-danger-sm image-remove-btn" onclick="event.stopPropagation();removePostImage()">Xóa ảnh</button>
+              </div>
+            </div>
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Tags</label>
+            <div class="tag-picker" id="postTagPicker">
+              <label class="tag-option"><input type="checkbox" value="flutter"/><span class="tag-label flutter">Flutter</span></label>
+              <label class="tag-option"><input type="checkbox" value="react-native"/><span class="tag-label rn">React Native</span></label>
+              <label class="tag-option"><input type="checkbox" value="kotlin"/><span class="tag-label kotlin">Kotlin</span></label>
+              <label class="tag-option"><input type="checkbox" value="swift"/><span class="tag-label swift">Swift</span></label>
+              <label class="tag-option"><input type="checkbox" value="dart"/><span class="tag-label dart">Dart</span></label>
+              <label class="tag-option"><input type="checkbox" value="tips"/><span class="tag-label tips">Tips</span></label>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" onclick="closePostModal()">Hủy</button>
+          <button type="submit" class="btn btn-primary" id="submit-post">Lưu bài viết</button>
+        </div>
+      </form>
+    </div>
   </div>
 
-  <!-- ===== MODAL: PROJECT ===== -->
-  <div class="modal-backdrop" id="projectBackdrop"></div>
+  <!-- Project Modal -->
+  <div class="modal-overlay" id="projectBackdrop"></div>
   <div class="modal" id="projectModal">
-    <div class="modal-header">
-      <div>
-        <h2 class="modal-title" id="projectModalTitle">Thêm dự án mới</h2>
-        <p class="modal-sub">Thêm dự án vào portfolio</p>
-      </div>
-      <button class="modal-close-btn" onclick="closeProjectModal()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-    <form id="projectForm" onsubmit="saveProject(event)" class="modal-form">
-      <input type="hidden" id="project-edit-id" />
-      <div class="form-row">
-        <div class="form-group" style="max-width:100px">
-          <label class="form-label">Icon</label>
-          <input type="text" id="project-icon" class="form-input" placeholder="🚀" maxlength="4" style="font-size:1.4rem;text-align:center"/>
+    <div class="modal-container">
+      <div class="modal-header">
+        <div>
+          <h2 class="modal-title" id="projectModalTitle">Thêm dự án mới</h2>
+          <p class="modal-subtitle">Thêm dự án vào portfolio</p>
         </div>
-        <div class="form-group">
-          <label class="form-label">Tên dự án <span class="req">*</span></label>
-          <input type="text" id="project-title" class="form-input" placeholder="ShopeeClone Mobile" required />
-        </div>
-        <div class="form-group full">
-          <label class="form-label">Mô tả <span class="req">*</span></label>
-          <textarea id="project-desc" class="form-input form-textarea" rows="3" required></textarea>
-        </div>
-        <div class="form-group full">
-          <label class="form-label">Ảnh dự án</label>
-          <div class="image-upload-zone" id="projectImageZone">
-            <input type="file" id="project-image-input" accept="image/*" class="image-file-input" />
-            <div class="image-upload-placeholder" id="projectImagePlaceholder">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-              <span>Kéo thả ảnh vào đây hoặc <strong>click để chọn</strong></span>
-              <span class="image-upload-hint">PNG, JPG, WebP — Tối đa 2MB</span>
-            </div>
-            <div class="image-preview-wrap hidden" id="projectImagePreview">
-              <img id="projectImagePreviewImg" alt="Preview" />
-              <button type="button" class="image-remove-btn" onclick="removeProjectImage()" title="Xóa ảnh">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-              </button>
-            </div>
-          </div>
-        </div>
-        <div class="form-group full">
-          <label class="form-label">Công nghệ (cách nhau bởi dấu phẩy)</label>
-          <input type="text" id="project-tech-labels" class="form-input" placeholder="Flutter, Dart, BLoC, REST API" />
-        </div>
-        <div class="form-group full">
-          <label class="form-label">Phân loại chính</label>
-          <div class="tag-picker">
-            <label class="tag-pick"><input type="checkbox" name="proj-cat" value="flutter"/><span class="tp-tag flutter">Flutter</span></label>
-            <label class="tag-pick"><input type="checkbox" name="proj-cat" value="react-native"/><span class="tp-tag rn">React Native</span></label>
-            <label class="tag-pick"><input type="checkbox" name="proj-cat" value="kotlin"/><span class="tp-tag kotlin">Kotlin</span></label>
-            <label class="tag-pick"><input type="checkbox" name="proj-cat" value="swift"/><span class="tp-tag swift">Swift</span></label>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Trạng thái</label>
-          <select id="project-status" class="form-input form-select">
-            <option value="completed">✓ Hoàn thành</option>
-            <option value="inprogress">⬡ Đang làm</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">GitHub URL</label>
-          <input type="url" id="project-github" class="form-input" placeholder="https://github.com/..." />
-        </div>
-        <div class="form-group full">
-          <label class="checkbox-row">
-            <input type="checkbox" id="project-featured" class="checkbox-input"/>
-            <span class="checkbox-label-text">Đánh dấu là dự án nổi bật (hiện trên trang chủ)</span>
-          </label>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-ghost" onclick="closeProjectModal()" id="cancel-project">Hủy</button>
-        <button type="submit" class="btn btn-primary" id="submit-project">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-          Lưu dự án
+        <button class="modal-close" onclick="closeProjectModal()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
         </button>
       </div>
-    </form>
+      <form id="projectForm" onsubmit="saveProject(event)" class="modal-form">
+        <input type="hidden" id="project-edit-id" />
+        <div class="form-grid">
+          <div class="form-group" style="max-width:80px">
+            <label class="form-label">Icon</label>
+            <input type="text" id="project-icon" class="form-input" placeholder="🚀" maxlength="4" style="font-size:1.5rem;text-align:center"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tên dự án <span class="required">*</span></label>
+            <input type="text" id="project-title" class="form-input" placeholder="Tên dự án..." required />
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Mô tả <span class="required">*</span></label>
+            <textarea id="project-desc" class="form-input form-textarea" rows="3" required></textarea>
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Công nghệ</label>
+            <input type="text" id="project-tech-labels" class="form-input" placeholder="Flutter, Firebase, REST API" />
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Nhóm công nghệ</label>
+            <div class="tag-picker">
+              <label class="tag-option"><input type="checkbox" name="proj-cat" value="flutter"/><span class="tag-label flutter">Flutter</span></label>
+              <label class="tag-option"><input type="checkbox" name="proj-cat" value="react-native"/><span class="tag-label rn">React Native</span></label>
+              <label class="tag-option"><input type="checkbox" name="proj-cat" value="kotlin"/><span class="tag-label kotlin">Kotlin</span></label>
+              <label class="tag-option"><input type="checkbox" name="proj-cat" value="swift"/><span class="tag-label swift">Swift</span></label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Trạng thái</label>
+            <select id="project-status" class="form-input form-select">
+              <option value="completed">✓ Hoàn thành</option>
+              <option value="inprogress">⬡ Đang làm</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">GitHub URL</label>
+            <input type="url" id="project-github" class="form-input" placeholder="https://github.com/..." />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nổi bật</label>
+            <label class="inline-check"><input type="checkbox" id="project-featured" /> Hiển thị trong mục nổi bật</label>
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Ảnh dự án</label>
+            <div class="image-upload-zone" id="projectImageZone" onclick="document.getElementById('project-image-input').click()">
+              <input type="file" id="project-image-input" accept="image/*" hidden />
+              <div id="projectImagePlaceholder" class="image-placeholder">Chọn hoặc kéo ảnh dự án vào đây</div>
+              <div id="projectImagePreview" class="image-preview hidden">
+                <img id="projectImagePreviewImg" alt="Project preview" />
+                <button type="button" class="btn btn-danger-sm image-remove-btn" onclick="event.stopPropagation();removeProjectImage()">Xóa ảnh</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" onclick="closeProjectModal()">Hủy</button>
+          <button type="submit" class="btn btn-primary" id="submit-project">Lưu dự án</button>
+        </div>
+      </form>
+    </div>
   </div>
 
-  <!-- ===== CONFIRM DELETE MODAL ===== -->
-  <div class="modal-backdrop" id="deleteBackdrop"></div>
+  <!-- Delete Confirmation Modal -->
+  <div class="modal-overlay" id="deleteBackdrop"></div>
   <div class="modal modal-sm" id="deleteModal">
-    <div class="modal-header">
-      <div>
-        <h2 class="modal-title" style="color:#f87171">Xác nhận xóa</h2>
-        <p class="modal-sub">Hành động này không thể hoàn tác</p>
+    <div class="modal-container">
+      <div class="modal-header">
+        <div>
+          <h2 class="modal-title" style="color:var(--red)">Xác nhận xóa</h2>
+          <p class="modal-subtitle">Hành động này không thể hoàn tác</p>
+        </div>
+        <button class="modal-close" onclick="closeDeleteModal()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
       </div>
-      <button class="modal-close-btn" onclick="closeDeleteModal()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-    <div class="modal-form">
-      <div class="delete-warning">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="1.5"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
-        <p id="deleteMsg">Bạn có chắc chắn muốn xóa?</p>
+      <div class="modal-body">
+        <div class="delete-warning">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--red)">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+          <p id="deleteMsg">Bạn có chắc chắn muốn xóa?</p>
+        </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-ghost" onclick="closeDeleteModal()" id="cancel-delete">Hủy</button>
+        <button class="btn btn-ghost" onclick="closeDeleteModal()">Hủy</button>
         <button class="btn btn-danger" id="confirmDeleteBtn" onclick="confirmDelete()">Xóa</button>
       </div>
     </div>
   </div>
 
-  <!-- Toast -->
+  <!-- Toast Container -->
   <div class="toast-container" id="toastContainer"></div>
 
-  <!-- API Client + Admin Logic -->
+  <!-- Scripts -->
   <script src="../js/api-config.js"></script>
   <script src="../js/admin-api.js"></script>
 </body>

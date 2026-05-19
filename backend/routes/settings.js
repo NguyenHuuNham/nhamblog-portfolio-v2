@@ -46,7 +46,10 @@ router.get('/', (req, res) => {
 router.put('/', authMiddleware, (req, res) => {
   try {
     const { maintenance, siteName } = req.body;
-    const updated = db.setDoc('settings', { maintenance, siteName });
+    const patch = {};
+    if (maintenance !== undefined) patch.maintenance = maintenance;
+    if (siteName !== undefined) patch.siteName = siteName;
+    const updated = db.setDoc('settings', patch);
     res.json(updated);
   } catch (err) {
     res.status(500).json({ error: err.message });

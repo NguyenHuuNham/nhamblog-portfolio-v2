@@ -1,204 +1,173 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nhâm Mobile Dev — Portfolio & Blog</title>
-  <meta name="description" content="Sinh viên IT năm 3 đam mê phát triển ứng dụng mobile với Flutter, React Native, Kotlin & Swift. — Nguyễn Hữu Nhâm" />
-  <meta name="keywords" content="mobile developer, flutter, react native, kotlin, swift, blog, portfolio" />
-  <!-- Anti-flicker: set theme before CSS renders -->
+  <title>Nhâm Mobile Dev — Aurora Glassmorphism</title>
+  <meta name="description" content="Portfolio phong cách Aurora Glassmorphism cao cấp của Nguyễn Hữu Nhâm — Mobile Developer." />
   <script>document.documentElement.setAttribute('data-theme',localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'));</script>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./css/style.css" />
 </head>
 <body>
-  <!-- Navigation -->
-  <nav class="nav" id="navbar">
-    <div class="nav-container">
-      <a href="./index.html" class="nav-logo">
-        <div class="logo-icon">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18" stroke-linecap="round" stroke-width="3.5"/></svg>
-        </div>
-        <span>Nhâm <span class="logo-accent">Mobile Dev</span></span>
+
+  <!-- FLOATING TOPBAR -->
+  <div class="topbar-wrapper">
+    <nav class="floating-nav">
+      <!-- Logo Brand -->
+      <a href="./index.html" class="nav-logo" title="Nguyễn Hữu Nhâm"><svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="lgNav" x1="0" y1="0" x2="34" y2="34" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#00d4ff"/><stop offset="100%" stop-color="#7a00ff"/></linearGradient></defs><rect width="34" height="34" rx="10" fill="url(#lgNav)"/><rect x="10" y="5" width="14" height="24" rx="3" stroke="white" stroke-width="2" fill="none"/><line x1="14" y1="9" x2="20" y2="9" stroke="white" stroke-width="1.5" stroke-linecap="round"/><circle cx="17" cy="25.5" r="1.5" fill="white"/></svg></a>
+      <div class="nav-divider"></div>
+      <a href="./index.html" class="nav-item active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Trang chủ</span>
       </a>
-      <div class="nav-links" id="navLinks">
-        <a href="./index.html" class="nav-link active">Trang chủ</a>
-        <a href="./blog.html" class="nav-link">Bài viết</a>
-        <a href="./projects.html" class="nav-link">Dự án</a>
-        <a href="./about.html" class="nav-link">Về tôi</a>
-        <a href="#" class="nav-link" id="nav-cv-link">CV</a>
-        <a href="./admin/login.html" class="nav-link nav-link-admin" id="nav-admin-link" title="Trang quản trị">
-          🔐 ADMIN
-        </a>
-      </div>
-      <div class="nav-actions">
-        <button class="theme-toggle" id="themeToggle" aria-label="Chuyển giao diện">
-          <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-          <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-        </button>
-        <button class="music-toggle hidden" id="musicToggle" aria-label="Bật/Tắt nhạc" style="width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:transparent;border:1px solid var(--border);color:var(--text);cursor:pointer;transition:var(--ease);">
-          <svg class="icon-music-on hidden" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
-          <svg class="icon-music-off" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
-        </button>
-        <button class="hamburger" id="hamburger" aria-label="Menu">
-          <span></span><span></span><span></span>
-        </button>
-      </div>
-    </div>
-  </nav>
+      <a href="./projects.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <span>Dự án</span>
+      </a>
+      <a href="./blog.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        <span>Bài viết</span>
+      </a>
+      <a href="./about.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span>Về tôi</span>
+      </a>
+      <div class="nav-divider"></div>
+      <button class="theme-btn" id="themeToggle" title="Đổi giao diện">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+    </nav>
+  </div>
 
-  <main>
-    <!-- Hero Section -->
-    <section class="hero" id="hero">
-      <!-- new background system -->
-      <div class="aurora-mesh">
-        <div class="aurora-rod"></div>
-        <div class="aurora-rod"></div>
-        <div class="aurora-rod"></div>
-        <div class="aurora-rod"></div>
-        <div class="aurora-rod"></div>
-      </div>
-      <canvas class="particles-canvas" id="particlesCanvas"></canvas>
+  <div class="container">
+    <div class="glass-grid">
 
-      <div class="hero-container">
-        <div class="hero-badge" id="hero-badge">
-          <span class="badge-dot"></span>
-          <span>Đang tìm kiếm cơ hội thực tập</span>
+      <!-- ROW 1: HERO + TERMINAL -->
+      <div class="glass-panel span-8 hero-box hover-glow">
+        <div class="hero-avatar" id="navLogo" title="Click 3 lần để mở Admin" style="cursor:pointer;">
+          <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="lgHero" x1="0" y1="0" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#00d4ff"/>
+                <stop offset="100%" stop-color="#7a00ff"/>
+              </linearGradient>
+            </defs>
+            <rect x="8" y="2" width="28" height="40" rx="5" stroke="url(#lgHero)" stroke-width="2.5" fill="none"/>
+            <line x1="16" y1="8" x2="28" y2="8" stroke="url(#lgHero)" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="22" cy="36" r="2.5" fill="url(#lgHero)"/>
+          </svg>
         </div>
 
-        <h1 class="hero-title">
-          Chào, tôi là<br/>
-          <span class="gradient-text">Nguyễn Hữu Nhâm</span> 👋
-        </h1>
-
-        <p class="hero-subtitle">
-          Sinh viên IT năm 3 · <strong>Mobile App Developer</strong><br/>
-          Xây những app đẹp, mượt bằng <strong>Flutter</strong> & <strong>React Native</strong>
-        </p>
-
-        <div class="hero-tech-stack">
-          <span class="tech-badge flutter">⚡ Flutter</span>
-          <span class="tech-badge rn">⚛ React Native</span>
-          <span class="tech-badge kotlin">🎯 Kotlin</span>
-          <span class="tech-badge swift">🍎 Swift</span>
-          <span class="tech-badge dart">🎵 Dart</span>
+        <h1>Xin chào, tôi là<br><span class="gradient-text">Nguyễn Hữu Nhâm</span></h1>
+        <p>Sinh viên IT năm 3 đam mê <strong>Mobile Development</strong>. Chuyên môn xây dựng ứng dụng với <strong>Flutter</strong> và <strong>React Native</strong> mượt mà như native apps.</p>
+        <div style="display:flex;gap:0.75rem;margin-top:1.5rem;flex-wrap:wrap;">
+          <a href="./projects.html" style="padding:10px 22px;background:linear-gradient(135deg,#00d4ff,#7a00ff);color:#fff;border-radius:12px;font-weight:600;font-size:0.9rem;transition:var(--trans);">Xem dự án →</a>
+          <a href="./about.html" style="padding:10px 22px;background:var(--glass-bg);border:1px solid var(--glass-border);color:var(--text-main);border-radius:12px;font-weight:600;font-size:0.9rem;transition:var(--trans);">Về tôi</a>
         </div>
+      </div>
 
-        <div class="hero-cta">
-          <a href="./projects.html" class="btn btn-primary" id="cta-projects">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-            Xem dự án
+      <div class="glass-panel span-4 term-box hover-glow" style="padding:2rem;display:flex;flex-direction:column;justify-content:center;">
+        <div class="term-header">
+          <div class="term-dot dot-r"></div>
+          <div class="term-dot dot-y"></div>
+          <div class="term-dot dot-g"></div>
+        </div>
+        <div class="term-body">
+          <div class="term-line"><span class="term-prompt">nham@macbook ~ %</span> ./status.sh</div>
+          <div class="term-line">> Đang code Flutter 📱</div>
+          <div class="term-line">> Mở cơ hội thực tập 2026 🚀</div>
+          <div class="term-line">> Available for internship ✅</div>
+          <div class="term-line"><span class="term-prompt">nham@macbook ~ %</span> <span class="blink-cursor"></span></div>
+        </div>
+      </div>
+
+      <!-- ROW 2: TECH STACK + STATS + MUSIC -->
+      <div class="glass-panel span-5 small-box hover-glow">
+        <h3 class="section-label">Tech Stack</h3>
+        <div class="tech-container">
+          <div class="tech-tag"><span style="color:#54C5F8;">●</span> Flutter</div>
+          <div class="tech-tag"><span style="color:#61DAFB;">●</span> React Native</div>
+          <div class="tech-tag"><span style="color:#C07EFF;">●</span> Kotlin</div>
+          <div class="tech-tag"><span style="color:#FF7B7B;">●</span> Swift</div>
+          <div class="tech-tag"><span style="color:#f7df1e;">●</span> JavaScript</div>
+          <div class="tech-tag"><span style="color:#3ecf8e;">●</span> Node.js</div>
+        </div>
+      </div>
+
+      <div class="glass-panel span-3 stat-box hover-glow small-box">
+        <div class="stat-val">8+</div>
+        <div class="stat-lbl">Dự án</div>
+      </div>
+
+      <div class="glass-panel span-4 music-box hover-glow small-box" id="musicToggle" style="flex-direction:row;">
+        <div class="record-disk">
+          <div class="record-center"></div>
+        </div>
+        <div class="music-info">
+          <h3>Lofi Chill</h3>
+          <p>Nhấp để phát</p>
+        </div>
+      </div>
+
+      <!-- ROW 3: FEATURED PROJECTS + SOCIAL/MAP STACK -->
+      <div class="glass-panel span-8 hover-glow" style="padding:2rem;">
+        <div class="section-label">🚀 Dự án nổi bật</div>
+        <div class="mini-app-grid" id="featuredProjectsGrid">
+          <!-- Populated by main.js initHomepage() -->
+          <div style="color:var(--text-muted);font-size:0.85rem;grid-column:1/-1;text-align:center;padding:1rem;">Đang tải...</div>
+        </div>
+        <a href="./projects.html" style="display:inline-flex;align-items:center;gap:6px;margin-top:1.5rem;font-size:0.85rem;color:var(--accent);font-weight:500;">Xem tất cả →</a>
+      </div>
+
+      <div class="glass-panel span-2 hover-glow small-box map-box" style="min-height:180px;">
+        <div class="map-pin">
+          <div class="pin-dot"></div>
+          <div class="map-lbl">Hà Nội</div>
+        </div>
+      </div>
+
+      <div class="glass-panel span-2 hover-glow small-box" style="padding:1.5rem;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.75rem;">
+        <div class="stat-val" style="font-size:2.5rem;">3</div>
+        <div class="stat-lbl">Năm<br>IT</div>
+      </div>
+
+      <!-- ROW 4: RECENT POSTS + CTA -->
+      <div class="glass-panel span-8 hover-glow" style="padding:2rem;">
+        <div class="section-label">📝 Bài viết gần đây</div>
+        <div id="postList">
+          <div style="color:var(--text-muted);font-size:0.85rem;text-align:center;padding:1rem;">Đang tải...</div>
+        </div>
+        <a href="./blog.html" style="display:inline-flex;align-items:center;gap:6px;margin-top:1.25rem;font-size:0.85rem;color:var(--accent);font-weight:500;">Xem tất cả bài viết →</a>
+      </div>
+
+      <div class="glass-panel span-4 hover-glow" style="padding:1.5rem;display:flex;flex-direction:column;gap:1rem;">
+        <!-- Social links -->
+        <div class="section-label">📬 Liên hệ</div>
+        <div class="social-grid">
+          <a href="https://github.com/NguyenHuuNham" target="_blank" class="social-icon-sm github" title="GitHub">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
           </a>
-          <a href="./about.html" class="btn btn-secondary" id="cta-about">
-            Về tôi →
+          <a href="https://linkedin.com/in/NguyenHuuNham" target="_blank" class="social-icon-sm linkedin" title="LinkedIn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          </a>
+          <a href="mailto:contact@nham.dev" class="social-icon-sm email" title="Email">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
           </a>
         </div>
-
-        <div class="hero-stats">
-          <div class="stat-item">
-            <span class="stat-number" id="stat-projects">8+</span>
-            <span class="stat-label">Dự án</span>
-          </div>
-          <div class="stat-divider"></div>
-          <div class="stat-item">
-            <span class="stat-number">3</span>
-            <span class="stat-label">Năm học</span>
-          </div>
-          <div class="stat-divider"></div>
-          <div class="stat-item">
-            <span class="stat-number">2</span>
-            <span class="stat-label">Framework</span>
-          </div>
+        <!-- CTA -->
+        <div style="margin-top:auto;padding-top:1rem;border-top:1px solid var(--glass-border);">
+          <h3 style="font-size:1.1rem;margin-bottom:0.5rem;">Muốn hợp tác? 🤝</h3>
+          <p style="color:var(--text-muted);font-size:0.82rem;margin-bottom:1rem;">Đang tìm kiếm cơ hội thực tập Mobile Dev 2026</p>
+          <a href="./about.html" class="cta-btn" style="display:inline-block;padding:10px 20px;font-size:0.9rem;">Xem chi tiết →</a>
         </div>
       </div>
-    </section>
 
-    <!-- Recent Posts -->
-    <section class="section" id="recent-posts">
-      <div class="container">
-        <div class="section-header">
-          <div>
-            <div class="section-eyebrow">📝 Chia sẻ kiến thức</div>
-            <h2 class="section-title">Bài viết <span class="section-title-accent">mới nhất</span></h2>
-          </div>
-          <a href="./blog.html" class="section-link" id="all-posts-link">Xem tất cả →</a>
-        </div>
-        <div class="post-list" id="postList">
-          <!-- Rendered by JS -->
-        </div>
-      </div>
-    </section>
-
-    <!-- Featured Projects -->
-    <section class="section section-alt" id="featured-projects">
-      <div class="container">
-        <div class="section-header">
-          <div>
-            <div class="section-eyebrow">🚀 Portfolio</div>
-            <h2 class="section-title">Dự án <span class="section-title-accent">nổi bật</span></h2>
-          </div>
-          <a href="./projects.html" class="section-link" id="all-projects-link">Xem tất cả →</a>
-        </div>
-        <div class="projects-grid" id="featuredProjectsGrid">
-          <!-- Rendered by JS -->
-        </div>
-      </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section class="section cta-section">
-      <div class="container">
-        <div class="cta-card">
-          <div class="cta-content">
-            <h2 class="cta-title">Muốn hợp tác?</h2>
-            <p class="cta-desc">Tôi đang tìm kiếm cơ hội thực tập hoặc làm việc bán thời gian trong lĩnh vực mobile development.</p>
-            <div class="cta-actions">
-              <a href="./about.html" class="btn btn-primary">Liên hệ với tôi</a>
-              <a href="https://github.com/NguyenHuuNham" target="_blank" rel="noopener" class="btn btn-secondary">GitHub Profile</a>
-            </div>
-          </div>
-          <div class="cta-decoration">
-            <div class="cta-phone">
-              <div class="phone-screen">
-                <div class="phone-app-grid">
-                  <div class="phone-app flutter-app">F</div>
-                  <div class="phone-app rn-app">RN</div>
-                  <div class="phone-app kotlin-app">K</div>
-                  <div class="phone-app dart-app">D</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-left">
-          <div class="footer-logo">
-            <div class="logo-icon small">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18" stroke-linecap="round" stroke-width="3.5"/></svg>
-            </div>
-            Nhâm <span class="logo-accent">Mobile Dev</span>
-          </div>
-          <p class="footer-desc">Mobile App Developer · Sinh viên IT</p>
-        </div>
-        <div class="footer-links">
-          <a href="https://github.com/NguyenHuuNham" class="footer-link" target="_blank" rel="noopener" id="github-link">GitHub</a>
-        </div>
-      </div>
     </div>
-  </footer>
+  </div>
 
-
-
-  <!-- API Client -->
   <script src="./js/api-config.js"></script>
   <script src="./js/main.js"></script>
+  <script src="./js/bg-canvas.js"></script>
 </body>
 </html>

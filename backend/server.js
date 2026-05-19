@@ -12,12 +12,12 @@ const fs        = require('fs');
 const app  = express();
 const PORT = process.env.PORT || 3000;
 
-// ---- Root of the project ----
-const ROOT_DIR = process.cwd();
+// ---- Root of the project (always the parent of /backend) ----
+const ROOT_DIR = path.resolve(__dirname, '..');
 
 // ---- On Vercel, uploads go to /tmp (writable); locally use data/uploads ----
 const IS_VERCEL   = !!process.env.VERCEL;
-const DATA_DIR    = path.join(ROOT_DIR, 'backend', 'data');
+const DATA_DIR    = path.join(__dirname, 'data');
 const UPLOADS_DIR = IS_VERCEL ? '/tmp/nham-uploads' : path.join(DATA_DIR, 'uploads');
 
 // Ensure upload directories exist (writable on both local and Vercel /tmp)
@@ -52,6 +52,7 @@ app.use('/api/posts',    require('./routes/posts'));
 app.use('/api/projects', require('./routes/projects'));
 app.use('/api/profile',  require('./routes/profile'));
 app.use('/api/settings', require('./routes/settings'));
+app.use('/api/code',     require('./routes/code'));
 
 // ---- Health check ----
 app.get('/api/health', (req, res) => {

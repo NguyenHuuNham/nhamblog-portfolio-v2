@@ -5,13 +5,16 @@
 // =============================================
 
 // ---- Auth Guard ----
-const AUTH_KEY = 'nhamblog_admin_auth';
-if (sessionStorage.getItem(AUTH_KEY) !== 'true') {
+const TOKEN_KEY = 'nhamblog_jwt_token';
+if (!localStorage.getItem(TOKEN_KEY)) {
   window.location.replace('./login.html');
 }
 
 window.logout = function () {
-  sessionStorage.removeItem(AUTH_KEY);
+  localStorage.removeItem(TOKEN_KEY);
+  // Dọn thêm các key cũ nếu còn
+  sessionStorage.removeItem('nhamblog_admin_auth');
+  sessionStorage.removeItem('nhamblog_admin_token');
   window.location.href = './login.html';
 };
 

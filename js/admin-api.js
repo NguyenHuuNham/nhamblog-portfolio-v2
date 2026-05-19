@@ -53,6 +53,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderProjectsGrid();
   renderProfileForm();
   renderSettingsForm();
+  renderComments();
+  fetchCodeFiles();
 });
 
 async function loadAllData() {
@@ -78,7 +80,6 @@ function initTheme() {
   updateThemeSwitchUI();
 
   document.getElementById('themeToggleBtn')?.addEventListener('click', toggleTheme);
-  document.getElementById('themeSwitch')?.addEventListener('click', toggleTheme);
 }
 
 function toggleTheme() {
@@ -91,7 +92,9 @@ function toggleTheme() {
 
 function updateThemeSwitchUI() {
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-  document.getElementById('themeSwitch')?.classList.toggle('active', isDark);
+  const themeSwitch = document.getElementById('themeSwitch');
+  themeSwitch?.classList.toggle('active', isDark);
+  themeSwitch?.classList.toggle('on', isDark);
 }
 
 window.toggleThemeSwitch = toggleTheme;
@@ -115,7 +118,9 @@ function initSidebar() {
     const wrapper    = document.getElementById('mainWrapper');
     const collapsed  = sidebar?.classList.toggle('collapsed');
     wrapper?.classList.toggle('sidebar-collapsed', collapsed);
-    document.getElementById('sidebarSwitch')?.classList.toggle('active', collapsed);
+    const sidebarSwitch = document.getElementById('sidebarSwitch');
+    sidebarSwitch?.classList.toggle('active', collapsed);
+    sidebarSwitch?.classList.toggle('on', collapsed);
   });
 }
 
@@ -124,7 +129,9 @@ window.toggleSidebar = function() {
   const wrapper   = document.getElementById('mainWrapper');
   const collapsed = sidebar?.classList.toggle('collapsed');
   wrapper?.classList.toggle('sidebar-collapsed', collapsed);
-  document.getElementById('sidebarSwitch')?.classList.toggle('active', collapsed);
+  const sidebarSwitch = document.getElementById('sidebarSwitch');
+  sidebarSwitch?.classList.toggle('active', collapsed);
+  sidebarSwitch?.classList.toggle('on', collapsed);
 };
 
 // =============================================
@@ -150,7 +157,18 @@ function switchTab(tabName) {
   document.getElementById(`panel-${tabName}`)?.classList.add('active');
   document.getElementById(`nav-${tabName}`)?.classList.add('active');
   document.getElementById('bcCurrent').textContent =
-    { dashboard: 'Dashboard', posts: 'Bài viết', projects: 'Dự án', profile: 'Hồ sơ', settings: 'Cài đặt' }[tabName] || tabName;
+    { 
+      dashboard: 'Dashboard', 
+      posts: 'Bài viết', 
+      projects: 'Dự án', 
+      comments: 'Bình luận',
+      profile: 'Hồ sơ', 
+      'edit-interface': 'Sửa giao diện', 
+      'edit-functionality': 'Sửa chức năng',
+      settings: 'Cài đặt' 
+    }[tabName] || tabName;
+
+  if (tabName === 'comments') renderComments();
 }
 
 window.switchTab = switchTab;
@@ -188,6 +206,7 @@ window.logout = function() {
 function renderDashboard() {
   const inprogress = projects.filter(p => p.status === 'inprogress').length;
   const completed  = projects.filter(p => p.status === 'completed').length;
+  const commentsCount = posts.reduce((sum, post) => sum + (post.comments || []).length, 0);
 
   const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
   set('statPosts',     posts.length);
@@ -196,6 +215,7 @@ function renderDashboard() {
   set('statCompleted',  completed);
   set('badge-posts',    posts.length);
   set('badge-projects', projects.length);
+  set('badge-comments', commentsCount);
 
   // Recent posts list
   const recentEl = document.getElementById('recentPostsList');
@@ -403,6 +423,7 @@ window.savePost = async function(e) {
     closePostModal();
     renderPostsGrid();
     renderDashboard();
+    renderComments();
   } catch (err) {
     showToast('❌ Lỗi: ' + err.message, 'error');
   } finally {
@@ -652,6 +673,7 @@ window.confirmDelete = async function() {
       posts = posts.filter(p => p.id != pendingDelete.id);
       showToast('🗑️ Đã xóa bài viết!', 'info');
       renderPostsGrid();
+      renderComments();
     } else {
       await apiDeleteProject(pendingDelete.id);
       projects = projects.filter(p => p.id != pendingDelete.id);
@@ -728,13 +750,6 @@ window.saveProfile = async function(e) {
       bio:      document.getElementById('prof-bio')?.value.trim(),
     };
 
-    // Handle avatar upload
-    const avatarFile = document.getElementById('avatar-image-input')?.files[0];
-    if (avatarFile) {
-      const result = await apiUploadAvatar(avatarFile);
-      profile.avatarUrl = result.avatarUrl;
-    }
-
     // Handle CV upload
     const cvFile = document.getElementById('cv-file-input')?.files[0];
     if (cvFile) {
@@ -756,30 +771,66 @@ window.saveProfile = async function(e) {
 
 // Avatar upload zone
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('avatar-image-input')?.addEventListener('change', (e) => {
+  document.getElementById('avatarFileInput')?.addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (file) showAvatarPreview(URL.createObjectURL(file));
   });
 });
 
 function showAvatarPreview(src) {
-  document.getElementById('avatarImagePlaceholder')?.classList.add('hidden');
-  document.getElementById('avatarImagePreview')?.classList.remove('hidden');
-  const img = document.getElementById('avatarImagePreviewImg');
-  if (img) img.src = src;
+  const img = document.getElementById('avatar-image');
+  if (img) { img.src = src; img.style.display = 'block'; }
+  document.getElementById('avatar-initials')?.style.setProperty('display', 'none');
 }
 
 window.removeAvatarImage = async function() {
   try {
     await apiDeleteAvatar();
     profile.avatarUrl = null;
-    document.getElementById('avatarImagePlaceholder')?.classList.remove('hidden');
-    document.getElementById('avatarImagePreview')?.classList.add('hidden');
+    // Reset avatar circle về initials
+    const img = document.getElementById('avatar-image');
+    if (img) img.style.display = 'none';
+    const initials = document.getElementById('avatar-initials');
+    if (initials) initials.style.display = '';
     showToast('✅ Đã xóa ảnh đại diện');
   } catch (err) {
     showToast('❌ ' + err.message, 'error');
   }
 };
+
+// Handler mới cho avatar click-to-upload (gắn với avatarFileInput)
+window.handleAvatarUpload = async function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) { showToast('❌ Ảnh quá lớn (tối đa 5MB)', 'error'); return; }
+
+  // Preview ngay
+  const previewSrc = URL.createObjectURL(file);
+  const img = document.getElementById('avatar-image');
+  if (img) { img.src = previewSrc; img.style.display = 'block'; }
+  document.getElementById('avatar-initials')?.style.setProperty('display', 'none');
+
+  // Upload lên server
+  try {
+    showToast('⏳ Đang upload ảnh...');
+    const result = await apiUploadAvatar(file);
+    profile.avatarUrl = result.avatarUrl;
+    showToast('✅ Đã cập nhật ảnh đại diện!');
+  } catch (err) {
+    showToast('❌ Upload thất bại: ' + err.message, 'error');
+  }
+};
+
+// Hover effect cho avatar wrapper
+document.addEventListener('DOMContentLoaded', () => {
+  const wrapper = document.querySelector('.avatar-wrapper[onclick]');
+  const overlay = document.getElementById('avatar-overlay');
+  if (wrapper && overlay) {
+    wrapper.addEventListener('mouseenter', () => overlay.style.opacity = '1');
+    wrapper.addEventListener('mouseleave', () => overlay.style.opacity = '0');
+  }
+});
+
 
 window.removeCVFile = async function() {
   try {
@@ -798,7 +849,10 @@ window.removeCVFile = async function() {
 // =============================================
 function renderSettingsForm() {
   const mainSwitch = document.getElementById('maintenanceSwitch');
-  if (mainSwitch) mainSwitch.classList.toggle('active', !!settings.maintenance);
+  if (mainSwitch) {
+    mainSwitch.classList.toggle('active', !!settings.maintenance);
+    mainSwitch.classList.toggle('on', !!settings.maintenance);
+  }
 
   // Music status — backend stores as 'musicUrl'
   if (settings.musicUrl) {
@@ -817,7 +871,9 @@ window.toggleMaintenance = async function() {
   try {
     const newVal = !settings.maintenance;
     settings = await apiUpdateSettings({ maintenance: newVal });
-    document.getElementById('maintenanceSwitch')?.classList.toggle('active', newVal);
+    const maintenanceSwitch = document.getElementById('maintenanceSwitch');
+    maintenanceSwitch?.classList.toggle('active', newVal);
+    maintenanceSwitch?.classList.toggle('on', newVal);
     showToast(newVal ? '🔒 Đã bật chế độ bảo trì' : '✅ Đã tắt chế độ bảo trì');
   } catch (err) {
     showToast('❌ ' + err.message, 'error');
@@ -865,29 +921,29 @@ function initSearch() {
   let timer;
   document.getElementById('postSearchInput')?.addEventListener('input', (e) => {
     clearTimeout(timer);
-    const activeTag = document.querySelector('#postFilterChips .chip.active')?.dataset.tag || 'all';
+    const activeTag = document.querySelector('#postFilterChips .filter-tab.active, #postFilterChips .chip.active')?.dataset.tag || 'all';
     timer = setTimeout(() => renderPostsGrid(e.target.value, activeTag), 300);
   });
 
   document.getElementById('projectSearchInput')?.addEventListener('input', (e) => {
     clearTimeout(timer);
-    const activeTech = document.querySelector('#projectFilterChips .chip.active')?.dataset.tech || 'all';
+    const activeTech = document.querySelector('#projectFilterChips .filter-tab.active, #projectFilterChips .chip.active')?.dataset.tech || 'all';
     timer = setTimeout(() => renderProjectsGrid(e.target.value, activeTech), 300);
   });
 
   // Post filter chips
-  document.getElementById('postFilterChips')?.querySelectorAll('.chip').forEach(chip => {
+  document.getElementById('postFilterChips')?.querySelectorAll('.filter-tab, .chip').forEach(chip => {
     chip.addEventListener('click', () => {
-      document.querySelectorAll('#postFilterChips .chip').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('#postFilterChips .filter-tab, #postFilterChips .chip').forEach(c => c.classList.remove('active'));
       chip.classList.add('active');
       renderPostsGrid(document.getElementById('postSearchInput')?.value || '', chip.dataset.tag);
     });
   });
 
   // Project filter chips
-  document.getElementById('projectFilterChips')?.querySelectorAll('.chip').forEach(chip => {
+  document.getElementById('projectFilterChips')?.querySelectorAll('.filter-tab, .chip').forEach(chip => {
     chip.addEventListener('click', () => {
-      document.querySelectorAll('#projectFilterChips .chip').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('#projectFilterChips .filter-tab, #projectFilterChips .chip').forEach(c => c.classList.remove('active'));
       chip.classList.add('active');
       renderProjectsGrid(document.getElementById('projectSearchInput')?.value || '', chip.dataset.tech);
     });
@@ -1033,6 +1089,8 @@ function renderComments() {
 
   const countEl = document.getElementById('commentsCount');
   if (countEl) countEl.textContent = `${allComments.length} bình luận`;
+  const badgeEl = document.getElementById('badge-comments');
+  if (badgeEl) badgeEl.textContent = allComments.length;
 
   if (allComments.length === 0) {
     container.innerHTML = `<div style="text-align:center;padding:3rem;color:var(--text-muted)">Chưa có bình luận nào 💬</div>`;
@@ -1065,6 +1123,7 @@ window.deleteComment = async function(postId, commentId) {
       post.comments = (post.comments || []).filter(c => String(c.id || c.createdAt) !== String(commentId));
     }
     renderComments();
+    renderDashboard();
     showToast('🗑️ Đã xóa bình luận!', 'info');
   } catch (err) {
     showToast('❌ ' + err.message, 'error');
@@ -1077,3 +1136,143 @@ function formatDate(dateStr) {
     return new Date(dateStr).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
   } catch { return dateStr || ''; }
 }
+
+// =============================================
+// CODE EDITOR (Categorized: Interface & Functionality)
+// =============================================
+let currentInterfaceFile = '';
+let currentFunctionalityFile = '';
+
+// Fetch files for both categories
+async function fetchCodeFiles() {
+  try {
+    const res = await apiFetch('/code/list');
+    
+    // Populate Interface files
+    const interfaceSelect = document.getElementById('interfaceFileSelect');
+    if (interfaceSelect && res.categories && res.categories.interface) {
+      interfaceSelect.innerHTML = '<option value="">-- Chọn file giao diện cần sửa --</option>' + 
+        res.categories.interface.map(f => `<option value="${f}">${f}</option>`).join('');
+    } else if (interfaceSelect && res.files) {
+      // Fallback for older API
+      const interfaceFiles = res.files.filter(f => 
+        f.endsWith('.html') || f.endsWith('.css')
+      );
+      interfaceSelect.innerHTML = '<option value="">-- Chọn file giao diện cần sửa --</option>' + 
+        interfaceFiles.map(f => `<option value="${f}">${f}</option>`).join('');
+    }
+    
+    // Populate Functionality files
+    const functionalitySelect = document.getElementById('functionalityFileSelect');
+    if (functionalitySelect && res.categories && res.categories.functionality) {
+      functionalitySelect.innerHTML = '<option value="">-- Chọn file chức năng cần sửa --</option>' + 
+        res.categories.functionality.map(f => `<option value="${f}">${f}</option>`).join('');
+    } else if (functionalitySelect && res.files) {
+      // Fallback for older API
+      const functionalityFiles = res.files.filter(f => f.endsWith('.js'));
+      functionalitySelect.innerHTML = '<option value="">-- Chọn file chức năng cần sửa --</option>' + 
+        functionalityFiles.map(f => `<option value="${f}">${f}</option>`).join('');
+    }
+  } catch (err) {
+    console.error('Lỗi lấy danh sách file:', err);
+  }
+}
+
+// Load file for a specific category
+window.loadCodeEditorFile = async function(category) {
+  if (category === 'interface') {
+    const select = document.getElementById('interfaceFileSelect');
+    const textarea = document.getElementById('interfaceEditorTextarea');
+    const loader = document.getElementById('interfaceEditorLoading');
+    const file = select.value;
+    
+    if (!file) {
+      textarea.value = '';
+      currentInterfaceFile = '';
+      return;
+    }
+
+    try {
+      loader.classList.remove('hidden');
+      const res = await apiFetch(`/code?file=${encodeURIComponent(file)}`);
+      textarea.value = res.content || '';
+      currentInterfaceFile = file;
+    } catch (err) {
+      showToast('❌ Không thể tải file: ' + err.message, 'error');
+      textarea.value = '';
+      select.value = '';
+      currentInterfaceFile = '';
+    } finally {
+      loader.classList.add('hidden');
+    }
+  } else if (category === 'functionality') {
+    const select = document.getElementById('functionalityFileSelect');
+    const textarea = document.getElementById('functionalityEditorTextarea');
+    const loader = document.getElementById('functionalityEditorLoading');
+    const file = select.value;
+    
+    if (!file) {
+      textarea.value = '';
+      currentFunctionalityFile = '';
+      return;
+    }
+
+    try {
+      loader.classList.remove('hidden');
+      const res = await apiFetch(`/code?file=${encodeURIComponent(file)}`);
+      textarea.value = res.content || '';
+      currentFunctionalityFile = file;
+    } catch (err) {
+      showToast('❌ Không thể tải file: ' + err.message, 'error');
+      textarea.value = '';
+      select.value = '';
+      currentFunctionalityFile = '';
+    } finally {
+      loader.classList.add('hidden');
+    }
+  }
+};
+
+// Save file for a specific category
+window.saveCodeEditor = async function(category) {
+  let currentFile, textarea, btn, loader;
+  
+  if (category === 'interface') {
+    currentFile = currentInterfaceFile;
+    textarea = document.getElementById('interfaceEditorTextarea');
+    btn = document.getElementById('btn-save-interface');
+    loader = document.getElementById('interfaceEditorLoading');
+  } else if (category === 'functionality') {
+    currentFile = currentFunctionalityFile;
+    textarea = document.getElementById('functionalityEditorTextarea');
+    btn = document.getElementById('btn-save-functionality');
+    loader = document.getElementById('functionalityEditorLoading');
+  }
+  
+  if (!currentFile) {
+    showToast('⚠️ Vui lòng chọn một file để lưu!', 'error');
+    return;
+  }
+
+  if (btn) { btn.disabled = true; btn.textContent = 'Đang lưu...'; }
+  loader.classList.remove('hidden');
+
+  try {
+    await apiFetch('/code', {
+      method: 'PUT',
+      body: JSON.stringify({
+        file: currentFile,
+        content: textarea.value
+      })
+    });
+    showToast('✅ Đã lưu file thành công!', 'success');
+  } catch (err) {
+    showToast('❌ Lỗi khi lưu: ' + err.message, 'error');
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Lưu thay đổi`;
+    }
+    loader.classList.add('hidden');
+  }
+};

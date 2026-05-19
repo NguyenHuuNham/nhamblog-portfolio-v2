@@ -7,6 +7,7 @@
 // DELETE /api/posts/:id      — delete (auth)
 // POST   /api/posts/:id/like     — like post (public)
 // POST   /api/posts/:id/comment  — add comment (public)
+// DELETE /api/posts/:id/comment/:commentId — delete comment (auth)
 // =============================================
 
 const express = require('express');
@@ -183,6 +184,29 @@ router.delete('/:id', authMiddleware, (req, res) => {
   res.json({ success: true, message: 'Post deleted' });
 });
 
+// POST /api/posts/:id/rate — rate a post (public)
+router.post('/:id/rate', (req, res) => {
+  const { id } = req.params;
+  const { score } = req.body;
+  const val = parseInt(score);
+
+  if (!val || val < 1 || val > 5) {
+    return res.status(400).json({ error: 'Score must be between 1 and 5' });
+  }
+
+  const post = db.getById('posts', id);
+  if (!post) return res.status(404).json({ error: 'Post not found' });
+
+  const prev = post.ratings || { count: 0, totalScore: 0 };
+  const ratings = {
+    count:      (prev.count      || 0) + 1,
+    totalScore: (prev.totalScore || 0) + val,
+  };
+
+  const updated = db.update('posts', id, { ratings });
+  res.json({ ratings: updated.ratings });
+});
+
 // POST /api/posts/:id/like — like a post (public)
 router.post('/:id/like', (req, res) => {
   const { id } = req.params;
@@ -193,21 +217,24 @@ router.post('/:id/like', (req, res) => {
   res.json({ likes: updated.likes });
 });
 
-// POST /api/posts/:id/comment — add comment (public)
+// POST /api/posts/:id/comment — add comment (public, name optional)
 router.post('/:id/comment', (req, res) => {
   const { id } = req.params;
   const { name, content } = req.body;
 
-  if (!name?.trim() || !content?.trim()) {
-    return res.status(400).json({ error: 'Name and content required' });
+  if (!content?.trim()) {
+    return res.status(400).json({ error: 'Content is required' });
   }
 
   const post = db.getById('posts', id);
   if (!post) return res.status(404).json({ error: 'Post not found' });
 
+  // Auto-generate anonymous name if not provided
+  const authorName = name?.trim() || `Ẩn danh #${Math.floor(1000 + Math.random() * 9000)}`;
+
   const comment = {
     id:        Date.now(),
-    name:      name.trim(),
+    name:      authorName,
     content:   content.trim(),
     createdAt: new Date().toISOString(),
   };
@@ -215,6 +242,22 @@ router.post('/:id/comment', (req, res) => {
   const comments = [...(post.comments || []), comment];
   db.update('posts', id, { comments });
   res.status(201).json(comment);
+});
+
+// DELETE /api/posts/:id/comment/:commentId — delete comment (auth required)
+router.delete('/:id/comment/:commentId', authMiddleware, (req, res) => {
+  const { id, commentId } = req.params;
+  const post = db.getById('posts', id);
+  if (!post) return res.status(404).json({ error: 'Post not found' });
+
+  const before = post.comments || [];
+  const comments = before.filter(c => String(c.id || c.createdAt) !== String(commentId));
+  if (comments.length === before.length) {
+    return res.status(404).json({ error: 'Comment not found' });
+  }
+
+  db.update('posts', id, { comments });
+  res.json({ success: true });
 });
 
 // ---- Util ----

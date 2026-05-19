@@ -18,6 +18,125 @@ const API_BASE = (() => {
   return '/api'; // production: same origin
 })();
 
+const DEFAULT_PROFILE = {
+  name: 'Nguyễn Hữu Nhâm',
+  title: 'Mobile App Developer',
+  email: 'nham@email.com',
+  phone: '0987.654.321',
+  location: 'Hà Nội, Việt Nam',
+  github: 'https://github.com/NguyenHuuNham',
+  hero: 'Sinh viên IT năm 3 · Mobile App Developer',
+  bio: 'Sinh viên IT năm 3 đam mê xây dựng ứng dụng mobile đẹp, mượt và có trải nghiệm gần với native.',
+  status: 'Đang tìm kiếm cơ hội thực tập',
+  avatar: null,
+  avatarUrl: null,
+  cvUrl: null,
+  cvName: null,
+};
+
+const DEFAULT_SETTINGS = {
+  maintenance: false,
+  musicUrl: null,
+};
+
+const DEFAULT_POSTS = [
+  {
+    id: 1,
+    slug: 'flutter-bloc-vs-riverpod',
+    title: 'Flutter BLoC vs Riverpod: Chọn gì cho dự án 2026?',
+    summary: 'So sánh hai hướng quản lý state phổ biến trong Flutter, kèm gợi ý chọn theo quy mô app.',
+    date: '2026-04-08',
+    tags: ['flutter', 'dart'],
+    readTime: '8 phút đọc',
+    likes: 12,
+    ratings: { totalScore: 22, count: 5 },
+    comments: [],
+  },
+  {
+    id: 2,
+    slug: 'react-native-new-architecture',
+    title: 'React Native New Architecture: JSI, Fabric và TurboModules',
+    summary: 'Những thay đổi đáng chú ý trong kiến trúc mới của React Native và tác động tới app mobile.',
+    date: '2026-03-25',
+    tags: ['react-native'],
+    readTime: '12 phút đọc',
+    likes: 8,
+    ratings: { totalScore: 18, count: 4 },
+    comments: [],
+  },
+  {
+    id: 3,
+    slug: 'flutter-animation-tips',
+    title: '10 animation tips trong Flutter để app trông xịn hơn',
+    summary: 'Các kỹ thuật animation nhỏ nhưng giúp trải nghiệm Flutter mượt và có cảm giác cao cấp hơn.',
+    date: '2026-03-10',
+    tags: ['flutter', 'tips'],
+    readTime: '6 phút đọc',
+    likes: 18,
+    ratings: { totalScore: 27, count: 6 },
+    comments: [],
+  },
+  {
+    id: 4,
+    slug: 'kotlin-flow-vs-livedata',
+    title: 'Kotlin Flow vs LiveData: Bao giờ dùng cái nào?',
+    summary: 'Góc nhìn thực tế khi chọn Flow hoặc LiveData trong Android app hiện đại.',
+    date: '2026-02-20',
+    tags: ['kotlin'],
+    readTime: '10 phút đọc',
+    likes: 6,
+    ratings: { totalScore: 13, count: 3 },
+    comments: [],
+  },
+];
+
+const DEFAULT_PROJECTS = [
+  {
+    id: 1,
+    icon: '🛍️',
+    title: 'ShopeeClone Mobile',
+    description: 'Clone giao diện thương mại điện tử bằng Flutter, có giỏ hàng và tìm kiếm sản phẩm.',
+    tech: ['flutter', 'dart'],
+    techLabels: ['Flutter', 'Dart', 'BLoC'],
+    status: 'completed',
+    github: 'https://github.com/NguyenHuuNham/shopee-clone',
+    featured: true,
+  },
+  {
+    id: 2,
+    icon: '💘',
+    title: 'TinderClone',
+    description: 'Ứng dụng swipe/match với realtime chat, profile cards và animation tương tác.',
+    tech: ['flutter', 'dart'],
+    techLabels: ['Flutter', 'Firebase'],
+    status: 'completed',
+    github: 'https://github.com/NguyenHuuNham/tinder-clone',
+    featured: true,
+  },
+  {
+    id: 3,
+    icon: '🎮',
+    title: 'Flappy Bird',
+    description: 'Mini game canvas với physics đơn giản, score và game loop mượt.',
+    tech: ['flutter', 'dart'],
+    techLabels: ['Game', 'Canvas'],
+    status: 'completed',
+    github: 'https://github.com/NguyenHuuNham/flappy-bird-flutter',
+    featured: true,
+  },
+  {
+    id: 4,
+    icon: '🤖',
+    title: 'Chat AI App',
+    description: 'Android app tích hợp AI chat, lịch sử hội thoại và giao diện Jetpack Compose.',
+    tech: ['kotlin'],
+    techLabels: ['Kotlin', 'Compose'],
+    status: 'inprogress',
+    github: 'https://github.com/NguyenHuuNham/ai-chat-android',
+    featured: false,
+  },
+];
+
 // =============================================
 // AUTH HELPERS
 // =============================================
@@ -113,6 +232,13 @@ async function apiDeletePost(id) {
 
 async function apiLikePost(id) {
   return apiFetch(`/posts/${id}/like`, { method: 'POST' });
+}
+
+async function apiRatePost(id, score) {
+  return apiFetch(`/posts/${id}/rate`, {
+    method: 'POST',
+    body: JSON.stringify({ score }),
+  });
 }
 
 async function apiAddComment(id, name, content) {
@@ -248,26 +374,31 @@ function apiLogout() {
 // =============================================
 
 // Will be overwritten after loadPublicData()
-let POSTS    = [];
-let PROJECTS = [];
-let PROFILE  = {};
-let SETTINGS = { maintenance: false };
+// Data stores — attached to window for global access
+window.POSTS    = DEFAULT_POSTS.slice();
+window.PROJECTS = DEFAULT_PROJECTS.slice();
+window.PROFILE  = { ...DEFAULT_PROFILE };
+window.SETTINGS = { ...DEFAULT_SETTINGS };
 
 async function loadPublicData() {
   try {
     const [profile, settings, posts, projects] = await Promise.all([
-      apiGetProfile().catch(() => ({})),
-      apiGetSettings().catch(() => ({ maintenance: false })),
-      apiGetPosts().catch(() => []),
-      apiGetProjects().catch(() => []),
+      apiGetProfile().catch(() => null),
+      apiGetSettings().catch(() => null),
+      apiGetPosts().catch(() => null),
+      apiGetProjects().catch(() => null),
     ]);
 
-    PROFILE  = profile;
-    SETTINGS = settings;
-    POSTS    = posts;
-    PROJECTS = projects;
+    window.PROFILE  = { ...DEFAULT_PROFILE, ...(profile || {}) };
+    window.SETTINGS = { ...DEFAULT_SETTINGS, ...(settings || {}) };
+    window.POSTS    = Array.isArray(posts) && posts.length ? posts : DEFAULT_POSTS.slice();
+    window.PROJECTS = Array.isArray(projects) && projects.length ? projects : DEFAULT_PROJECTS.slice();
   } catch (e) {
     console.warn('loadPublicData error:', e);
+    window.PROFILE  = { ...DEFAULT_PROFILE };
+    window.SETTINGS = { ...DEFAULT_SETTINGS };
+    window.POSTS    = DEFAULT_POSTS.slice();
+    window.PROJECTS = DEFAULT_PROJECTS.slice();
   }
 }
 
@@ -297,6 +428,7 @@ window.apiCreatePost  = apiCreatePost;
 window.apiUpdatePost  = apiUpdatePost;
 window.apiDeletePost  = apiDeletePost;
 window.apiLikePost    = apiLikePost;
+window.apiRatePost    = apiRatePost;
 window.apiAddComment  = apiAddComment;
 
 window.apiGetProjects    = apiGetProjects;
