@@ -143,7 +143,7 @@ function renderPost() {
     `<span class="blog-tag ${tagClass[t]||'default'}" style="font-size:0.8rem;padding:0.3rem 0.9rem;">${tagLabel(t)}</span>`
   ).join('');
 
-  const imgSrc      = currentPost.imageUrl || currentPost.image || null;
+  const imgSrc      = resolveAssetUrl(currentPost.imageUrl || currentPost.image || null);
   const imgHtml     = imgSrc
     ? `<div class="post-detail-cover"><img src="${imgSrc}" alt="${currentPost.title}"></div>`
     : '';

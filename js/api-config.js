@@ -18,6 +18,21 @@ const API_BASE = (() => {
   return '/api'; // production: same origin
 })();
 
+function getApiOrigin() {
+  try {
+    return new URL(API_BASE, window.location.origin).origin;
+  } catch {
+    return window.location.origin;
+  }
+}
+
+function resolveAssetUrl(url) {
+  if (!url) return '';
+  if (/^(https?:|blob:|data:)/i.test(url)) return url;
+  if (url.startsWith('/')) return `${getApiOrigin()}${url}`;
+  return url;
+}
+
 const DEFAULT_PROFILE = {
   name: 'Nguyễn Hữu Nhâm',
   title: 'Mobile App Developer',
@@ -179,7 +194,7 @@ async function apiFetch(endpoint, options = {}) {
     delete defaults.headers['Content-Type'];
   }
 
-  const resp = await fetch(url, { ...defaults, ...options });
+  const resp = await fetch(url, { cache: 'no-store', ...defaults, ...options });
 
   // Auto logout if unauthorized
   if (resp.status === 401) {
@@ -450,4 +465,6 @@ window.apiUploadMusic    = apiUploadMusic;
 window.apiDeleteMusic    = apiDeleteMusic;
 
 window.loadPublicData = loadPublicData;
+window.resolveAssetUrl = resolveAssetUrl;
+window.getApiOrigin = getApiOrigin;
 window.formatDate     = formatDate;

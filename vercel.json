@@ -11,6 +11,7 @@
           "src/**",
           "public/**",
           "admin/**",
+          "backend/data/*.json",
           "*.html"
         ]
       }
@@ -23,4 +24,3 @@
   ],
   "cleanUrls": true
 }
-

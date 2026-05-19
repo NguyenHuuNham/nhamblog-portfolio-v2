@@ -309,7 +309,7 @@ function renderPostsGrid(searchQuery = '', filterTag = 'all') {
     const tagsHtml = (p.tags||[]).map(t => `<span class="tp-tag ${t}" style="font-size:0.7rem;padding:2px 8px;">${tagLabel(t)}</span>`).join('');
     return `
       <div class="post-card-admin">
-        ${p.imageUrl ? `<div class="post-card-img" style="background:url('${API_BASE.replace('/api','')}${p.imageUrl}') center/cover no-repeat"></div>` : ''}
+        ${p.imageUrl ? `<div class="post-card-img" style="background:url('${resolveAssetUrl(p.imageUrl)}') center/cover no-repeat"></div>` : ''}
         <div class="post-card-body">
           <div class="post-card-tags">${tagsHtml}</div>
           <div class="post-card-title">${escHtml(p.title)}</div>
@@ -373,7 +373,7 @@ window.editPost = function(id) {
 
   // Show existing image
   if (post.imageUrl) {
-    showPostImagePreview(API_BASE.replace('/api', '') + post.imageUrl);
+    showPostImagePreview(resolveAssetUrl(post.imageUrl));
   } else {
     removePostImage();
   }
@@ -511,7 +511,7 @@ function renderProjectsGrid(searchQuery = '', filterTech = 'all') {
 
     return `
       <div class="post-card-admin">
-        ${p.imageUrl ? `<div class="post-card-img" style="background:url('${API_BASE.replace('/api','')}${p.imageUrl}') center/cover no-repeat;font-size:2rem;display:flex;align-items:center;justify-content:center;"></div>` : `<div class="post-card-img" style="display:flex;align-items:center;justify-content:center;font-size:2.5rem;background:rgba(124,109,250,0.1);">${p.icon||'📱'}</div>`}
+        ${p.imageUrl ? `<div class="post-card-img" style="background:url('${resolveAssetUrl(p.imageUrl)}') center/cover no-repeat;font-size:2rem;display:flex;align-items:center;justify-content:center;"></div>` : `<div class="post-card-img" style="display:flex;align-items:center;justify-content:center;font-size:2.5rem;background:rgba(124,109,250,0.1);">${p.icon||'📱'}</div>`}
         <div class="post-card-body">
           <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.5rem;">${statusBadge}${featuredBadge}</div>
           <div class="post-card-title">${p.icon||''} ${escHtml(p.title)}</div>
@@ -569,7 +569,7 @@ window.editProject = function(id) {
   });
 
   if (proj.imageUrl) {
-    showProjectImagePreview(API_BASE.replace('/api', '') + proj.imageUrl);
+    showProjectImagePreview(resolveAssetUrl(proj.imageUrl));
   } else {
     removeProjectImage();
   }
@@ -714,9 +714,9 @@ function renderProfileForm() {
   // Avatar preview
   if (profile.avatarUrl) {
     const img = document.getElementById('avatar-image');
-    if (img) { img.src = API_BASE.replace('/api','') + profile.avatarUrl; img.style.display = 'block'; }
+    if (img) { img.src = resolveAssetUrl(profile.avatarUrl); img.style.display = 'block'; }
     document.getElementById('avatar-initials')?.style.setProperty('display', 'none');
-    showAvatarPreview(API_BASE.replace('/api','') + profile.avatarUrl);
+    showAvatarPreview(resolveAssetUrl(profile.avatarUrl));
   }
 
   // CV status

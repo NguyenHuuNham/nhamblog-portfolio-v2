@@ -43,7 +43,7 @@ async function initMusicPlayer() {
 
     // Backend stores music URL as 'musicUrl' (relative path like /uploads/music-xxx.mp3)
     const musicUrl  = settingsData?.musicUrl  || null;
-    const musicSrc  = musicUrl ? (musicUrl.startsWith('http') ? musicUrl : musicUrl) : null;
+    const musicSrc  = resolveAssetUrl(musicUrl);
 
     if (!musicSrc) return;
 
@@ -422,7 +422,7 @@ function buildPostItem(post) {
   const tagsHtml = (post.tags||[]).map(t => `<span class="blog-tag ${tagClass[t]||'default'}">${tagLabel(t)}</span>`).join('');
 
   // Thumbnail
-  const imgSrc = post.imageUrl || post.image || null;
+  const imgSrc = resolveAssetUrl(post.imageUrl || post.image || null);
   const thumbHtml = imgSrc
     ? `<div class="blog-card-thumb"><img src="${imgSrc}" alt="${post.title}" loading="lazy"/></div>`
     : `<div class="blog-card-thumb"><div class="blog-card-thumb-placeholder">${getPostEmoji(post.tags)}</div></div>`;
@@ -506,7 +506,7 @@ function updateProfileUI() {
   const ghBtn    = document.getElementById('about-github');   if (ghBtn)      ghBtn.href             = PROFILE.github;
 
   // Avatar
-  const avatarSrc = PROFILE.avatarUrl || PROFILE.avatar || null;
+  const avatarSrc = resolveAssetUrl(PROFILE.avatarUrl || PROFILE.avatar || null);
   const avatarImg = document.getElementById('about-avatar-image');
   const avatarIni = document.getElementById('about-avatar-initials');
   if (avatarSrc) {
@@ -571,7 +571,7 @@ function initCvViewerModal() {
     if (currentBlobUrl) { URL.revokeObjectURL(currentBlobUrl); currentBlobUrl = null; }
 
     // Build absolute URL if relative
-    const iframeSrc = cvUrl.startsWith('http') ? cvUrl : cvUrl;
+    const iframeSrc = resolveAssetUrl(cvUrl);
 
     document.getElementById('cv-iframe').src = iframeSrc;
     const dlBtn = document.getElementById('cv-download-btn');
@@ -593,8 +593,9 @@ function buildMiniPostRow(post) {
 }
 
 function buildMiniProjectCard(project) {
-  const icon = project.image
-    ? `<img src="${project.image}" alt="${project.title}" style="width:100%;height:100%;object-fit:cover;border-radius:14px;">`
+  const projectImage = resolveAssetUrl(project.imageUrl || project.image || null);
+  const icon = projectImage
+    ? `<img src="${projectImage}" alt="${project.title}" style="width:100%;height:100%;object-fit:cover;border-radius:14px;">`
     : `<span>${project.icon || '📱'}</span>`;
   const tech = project.techLabels && project.techLabels.length > 0 ? project.techLabels[0] : '';
   let onclick = '';

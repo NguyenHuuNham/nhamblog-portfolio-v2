@@ -56,7 +56,11 @@ router.get('/', (req, res) => {
 router.put('/', authMiddleware, (req, res) => {
   try {
     const { name, title, email, phone, location, github, hero, bio, status } = req.body;
-    const updated = db.setDoc('profile', { name, title, email, phone, location, github, hero, bio, status });
+    const patch = {};
+    Object.entries({ name, title, email, phone, location, github, hero, bio, status }).forEach(([key, value]) => {
+      if (value !== undefined) patch[key] = value;
+    });
+    const updated = db.setDoc('profile', patch);
     res.json(updated);
   } catch (err) {
     res.status(500).json({ error: err.message });
