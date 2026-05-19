@@ -8,19 +8,12 @@ const express   = require('express');
 const cors      = require('cors');
 const path      = require('path');
 const fs        = require('fs');
+const { IS_VERCEL, ROOT_DIR, DATA_DIR, UPLOADS_DIR, STORAGE_MODE } = require('./config/paths');
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
 
-// ---- Root of the project (always the parent of /backend) ----
-const ROOT_DIR = path.resolve(__dirname, '..');
-
-// ---- On Vercel, uploads go to /tmp (writable); locally use data/uploads ----
-const IS_VERCEL   = !!process.env.VERCEL;
-const DATA_DIR    = path.join(__dirname, 'data');
-const UPLOADS_DIR = IS_VERCEL ? '/tmp/nham-uploads' : path.join(DATA_DIR, 'uploads');
-
-// Ensure upload directories exist (writable on both local and Vercel /tmp)
+// Ensure upload directories exist
 const uploadSubdirs = ['', 'avatars', 'cv', 'posts', 'projects', 'music'];
 uploadSubdirs.forEach(sub => {
   const dir = path.join(UPLOADS_DIR, sub);
@@ -52,8 +45,16 @@ app.use('/uploads', (req, res, next) => {
   next();
 }, express.static(UPLOADS_DIR));
 
-// Serve frontend static files from root directory
-app.use(express.static(ROOT_DIR));
+// Serve frontend static files from root directory. Keep HTML/CSS/JS fresh after deploy.
+app.use(express.static(ROOT_DIR, {
+  etag: false,
+  maxAge: 0,
+  setHeaders: (res, filePath) => {
+    if (/\.(html|css|js|json)$/i.test(filePath)) {
+      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    }
+  },
+}));
 
 // ---- API Routes ----
 app.use('/api/auth',     require('./routes/auth'));
@@ -65,7 +66,15 @@ app.use('/api/code',     require('./routes/code'));
 
 // ---- Health check ----
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', time: new Date().toISOString(), version: '1.0.0', env: IS_VERCEL ? 'vercel' : 'local', cwd: ROOT_DIR });
+  res.json({
+    status: 'ok',
+    time: new Date().toISOString(),
+    version: '1.0.0',
+    env: IS_VERCEL ? 'vercel' : 'node',
+    storage: STORAGE_MODE,
+    cwd: ROOT_DIR,
+    dataDir: DATA_DIR,
+  });
 });
 
 // ---- Catch all — serve HTML pages ----

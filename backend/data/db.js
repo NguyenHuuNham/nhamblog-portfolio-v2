@@ -1,25 +1,21 @@
 // =============================================
-// data/db.js — JSON File Database Helper
-// On Vercel (serverless): data lives in /tmp (writable)
-// Locally: data lives in this same directory
+// data/db.js - JSON File Database Helper
+// Local: backend/data
+// Render persistent disk: PERSIST_DIR/data
+// Vercel fallback: /tmp/nham-data (not persistent)
 // =============================================
 
-const fs   = require('fs');
+const fs = require('fs');
 const path = require('path');
+const { BUNDLE_DATA_DIR, DATA_DIR, STORAGE_MODE } = require('../config/paths');
 
-const IS_VERCEL  = !!process.env.VERCEL;
-const BUNDLE_DIR = __dirname; // always points to backend/data/ in the bundle
+if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
 
-// On Vercel, write to /tmp; locally write to backend/data/
-const DATA_DIR = IS_VERCEL ? '/tmp/nham-data' : __dirname;
-
-// On Vercel: ensure /tmp/nham-data exists and seed initial JSON files from bundle
-if (IS_VERCEL) {
-  if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
-
-  // Copy committed JSON files to /tmp on cold start (if not already there)
-  ['posts', 'projects', 'profile', 'settings'].forEach(name => {
-    const src = path.join(BUNDLE_DIR, `${name}.json`);
+// When DATA_DIR is outside the bundled backend/data directory, copy the
+// committed JSON files once so a fresh persistent disk starts with current data.
+if (path.resolve(DATA_DIR) !== path.resolve(BUNDLE_DATA_DIR)) {
+  ['posts', 'projects', 'profile', 'settings', 'admin'].forEach(name => {
+    const src = path.join(BUNDLE_DATA_DIR, `${name}.json`);
     const dst = path.join(DATA_DIR, `${name}.json`);
     if (fs.existsSync(src) && !fs.existsSync(dst)) {
       fs.copyFileSync(src, dst);
@@ -28,11 +24,11 @@ if (IS_VERCEL) {
 }
 
 const FILES = {
-  posts:    path.join(DATA_DIR, 'posts.json'),
+  posts: path.join(DATA_DIR, 'posts.json'),
   projects: path.join(DATA_DIR, 'projects.json'),
-  profile:  path.join(DATA_DIR, 'profile.json'),
+  profile: path.join(DATA_DIR, 'profile.json'),
   settings: path.join(DATA_DIR, 'settings.json'),
-  admin:    path.join(DATA_DIR, 'admin.json'),
+  admin: path.join(DATA_DIR, 'admin.json'),
 };
 
 /** Read a JSON file safely */
@@ -52,12 +48,9 @@ function read(name) {
 function write(name, data) {
   const file = FILES[name];
   if (!file) throw new Error(`Unknown collection: ${name}`);
+  fs.mkdirSync(path.dirname(file), { recursive: true });
   fs.writeFileSync(file, JSON.stringify(data, null, 2), 'utf8');
 }
-
-// ========================
-// Collection helpers (arrays)
-// ========================
 
 function getAll(name) { return read(name) || []; }
 
@@ -70,7 +63,7 @@ function getByField(name, field, value) {
 }
 
 function create(name, data) {
-  const arr   = getAll(name);
+  const arr = getAll(name);
   const maxId = arr.length ? Math.max(...arr.map(i => Number(i.id) || 0)) : 0;
   const newItem = { ...data, id: maxId + 1, createdAt: new Date().toISOString() };
   arr.unshift(newItem);
@@ -96,17 +89,26 @@ function remove(name, id) {
   return true;
 }
 
-// ========================
-// Single-doc helpers (profile, settings, admin)
-// ========================
-
 function getDoc(name) { return read(name) || {}; }
 
 function setDoc(name, data) {
   const current = getDoc(name);
-  const merged  = { ...current, ...data, updatedAt: new Date().toISOString() };
+  const merged = { ...current, ...data, updatedAt: new Date().toISOString() };
   write(name, merged);
   return merged;
 }
 
-module.exports = { getAll, getById, getByField, create, update, remove, getDoc, setDoc, read, write };
+module.exports = {
+  getAll,
+  getById,
+  getByField,
+  create,
+  update,
+  remove,
+  getDoc,
+  setDoc,
+  read,
+  write,
+  DATA_DIR,
+  STORAGE_MODE,
+};

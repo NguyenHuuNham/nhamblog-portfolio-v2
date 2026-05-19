@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: nham-mobile-dev
+    env: node
+    rootDir: .
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: PERSIST_DIR
+        value: /var/data
+      - key: JWT_SECRET
+        generateValue: true
+    disk:
+      name: nham-mobile-dev-data
+      mountPath: /var/data
+      sizeGB: 1

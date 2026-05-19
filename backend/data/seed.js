@@ -6,14 +6,9 @@
 const fs   = require('fs');
 const path = require('path');
 const bcrypt = require('bcryptjs');
+const { DATA_DIR } = require('../config/paths');
 
-const IS_VERCEL = !!process.env.VERCEL;
-const DATA_DIR  = IS_VERCEL ? '/tmp/nham-data' : __dirname;
-
-// Ensure data dir exists on Vercel
-if (IS_VERCEL && !fs.existsSync(DATA_DIR)) {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
-}
+if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
 
 const FILES = {
   posts:    path.join(DATA_DIR, 'posts.json'),
