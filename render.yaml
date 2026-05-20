@@ -10,11 +10,11 @@ services:
     envVars:
       - key: NODE_VERSION
         value: 20
-      - key: PERSIST_DIR
-        value: /var/data
       - key: JWT_SECRET
         generateValue: true
-    disk:
-      name: nham-mobile-dev-data
-      mountPath: /var/data
-      sizeGB: 1
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: SUPABASE_BUCKET
+        value: uploads

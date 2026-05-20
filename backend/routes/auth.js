@@ -60,7 +60,7 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ error: 'Vui lòng nhập tài khoản và mật khẩu.' });
     }
 
-    const admin = db.getDoc('admin');
+    const admin = await db.getDoc('admin');
 
     // Always compare to prevent timing attacks (even if username wrong)
     const dummyHash = '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy';
@@ -110,14 +110,14 @@ router.post('/change-password', authMiddleware, async (req, res) => {
       return res.status(400).json({ error: 'Mật khẩu mới phải khác mật khẩu cũ.' });
     }
 
-    const admin = db.getDoc('admin');
+    const admin = await db.getDoc('admin');
     const valid  = await bcrypt.compare(currentPassword, admin.passwordHash);
     if (!valid) {
       return res.status(401).json({ error: 'Mật khẩu hiện tại không đúng!' });
     }
 
     const newHash = await bcrypt.hash(newPassword, 12);
-    db.setDoc('admin', { passwordHash: newHash });
+    await db.setDoc('admin', { passwordHash: newHash });
     res.json({ success: true, message: 'Đổi mật khẩu thành công!' });
   } catch (err) {
     console.error('Change password error:', err);

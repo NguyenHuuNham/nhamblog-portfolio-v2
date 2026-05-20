@@ -1,37 +1,59 @@
 # Deploy Guide
 
-## Render recommended
+## Free production setup: Render + Supabase
 
-Use Render when you want the admin panel to save posts, projects, profile, CV, music, and uploaded images persistently.
+Render free can run the Node web service, but it cannot keep uploaded files or JSON changes on disk. For shared admin data on the free path, use Supabase for database and storage.
 
-1. Push this repo to GitHub.
-2. Open Render, choose **New > Blueprint**, then select this repo.
-3. Render reads `render.yaml` and creates a Node web service.
-4. Confirm these values if Render asks:
-   - Build Command: `npm install`
-   - Start Command: `npm start`
-   - Health Check Path: `/api/health`
-   - Disk Mount Path: `/var/data`
-   - Environment Variable: `PERSIST_DIR=/var/data`
-5. After deploy, open:
-   - Website: `https://your-service.onrender.com`
-   - Admin: `https://your-service.onrender.com/admin/login.html`
+### 1. Create Supabase
 
-The persistent disk stores:
+1. Create a free project at Supabase.
+2. Open SQL Editor and run `supabase-schema.sql` from this repo.
+3. Open Project Settings > API and copy:
+   - `Project URL`
+   - `service_role` key
 
-- JSON data: `/var/data/data`
-- Uploads: `/var/data/uploads`
+### 2. Configure Render
 
-## Vercel optional
+In your Render service, open Environment and set:
 
-Vercel can run this app, but serverless file writes are not persistent. Use it only for preview/static-style deploys unless you add a real database and blob storage.
+- `SUPABASE_URL`: your Supabase Project URL
+- `SUPABASE_SERVICE_ROLE_KEY`: your Supabase service role key
+- `SUPABASE_BUCKET`: `uploads`
+- `JWT_SECRET`: any long random string, or let Render generate it from `render.yaml`
 
-To deploy:
+Deploy latest commit after saving the environment variables.
 
-1. Import the GitHub repo into Vercel.
-2. Framework preset: `Other`.
-3. Keep the existing `vercel.json`.
-4. Add environment variable `JWT_SECRET`.
-5. Deploy.
+### 3. Verify
 
-For production admin persistence on Vercel, migrate JSON data to a database and uploads to Vercel Blob, Supabase Storage, Cloudinary, or S3.
+Open:
+
+`https://your-service.onrender.com/api/health`
+
+The response should include:
+
+```json
+"storage": "supabase"
+```
+
+Use admin at:
+
+`https://your-service.onrender.com/admin/login.html`
+
+Admin changes to posts, projects, profile, maintenance mode, CV, avatar, and music will be stored in Supabase and shared across users.
+
+## Local development
+
+Without Supabase environment variables, the app falls back to local JSON files:
+
+```bash
+npm install
+npm start
+```
+
+Local URL:
+
+`http://localhost:3000`
+
+## Vercel note
+
+Vercel can run this app only if Supabase environment variables are set. Do not rely on Vercel's local filesystem for admin data or uploads.

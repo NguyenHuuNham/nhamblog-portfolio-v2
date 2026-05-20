@@ -10,6 +10,10 @@ const IS_VERCEL = !!process.env.VERCEL;
 const ROOT_DIR = path.resolve(__dirname, '..', '..');
 const BUNDLE_DATA_DIR = path.resolve(__dirname, '..', 'data');
 const PERSIST_DIR = process.env.PERSIST_DIR ? path.resolve(process.env.PERSIST_DIR) : null;
+const SUPABASE_URL = (process.env.SUPABASE_URL || '').replace(/\/+$/, '');
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+const SUPABASE_BUCKET = process.env.SUPABASE_BUCKET || 'uploads';
+const SUPABASE_ENABLED = !!(SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY);
 
 const DATA_DIR = PERSIST_DIR
   ? path.join(PERSIST_DIR, 'data')
@@ -19,7 +23,7 @@ const UPLOADS_DIR = PERSIST_DIR
   ? path.join(PERSIST_DIR, 'uploads')
   : (IS_VERCEL ? '/tmp/nham-uploads' : path.join(BUNDLE_DATA_DIR, 'uploads'));
 
-const STORAGE_MODE = PERSIST_DIR ? 'persistent-disk' : (IS_VERCEL ? 'vercel-tmp' : 'local');
+const STORAGE_MODE = SUPABASE_ENABLED ? 'supabase' : (PERSIST_DIR ? 'persistent-disk' : (IS_VERCEL ? 'vercel-tmp' : 'local'));
 
 module.exports = {
   IS_VERCEL,
@@ -29,4 +33,8 @@ module.exports = {
   DATA_DIR,
   UPLOADS_DIR,
   STORAGE_MODE,
+  SUPABASE_URL,
+  SUPABASE_SERVICE_ROLE_KEY,
+  SUPABASE_BUCKET,
+  SUPABASE_ENABLED,
 };

@@ -14,6 +14,7 @@ const fs      = require('fs');
 const router  = express.Router();
 
 const db = require('../data/db');
+const storageFiles = require('../data/storage');
 const { authMiddleware } = require('../middleware/auth');
 const { UPLOADS_DIR } = require('../config/paths');
 
@@ -40,8 +41,8 @@ const upload = multer({
 });
 
 // GET /api/projects
-router.get('/', (req, res) => {
-  let projects = db.getAll('projects');
+router.get('/', async (req, res) => {
+  let projects = await db.getAll('projects');
   const { tech, status, featured } = req.query;
 
   if (tech && tech !== 'all') {
@@ -60,14 +61,14 @@ router.get('/', (req, res) => {
 });
 
 // GET /api/projects/:id
-router.get('/:id', (req, res) => {
-  const project = db.getById('projects', req.params.id);
+router.get('/:id', async (req, res) => {
+  const project = await db.getById('projects', req.params.id);
   if (!project) return res.status(404).json({ error: 'Project not found' });
   res.json(project);
 });
 
 // POST /api/projects — create (auth)
-router.post('/', authMiddleware, upload.single('image'), (req, res) => {
+router.post('/', authMiddleware, upload.single('image'), async (req, res) => {
   try {
     const { icon, title, description, techLabels, tech, status, github, demo, featured } = req.body;
     if (!title || !description) {
@@ -79,9 +80,9 @@ router.post('/', authMiddleware, upload.single('image'), (req, res) => {
       ? JSON.parse(techLabels)
       : (techLabels || '').split(',').map(t => t.trim()).filter(Boolean);
 
-    const imageUrl = req.file ? `/uploads/projects/${req.file.filename}` : null;
+    const imageUrl = req.file ? await storageFiles.uploadFile(req.file, 'projects') : null;
 
-    const newProject = db.create('projects', {
+    const newProject = await db.create('projects', {
       icon:       icon?.trim() || '📱',
       title:      title.trim(),
       description: description.trim(),
@@ -102,10 +103,10 @@ router.post('/', authMiddleware, upload.single('image'), (req, res) => {
 });
 
 // PUT /api/projects/:id — update (auth)
-router.put('/:id', authMiddleware, upload.single('image'), (req, res) => {
+router.put('/:id', authMiddleware, upload.single('image'), async (req, res) => {
   try {
     const { id } = req.params;
-    const existing = db.getById('projects', id);
+    const existing = await db.getById('projects', id);
     if (!existing) return res.status(404).json({ error: 'Project not found' });
 
     const { icon, title, description, techLabels, tech, status, github, demo, featured } = req.body;
@@ -119,14 +120,11 @@ router.put('/:id', authMiddleware, upload.single('image'), (req, res) => {
 
     let imageUrl = existing.imageUrl;
     if (req.file) {
-      if (existing.imageUrl) {
-        const old = path.join(UPLOADS_DIR, 'projects', path.basename(existing.imageUrl));
-        if (fs.existsSync(old)) fs.unlinkSync(old);
-      }
-      imageUrl = `/uploads/projects/${req.file.filename}`;
+      await storageFiles.deleteFile(existing.imageUrl);
+      imageUrl = await storageFiles.uploadFile(req.file, 'projects');
     }
 
-    const updated = db.update('projects', id, {
+    const updated = await db.update('projects', id, {
       icon:        icon?.trim()        || existing.icon,
       title:       title?.trim()       || existing.title,
       description: description?.trim() || existing.description,
@@ -147,17 +145,14 @@ router.put('/:id', authMiddleware, upload.single('image'), (req, res) => {
 });
 
 // DELETE /api/projects/:id — delete (auth)
-router.delete('/:id', authMiddleware, (req, res) => {
+router.delete('/:id', authMiddleware, async (req, res) => {
   const { id } = req.params;
-  const existing = db.getById('projects', id);
+  const existing = await db.getById('projects', id);
   if (!existing) return res.status(404).json({ error: 'Project not found' });
 
-  if (existing.imageUrl) {
-    const imgPath = path.join(UPLOADS_DIR, 'projects', path.basename(existing.imageUrl));
-    if (fs.existsSync(imgPath)) fs.unlinkSync(imgPath);
-  }
+  await storageFiles.deleteFile(existing.imageUrl);
 
-  db.remove('projects', id);
+  await db.remove('projects', id);
   res.json({ success: true });
 });
 

@@ -13,6 +13,7 @@ const fs      = require('fs');
 const router  = express.Router();
 
 const db = require('../data/db');
+const storageFiles = require('../data/storage');
 const { authMiddleware } = require('../middleware/auth');
 const { UPLOADS_DIR } = require('../config/paths');
 
@@ -37,19 +38,19 @@ const uploadMusic = multer({
 });
 
 // GET /api/settings (public)
-router.get('/', (req, res) => {
-  const settings = db.getDoc('settings');
+router.get('/', async (req, res) => {
+  const settings = await db.getDoc('settings');
   res.json(settings);
 });
 
 // PUT /api/settings (auth)
-router.put('/', authMiddleware, (req, res) => {
+router.put('/', authMiddleware, async (req, res) => {
   try {
     const { maintenance, siteName } = req.body;
     const patch = {};
     if (maintenance !== undefined) patch.maintenance = maintenance;
     if (siteName !== undefined) patch.siteName = siteName;
-    const updated = db.setDoc('settings', patch);
+    const updated = await db.setDoc('settings', patch);
     res.json(updated);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -57,18 +58,15 @@ router.put('/', authMiddleware, (req, res) => {
 });
 
 // POST /api/settings/music (auth)
-router.post('/music', authMiddleware, uploadMusic.single('music'), (req, res) => {
+router.post('/music', authMiddleware, uploadMusic.single('music'), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
 
-    const settings = db.getDoc('settings');
-    if (settings.musicUrl) {
-      const oldPath = path.join(UPLOADS_DIR, 'music', path.basename(settings.musicUrl));
-      if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
-    }
+    const settings = await db.getDoc('settings');
+    await storageFiles.deleteFile(settings.musicUrl);
 
-    const musicUrl = `/uploads/music/${req.file.filename}`;
-    const updated  = db.setDoc('settings', { musicUrl, musicName: req.file.originalname });
+    const musicUrl = await storageFiles.uploadFile(req.file, 'music');
+    const updated  = await db.setDoc('settings', { musicUrl, musicName: req.file.originalname });
     res.json({ success: true, musicUrl: updated.musicUrl });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -76,14 +74,11 @@ router.post('/music', authMiddleware, uploadMusic.single('music'), (req, res) =>
 });
 
 // DELETE /api/settings/music (auth)
-router.delete('/music', authMiddleware, (req, res) => {
+router.delete('/music', authMiddleware, async (req, res) => {
   try {
-    const settings = db.getDoc('settings');
-    if (settings.musicUrl) {
-      const oldPath = path.join(UPLOADS_DIR, 'music', path.basename(settings.musicUrl));
-      if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
-    }
-    db.setDoc('settings', { musicUrl: null, musicName: null });
+    const settings = await db.getDoc('settings');
+    await storageFiles.deleteFile(settings.musicUrl);
+    await db.setDoc('settings', { musicUrl: null, musicName: null });
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });

@@ -6,7 +6,12 @@
 const fs   = require('fs');
 const path = require('path');
 const bcrypt = require('bcryptjs');
-const { DATA_DIR } = require('../config/paths');
+const { DATA_DIR, SUPABASE_ENABLED } = require('../config/paths');
+
+if (SUPABASE_ENABLED) {
+  console.log('📂 Database ready! Supabase mode');
+  return;
+}
 
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
 

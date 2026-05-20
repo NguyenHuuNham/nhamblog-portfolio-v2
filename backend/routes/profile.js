@@ -15,6 +15,7 @@ const fs      = require('fs');
 const router  = express.Router();
 
 const db = require('../data/db');
+const storageFiles = require('../data/storage');
 const { authMiddleware } = require('../middleware/auth');
 const { UPLOADS_DIR } = require('../config/paths');
 
@@ -47,20 +48,20 @@ const uploadCv = multer({
 });
 
 // GET /api/profile — public
-router.get('/', (req, res) => {
-  const profile = db.getDoc('profile');
+router.get('/', async (req, res) => {
+  const profile = await db.getDoc('profile');
   res.json(profile);
 });
 
 // PUT /api/profile — update text fields (auth)
-router.put('/', authMiddleware, (req, res) => {
+router.put('/', authMiddleware, async (req, res) => {
   try {
     const { name, title, email, phone, location, github, hero, bio, status } = req.body;
     const patch = {};
     Object.entries({ name, title, email, phone, location, github, hero, bio, status }).forEach(([key, value]) => {
       if (value !== undefined) patch[key] = value;
     });
-    const updated = db.setDoc('profile', patch);
+    const updated = await db.setDoc('profile', patch);
     res.json(updated);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -68,19 +69,16 @@ router.put('/', authMiddleware, (req, res) => {
 });
 
 // POST /api/profile/avatar — upload avatar image (auth)
-router.post('/avatar', authMiddleware, uploadAvatar.single('avatar'), (req, res) => {
+router.post('/avatar', authMiddleware, uploadAvatar.single('avatar'), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
 
-    const profile = db.getDoc('profile');
+    const profile = await db.getDoc('profile');
     // Delete old avatar
-    if (profile.avatarUrl) {
-      const oldPath = path.join(UPLOADS_DIR, 'avatars', path.basename(profile.avatarUrl));
-      if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
-    }
+    await storageFiles.deleteFile(profile.avatarUrl);
 
-    const avatarUrl = `/uploads/avatars/${req.file.filename}`;
-    const updated   = db.setDoc('profile', { avatarUrl });
+    const avatarUrl = await storageFiles.uploadFile(req.file, 'avatars');
+    const updated   = await db.setDoc('profile', { avatarUrl });
     res.json({ success: true, avatarUrl: updated.avatarUrl });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -88,14 +86,11 @@ router.post('/avatar', authMiddleware, uploadAvatar.single('avatar'), (req, res)
 });
 
 // DELETE /api/profile/avatar — remove avatar (auth)
-router.delete('/avatar', authMiddleware, (req, res) => {
+router.delete('/avatar', authMiddleware, async (req, res) => {
   try {
-    const profile = db.getDoc('profile');
-    if (profile.avatarUrl) {
-      const oldPath = path.join(UPLOADS_DIR, 'avatars', path.basename(profile.avatarUrl));
-      if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
-    }
-    db.setDoc('profile', { avatarUrl: null });
+    const profile = await db.getDoc('profile');
+    await storageFiles.deleteFile(profile.avatarUrl);
+    await db.setDoc('profile', { avatarUrl: null });
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -103,20 +98,17 @@ router.delete('/avatar', authMiddleware, (req, res) => {
 });
 
 // POST /api/profile/cv — upload CV PDF (auth)
-router.post('/cv', authMiddleware, uploadCv.single('cv'), (req, res) => {
+router.post('/cv', authMiddleware, uploadCv.single('cv'), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
 
-    const profile = db.getDoc('profile');
+    const profile = await db.getDoc('profile');
     // Delete old CV
-    if (profile.cvUrl) {
-      const oldPath = path.join(UPLOADS_DIR, 'cv', path.basename(profile.cvUrl));
-      if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
-    }
+    await storageFiles.deleteFile(profile.cvUrl);
 
-    const cvUrl  = `/uploads/cv/${req.file.filename}`;
+    const cvUrl  = await storageFiles.uploadFile(req.file, 'cv');
     const cvName = req.file.originalname;
-    const updated = db.setDoc('profile', { cvUrl, cvName });
+    const updated = await db.setDoc('profile', { cvUrl, cvName });
     res.json({ success: true, cvUrl: updated.cvUrl, cvName: updated.cvName });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -124,14 +116,11 @@ router.post('/cv', authMiddleware, uploadCv.single('cv'), (req, res) => {
 });
 
 // DELETE /api/profile/cv — remove CV (auth)
-router.delete('/cv', authMiddleware, (req, res) => {
+router.delete('/cv', authMiddleware, async (req, res) => {
   try {
-    const profile = db.getDoc('profile');
-    if (profile.cvUrl) {
-      const oldPath = path.join(UPLOADS_DIR, 'cv', path.basename(profile.cvUrl));
-      if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
-    }
-    db.setDoc('profile', { cvUrl: null, cvName: null });
+    const profile = await db.getDoc('profile');
+    await storageFiles.deleteFile(profile.cvUrl);
+    await db.setDoc('profile', { cvUrl: null, cvName: null });
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
