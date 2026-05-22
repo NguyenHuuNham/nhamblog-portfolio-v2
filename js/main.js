@@ -35,6 +35,9 @@ window.addEventListener('storage', e => {
 // ============ BACKGROUND MUSIC ============
 let globalAudio    = null;
 let isMusicPlaying = false;
+let maintenanceActive = false;
+let publicDataSyncStarted = false;
+let publicDataRefreshInFlight = null;
 
 async function initMusicPlayer() {
   try {
@@ -211,11 +214,13 @@ function initScrollAnimations() {
 
 function initKineticScrollEffects() {
   const root = document.documentElement;
+  const lightMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches || window.matchMedia('(max-width: 900px)').matches;
 
   const update = () => {
     const maxScroll = Math.max(1, root.scrollHeight - window.innerHeight);
     const progress = Math.min(1, Math.max(0, window.scrollY / maxScroll));
     root.style.setProperty('--page-scroll-progress', progress.toFixed(4));
+    if (lightMotion) return;
 
     document.querySelectorAll('.glass-panel.is-visible, .blog-card.is-visible, .app-item.is-visible').forEach(el => {
       const rect = el.getBoundingClientRect();
@@ -580,7 +585,11 @@ function initCvViewerModal() {
     cvModal.style.display = 'flex';
   };
 
-  cvLinks.forEach(link => link.addEventListener('click', e => { e.preventDefault(); openCV(); }));
+  cvLinks.forEach(link => {
+    if (link.dataset.cvBound === '1') return;
+    link.dataset.cvBound = '1';
+    link.addEventListener('click', e => { e.preventDefault(); openCV(); });
+  });
 }
 
 // ============ HOMEPAGE RENDER ============
@@ -622,9 +631,60 @@ function initHomepage() {
   }
 }
 
+// ============ LIVE PUBLIC DATA SYNC ============
+async function refreshPublicData(reason = 'poll') {
+  if (publicDataRefreshInFlight) return publicDataRefreshInFlight;
+
+  publicDataRefreshInFlight = (async () => {
+    await loadPublicData();
+
+    if (checkMaintenance()) return;
+
+    updateProfileUI();
+    initHomepage();
+
+    if (typeof renderBlogPosts === 'function' && document.getElementById('blogPostList')) {
+      renderBlogPosts();
+    }
+    if (typeof renderProjectsPage === 'function' && document.getElementById('projectsGrid')) {
+      renderProjectsPage();
+    }
+
+    window.dispatchEvent(new CustomEvent('nhamblog:data-updated', { detail: { reason } }));
+  })().catch(err => {
+    console.warn('Public data refresh failed:', err);
+  }).finally(() => {
+    publicDataRefreshInFlight = null;
+  });
+
+  return publicDataRefreshInFlight;
+}
+
+function startPublicDataSync() {
+  if (publicDataSyncStarted) return;
+  publicDataSyncStarted = true;
+
+  window.addEventListener('focus', () => refreshPublicData('focus'));
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) refreshPublicData('visible');
+  });
+  window.addEventListener('storage', e => {
+    if (e.key === 'nhamblog_public_data_changed') refreshPublicData('admin-change');
+  });
+
+  setInterval(() => {
+    if (!document.hidden) refreshPublicData('interval');
+  }, 12000);
+}
+
 // ============ MAINTENANCE CHECK ============
 function checkMaintenance() {
-  if (!SETTINGS.maintenance) return false;
+  if (!SETTINGS.maintenance) {
+    if (maintenanceActive) window.location.reload();
+    return false;
+  }
+  if (maintenanceActive) return true;
+  maintenanceActive = true;
   document.body.innerHTML = `
     <div style="position:fixed;inset:0;background:#080810;color:#fff;display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif;z-index:999999;flex-direction:column;text-align:center;padding:2rem;">
       <div style="font-size:5rem;margin-bottom:10px;animation:wobble 2s infinite">🛠️🦦</div>
@@ -644,6 +704,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // 2. Load data from Firebase/localStorage
   await loadPublicData();
+  startPublicDataSync();
 
   // 3. Check maintenance
   if (checkMaintenance()) return;

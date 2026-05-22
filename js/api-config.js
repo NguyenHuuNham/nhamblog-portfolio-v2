@@ -175,6 +175,12 @@ function authHeaders() {
   return token ? { 'Authorization': `Bearer ${token}` } : {};
 }
 
+function announcePublicDataChanged() {
+  try {
+    localStorage.setItem('nhamblog_public_data_changed', String(Date.now()));
+  } catch {}
+}
+
 // =============================================
 // CORE FETCH HELPER
 // =============================================
@@ -213,7 +219,12 @@ async function apiFetch(endpoint, options = {}) {
     throw new Error(err.error || `HTTP ${resp.status}`);
   }
 
-  return resp.json();
+  const data = await resp.json();
+  const method = (options.method || 'GET').toUpperCase();
+  if (!['GET', 'HEAD', 'OPTIONS'].includes(method) && !endpoint.startsWith('/auth')) {
+    announcePublicDataChanged();
+  }
+  return data;
 }
 
 // =============================================

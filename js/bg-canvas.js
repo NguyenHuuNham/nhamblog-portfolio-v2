@@ -7,6 +7,7 @@
   'use strict';
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const lowPower = window.matchMedia('(max-width: 900px)').matches || (navigator.hardwareConcurrency || 4) <= 4;
 
   const canvas = document.createElement('canvas');
   canvas.id = 'bgCanvas';
@@ -44,10 +45,11 @@
   let ripples = [];
   let frameCount = 0;
   let isLight = false;
+  let pageVisible = !document.hidden;
 
-  const STAR_COUNT = reduceMotion ? 150 : 340;
-  const MAX_SHOOTERS = reduceMotion ? 1 : 3;
-  const TWINKLE_SPEED = reduceMotion ? 0.006 : 0.012;
+  const STAR_COUNT = reduceMotion ? 90 : (lowPower ? 150 : 230);
+  const MAX_SHOOTERS = reduceMotion ? 0 : (lowPower ? 1 : 2);
+  const TWINKLE_SPEED = reduceMotion ? 0.004 : (lowPower ? 0.008 : 0.01);
 
   const NEBULAE = [
     { x: 0.15, y: 0.18, r: 0.34, h: 202, s: 82, l: 48, a: 0.2, drift: 0.55 },
@@ -67,7 +69,7 @@
   function resize() {
     W = window.innerWidth;
     H = window.innerHeight;
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    dpr = Math.min(window.devicePixelRatio || 1, lowPower ? 1.25 : 1.6);
     canvas.width = Math.floor(W * dpr);
     canvas.height = Math.floor(H * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -365,6 +367,11 @@
   }
 
   function loop() {
+    if (!pageVisible) {
+      requestAnimationFrame(loop);
+      return;
+    }
+
     tickMotion();
     drawBackdrop();
     drawNebulae();
@@ -397,6 +404,9 @@
 
   window.addEventListener('scroll', () => updateScrollState(false), { passive: true });
   window.addEventListener('resize', resize);
+  document.addEventListener('visibilitychange', () => {
+    pageVisible = !document.hidden;
+  });
 
   new MutationObserver(syncTheme)
     .observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
