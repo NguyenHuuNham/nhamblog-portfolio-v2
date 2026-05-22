@@ -1,0 +1,32 @@
+version: '3.9'
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      SA_PASSWORD: "YourStrong@Passw0rd"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqldata:/var/opt/mssql
+    restart: unless-stopped
+
+  blog-api:
+    build:
+      context: ./backend/Blog.Api
+      dockerfile: Dockerfile
+    ports:
+      - "5181:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=PersonalBlogDb;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True;
+      - JwtSettings__Secret=MyS3cur3BlogJwtS3cr3tK3y!MustB3AtL3ast32Chars
+      - JwtSettings__Issuer=PersonalBlogApi
+      - JwtSettings__Audience=PersonalBlogClients
+    depends_on:
+      - sqlserver
+    restart: unless-stopped
+
+volumes:
+  sqldata:

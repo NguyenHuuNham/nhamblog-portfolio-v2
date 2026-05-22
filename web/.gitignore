@@ -1,0 +1,28 @@
+# Backend
+backend/Blog.Api/bin/
+backend/Blog.Api/obj/
+
+# Frontend
+frontend/public-site/node_modules/
+frontend/public-site/dist/
+frontend/admin-panel/node_modules/
+frontend/admin-panel/dist/
+
+# Environment
+.env
+.env.local
+appsettings.Development.json
+
+# IDE
+.vs/
+.vscode/
+*.user
+*.suo
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
