@@ -6,6 +6,7 @@
 const fs = require('fs');
 const path = require('path');
 const {
+  BLOB_ENABLED,
   STORAGE_MODE,
   POSTGRES_ENABLED,
   SUPABASE_BUCKET,
@@ -16,6 +17,10 @@ const {
 } = require('../config/paths');
 const db = require('./db');
 
+async function blobSdk() {
+  return import('@vercel/blob');
+}
+
 function publicUrl(objectPath) {
   return `${SUPABASE_URL}/storage/v1/object/public/${SUPABASE_BUCKET}/${objectPath}`;
 }
@@ -25,6 +30,19 @@ async function uploadFile(file, folder) {
 
   const objectPath = `${folder}/${path.basename(file.filename || file.path)}`;
   const publicPath = `/uploads/${objectPath}`;
+
+  if (BLOB_ENABLED) {
+    const { put } = await blobSdk();
+    const bytes = fs.readFileSync(file.path);
+    await put(`uploads/${objectPath}`, bytes, {
+      access: 'private',
+      allowOverwrite: true,
+      contentType: file.mimetype || 'application/octet-stream',
+      cacheControlMaxAge: 60,
+    });
+    try { fs.unlinkSync(file.path); } catch {}
+    return publicPath;
+  }
 
   if (POSTGRES_ENABLED) {
     const bytes = fs.readFileSync(file.path);
@@ -68,6 +86,14 @@ async function uploadFile(file, folder) {
 async function deleteFile(url) {
   if (!url) return;
 
+  if (BLOB_ENABLED) {
+    const pathname = new URL(url, 'http://local.test').pathname;
+    if (!pathname.startsWith('/uploads/')) return;
+    const { del } = await blobSdk();
+    await del(pathname.replace(/^\/+/, '')).catch(() => {});
+    return;
+  }
+
   if (POSTGRES_ENABLED) {
     const pathname = new URL(url, 'http://local.test').pathname;
     if (!pathname.startsWith('/uploads/')) return;
@@ -100,6 +126,25 @@ async function deleteFile(url) {
 }
 
 async function getDatabaseFile(urlPath) {
+  if (BLOB_ENABLED && urlPath?.startsWith('/uploads/')) {
+    const { get } = await blobSdk();
+    try {
+      const result = await get(urlPath.replace(/^\/+/, ''), { access: 'private' });
+      if (!result || result.statusCode !== 200 || !result.stream) return null;
+      const data = Buffer.from(await new Response(result.stream).arrayBuffer());
+      return {
+        path: urlPath,
+        mimeType: result.blob.contentType || 'application/octet-stream',
+        data,
+        size: result.blob.size || data.length,
+        updatedAt: result.blob.uploadedAt,
+      };
+    } catch (err) {
+      if (err?.name === 'BlobNotFoundError' || /not found/i.test(err?.message || '')) return null;
+      throw err;
+    }
+  }
+
   if (!POSTGRES_ENABLED || !urlPath?.startsWith('/uploads/')) return null;
   const result = await db.postgresQuery(
     'select path, mime_type, data, size, updated_at from nham_files where path = $1 limit 1',

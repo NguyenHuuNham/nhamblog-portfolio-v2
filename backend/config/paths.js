@@ -16,6 +16,8 @@ const SUPABASE_BUCKET = process.env.SUPABASE_BUCKET || 'uploads';
 const SUPABASE_ENABLED = !!(SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY);
 const DATABASE_URL = process.env.DATABASE_URL || '';
 const POSTGRES_ENABLED = !!DATABASE_URL;
+const BLOB_READ_WRITE_TOKEN = process.env.BLOB_READ_WRITE_TOKEN || '';
+const BLOB_ENABLED = !!BLOB_READ_WRITE_TOKEN;
 
 const DATA_DIR = PERSIST_DIR
   ? path.join(PERSIST_DIR, 'data')
@@ -25,9 +27,11 @@ const UPLOADS_DIR = PERSIST_DIR
   ? path.join(PERSIST_DIR, 'uploads')
   : (IS_VERCEL ? '/tmp/nham-uploads' : path.join(BUNDLE_DATA_DIR, 'uploads'));
 
-const STORAGE_MODE = POSTGRES_ENABLED
-  ? 'postgres'
-  : (SUPABASE_ENABLED ? 'supabase' : (PERSIST_DIR ? 'persistent-disk' : (IS_VERCEL ? 'vercel-tmp' : 'local')));
+const STORAGE_MODE = BLOB_ENABLED
+  ? 'vercel-blob'
+  : (POSTGRES_ENABLED
+    ? 'postgres'
+    : (SUPABASE_ENABLED ? 'supabase' : (PERSIST_DIR ? 'persistent-disk' : (IS_VERCEL ? 'vercel-tmp' : 'local'))));
 
 module.exports = {
   IS_VERCEL,
@@ -43,4 +47,6 @@ module.exports = {
   SUPABASE_ENABLED,
   DATABASE_URL,
   POSTGRES_ENABLED,
+  BLOB_READ_WRITE_TOKEN,
+  BLOB_ENABLED,
 };

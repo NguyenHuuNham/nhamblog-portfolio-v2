@@ -1,17 +1,14 @@
 # Deploy Guide
 
-## Free production setup: Vercel/Render + PostgreSQL
+## Free production setup: Vercel Blob
 
-For shared admin data, set a real database URL. The app supports Render PostgreSQL through `DATABASE_URL` and stores both JSON data and uploaded files (CV, music, avatar, post/project images) in PostgreSQL.
+The recommended setup for this Vercel project is Vercel Blob. It stores both JSON admin data and uploaded files (CV, music, avatar, post/project images), so admin changes are shared across devices.
 
-### Render PostgreSQL
+### Vercel Blob
 
-1. Open your Render PostgreSQL database.
-2. Copy `External Database URL` when the app runs on Vercel, or `Internal Database URL` when the app runs as a Render Web Service in the same Render workspace.
-3. In Vercel or Render service environment variables, set:
-   - `DATABASE_URL`: the database URL copied above
-   - `JWT_SECRET`: any long random string
-   - optional `DATABASE_SSL`: `true` for external Render PostgreSQL URLs, `false` for internal URLs if needed
+1. In the Vercel project, open Storage and create/connect a Blob store.
+2. Vercel automatically adds `BLOB_READ_WRITE_TOKEN` to the project environment.
+3. Redeploy the production deployment after connecting the store.
 
 Deploy latest commit after saving the environment variables. Open:
 
@@ -20,10 +17,18 @@ Deploy latest commit after saving the environment variables. Open:
 The response should include:
 
 ```json
-"storage": "postgres"
+"storage": "vercel-blob"
 ```
 
-Admin changes to posts, projects, profile, maintenance mode, CV, avatar, and music will be stored in PostgreSQL and shared across users.
+Admin changes to posts, projects, profile, maintenance mode, CV, avatar, and music will be stored in Vercel Blob and shared across users.
+
+## Alternative: Render PostgreSQL
+
+Render PostgreSQL is also supported. Set:
+
+- `DATABASE_URL`: External Database URL when the app runs on Vercel, or Internal Database URL when the app runs as a Render Web Service in the same Render workspace
+- `JWT_SECRET`: any long random string
+- optional `DATABASE_SSL`: `true` for external Render PostgreSQL URLs, `false` for internal URLs if needed
 
 ## Alternative: Supabase
 
@@ -39,7 +44,13 @@ Open:
 
 `https://your-domain/api/health`
 
-The response should include either:
+The response should include one of:
+
+```json
+"storage": "vercel-blob"
+```
+
+or:
 
 ```json
 "storage": "postgres"
@@ -66,4 +77,4 @@ Local URL:
 
 ## Vercel note
 
-Vercel can run this app only if `DATABASE_URL` or Supabase environment variables are set. Do not rely on Vercel's local filesystem for admin data or uploads.
+Vercel can run this app persistently only if `BLOB_READ_WRITE_TOKEN`, `DATABASE_URL`, or Supabase environment variables are set. Do not rely on Vercel's local filesystem for admin data or uploads.

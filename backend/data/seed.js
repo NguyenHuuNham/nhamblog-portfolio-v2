@@ -6,9 +6,9 @@
 const fs   = require('fs');
 const path = require('path');
 const bcrypt = require('bcryptjs');
-const { DATA_DIR, POSTGRES_ENABLED, SUPABASE_ENABLED } = require('../config/paths');
+const { BLOB_ENABLED, DATA_DIR, POSTGRES_ENABLED, SUPABASE_ENABLED } = require('../config/paths');
 
-if (POSTGRES_ENABLED || SUPABASE_ENABLED) {
+if (BLOB_ENABLED || POSTGRES_ENABLED || SUPABASE_ENABLED) {
   console.log('📂 Database ready! Supabase mode');
   return;
 }

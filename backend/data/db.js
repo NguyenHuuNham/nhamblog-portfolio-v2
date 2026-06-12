@@ -1,12 +1,13 @@
 // =============================================
 // data/db.js - Database adapter
-// Priority: PostgreSQL (DATABASE_URL) > Supabase > JSON files.
+// Priority: Vercel Blob > PostgreSQL > Supabase > JSON files.
 // =============================================
 
 const fs = require('fs');
 const path = require('path');
 const {
   BUNDLE_DATA_DIR,
+  BLOB_ENABLED,
   DATA_DIR,
   DATABASE_URL,
   IS_VERCEL,
@@ -31,7 +32,7 @@ if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
 
 // When DATA_DIR is outside bundled backend/data, copy committed JSON files once.
 // Vercel /tmp is volatile, so refresh it from the bundle on cold starts.
-if (!POSTGRES_ENABLED && !SUPABASE_ENABLED && path.resolve(DATA_DIR) !== path.resolve(BUNDLE_DATA_DIR)) {
+if (!BLOB_ENABLED && !POSTGRES_ENABLED && !SUPABASE_ENABLED && path.resolve(DATA_DIR) !== path.resolve(BUNDLE_DATA_DIR)) {
   JSON_COLLECTIONS.forEach(name => {
     const src = path.join(BUNDLE_DATA_DIR, `${name}.json`);
     const dst = path.join(DATA_DIR, `${name}.json`);
@@ -80,6 +81,87 @@ function writeJson(name, data) {
   if (!file) throw new Error(`Unknown collection: ${name}`);
   fs.mkdirSync(path.dirname(file), { recursive: true });
   fs.writeFileSync(file, JSON.stringify(data, null, 2), 'utf8');
+}
+
+// ---------- Vercel Blob JSON store ----------
+let blobSeedPromise = null;
+
+async function blobSdk() {
+  return import('@vercel/blob');
+}
+
+function blobJsonPath(name) {
+  return `nham-data/${name}.json`;
+}
+
+async function readBlobText(pathname) {
+  const { get } = await blobSdk();
+  try {
+    const result = await get(pathname, { access: 'private' });
+    if (!result || result.statusCode !== 200 || !result.stream) return null;
+    return new Response(result.stream).text();
+  } catch (err) {
+    if (err?.name === 'BlobNotFoundError' || /not found/i.test(err?.message || '')) return null;
+    throw err;
+  }
+}
+
+async function readBlobJson(name) {
+  const text = await readBlobText(blobJsonPath(name));
+  if (!text) return null;
+  return JSON.parse(text);
+}
+
+async function writeBlobJson(name, data) {
+  const { put } = await blobSdk();
+  await put(blobJsonPath(name), JSON.stringify(data, null, 2), {
+    access: 'private',
+    allowOverwrite: true,
+    contentType: 'application/json; charset=utf-8',
+    cacheControlMaxAge: 60,
+  });
+}
+
+async function ensureBlobSeeded() {
+  if (!BLOB_ENABLED) return;
+  if (!blobSeedPromise) blobSeedPromise = seedBlob();
+  await blobSeedPromise;
+}
+
+async function seedBlob() {
+  for (const name of JSON_COLLECTIONS) {
+    const existing = await readBlobJson(name);
+    if (existing !== null) continue;
+    const fallback = ITEM_COLLECTIONS.includes(name) ? [] : {};
+    await writeBlobJson(name, readSeed(name, fallback));
+  }
+  await seedBlobFiles();
+}
+
+async function seedBlobFiles() {
+  const uploadsDir = path.join(BUNDLE_DATA_DIR, 'uploads');
+  const files = listSeedUploadFiles(uploadsDir);
+  if (!files.length) return;
+
+  const { head, put } = await blobSdk();
+  for (const filePath of files) {
+    const relativePath = path.relative(uploadsDir, filePath).replace(/\\/g, '/');
+    const pathname = `uploads/${relativePath}`;
+    try {
+      await head(pathname);
+      continue;
+    } catch (err) {
+      if (err?.name !== 'BlobNotFoundError' && !/not found/i.test(err?.message || '')) throw err;
+    }
+
+    const bytes = fs.readFileSync(filePath);
+    await put(pathname, bytes, {
+      access: 'private',
+      allowOverwrite: true,
+      contentType: mimeFromFile(filePath),
+      cacheControlMaxAge: 60,
+    });
+  }
 }
 
 // ---------- PostgreSQL ----------
@@ -303,6 +385,11 @@ async function seedSupabase() {
 
 // ---------- Public adapter ----------
 async function getAll(name) {
+  if (BLOB_ENABLED) {
+    await ensureBlobSeeded();
+    return await readBlobJson(name) || [];
+  }
+
   if (POSTGRES_ENABLED) {
     await ensurePostgresReady();
     const rows = await rawPostgresQuery(
@@ -319,6 +406,11 @@ async function getAll(name) {
 }
 
 async function getById(name, id) {
+  if (BLOB_ENABLED) {
+    const rows = await getAll(name);
+    return rows.find(item => String(item.id) === String(id)) || null;
+  }
+
   if (POSTGRES_ENABLED) {
     await ensurePostgresReady();
     const rows = await rawPostgresQuery(
@@ -344,6 +436,15 @@ async function getByField(name, field, value) {
 }
 
 async function create(name, data) {
+  if (BLOB_ENABLED) {
+    const arr = await getAll(name);
+    const maxId = arr.length ? Math.max(...arr.map(i => Number(i.id) || 0)) : 0;
+    const newItem = { ...data, id: maxId + 1, createdAt: new Date().toISOString() };
+    arr.unshift(newItem);
+    await writeBlobJson(name, arr);
+    return newItem;
+  }
+
   if (POSTGRES_ENABLED) {
     await ensurePostgresReady();
     const maxResult = await rawPostgresQuery(
@@ -382,6 +483,15 @@ async function create(name, data) {
 }
 
 async function update(name, id, patch) {
+  if (BLOB_ENABLED) {
+    const arr = await getAll(name);
+    const idx = arr.findIndex(item => String(item.id) === String(id));
+    if (idx === -1) return null;
+    arr[idx] = { ...arr[idx], ...patch, updatedAt: new Date().toISOString() };
+    await writeBlobJson(name, arr);
+    return arr[idx];
+  }
+
   if (POSTGRES_ENABLED) {
     const existing = await getById(name, id);
     if (!existing) return null;
@@ -418,6 +528,15 @@ async function update(name, id, patch) {
 }
 
 async function remove(name, id) {
+  if (BLOB_ENABLED) {
+    const arr = await getAll(name);
+    const idx = arr.findIndex(item => String(item.id) === String(id));
+    if (idx === -1) return false;
+    arr.splice(idx, 1);
+    await writeBlobJson(name, arr);
+    return true;
+  }
+
   if (POSTGRES_ENABLED) {
     await ensurePostgresReady();
     await rawPostgresQuery(
@@ -445,6 +564,11 @@ async function remove(name, id) {
 }
 
 async function getDoc(name) {
+  if (BLOB_ENABLED) {
+    await ensureBlobSeeded();
+    return await readBlobJson(name) || {};
+  }
+
   if (POSTGRES_ENABLED) {
     await ensurePostgresReady();
     const rows = await rawPostgresQuery(
@@ -463,6 +587,11 @@ async function getDoc(name) {
 async function setDoc(name, data) {
   const current = await getDoc(name);
   const merged = { ...current, ...data, updatedAt: new Date().toISOString() };
+
+  if (BLOB_ENABLED) {
+    await writeBlobJson(name, merged);
+    return merged;
+  }
 
   if (POSTGRES_ENABLED) {
     await rawPostgresQuery(
@@ -503,6 +632,7 @@ module.exports = {
   write: writeJson,
   DATA_DIR,
   STORAGE_MODE,
+  BLOB_ENABLED,
   POSTGRES_ENABLED,
   SUPABASE_ENABLED,
 };
