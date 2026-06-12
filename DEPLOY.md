@@ -1,49 +1,59 @@
 # Deploy Guide
 
-## Free production setup: Render + Supabase
+## Free production setup: Vercel/Render + PostgreSQL
 
-Render free can run the Node web service, but it cannot keep uploaded files or JSON changes on disk. For shared admin data on the free path, use Supabase for database and storage.
+For shared admin data, set a real database URL. The app supports Render PostgreSQL through `DATABASE_URL` and stores both JSON data and uploaded files (CV, music, avatar, post/project images) in PostgreSQL.
 
-### 1. Create Supabase
+### Render PostgreSQL
 
-1. Create a free project at Supabase.
-2. Open SQL Editor and run `supabase-schema.sql` from this repo.
-3. Open Project Settings > API and copy:
-   - `Project URL`
-   - `service_role` key
+1. Open your Render PostgreSQL database.
+2. Copy `External Database URL` when the app runs on Vercel, or `Internal Database URL` when the app runs as a Render Web Service in the same Render workspace.
+3. In Vercel or Render service environment variables, set:
+   - `DATABASE_URL`: the database URL copied above
+   - `JWT_SECRET`: any long random string
+   - optional `DATABASE_SSL`: `true` for external Render PostgreSQL URLs, `false` for internal URLs if needed
 
-### 2. Configure Render
+Deploy latest commit after saving the environment variables. Open:
 
-In your Render service, open Environment and set:
+`https://your-domain/api/health`
 
-- `SUPABASE_URL`: your Supabase Project URL
-- `SUPABASE_SERVICE_ROLE_KEY`: your Supabase service role key
+The response should include:
+
+```json
+"storage": "postgres"
+```
+
+Admin changes to posts, projects, profile, maintenance mode, CV, avatar, and music will be stored in PostgreSQL and shared across users.
+
+## Alternative: Supabase
+
+Supabase is still supported. If you prefer it, run `supabase-schema.sql` and set:
+
+- `SUPABASE_URL`
+- `SUPABASE_SERVICE_ROLE_KEY`
 - `SUPABASE_BUCKET`: `uploads`
-- `JWT_SECRET`: any long random string, or let Render generate it from `render.yaml`
 
-Deploy latest commit after saving the environment variables.
-
-### 3. Verify
+## Verify
 
 Open:
 
-`https://your-service.onrender.com/api/health`
+`https://your-domain/api/health`
 
-The response should include:
+The response should include either:
+
+```json
+"storage": "postgres"
+```
+
+or:
 
 ```json
 "storage": "supabase"
 ```
 
-Use admin at:
-
-`https://your-service.onrender.com/admin/login.html`
-
-Admin changes to posts, projects, profile, maintenance mode, CV, avatar, and music will be stored in Supabase and shared across users.
-
 ## Local development
 
-Without Supabase environment variables, the app falls back to local JSON files:
+Without database environment variables, the app falls back to local JSON files:
 
 ```bash
 npm install
@@ -56,4 +66,4 @@ Local URL:
 
 ## Vercel note
 
-Vercel can run this app only if Supabase environment variables are set. Do not rely on Vercel's local filesystem for admin data or uploads.
+Vercel can run this app only if `DATABASE_URL` or Supabase environment variables are set. Do not rely on Vercel's local filesystem for admin data or uploads.

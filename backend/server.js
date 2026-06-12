@@ -17,6 +17,7 @@ const {
   BUNDLE_DATA_DIR,
   SUPABASE_ENABLED,
 } = require('./config/paths');
+const storageFiles = require('./data/storage');
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
@@ -63,6 +64,24 @@ app.use('/api', (req, res, next) => {
   res.setHeader('Pragma', 'no-cache');
   res.setHeader('Expires', '0');
   next();
+});
+
+// Serve uploaded files from PostgreSQL first when DATABASE_URL is configured.
+app.get('/uploads/*', async (req, res, next) => {
+  try {
+    const pathname = `/uploads/${req.params[0] || ''}`;
+    const dbFile = await storageFiles.getDatabaseFile(pathname);
+    if (!dbFile) return next();
+
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.setHeader('Content-Type', dbFile.mimeType);
+    res.setHeader('Content-Length', dbFile.size || dbFile.data.length);
+    return res.send(dbFile.data);
+  } catch (err) {
+    return next(err);
+  }
 });
 
 // Serve uploaded files
