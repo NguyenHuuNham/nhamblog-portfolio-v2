@@ -9,6 +9,7 @@ const path = require('path');
 const {
   BUNDLE_DATA_DIR,
   DATA_DIR,
+  IS_VERCEL,
   STORAGE_MODE,
   SUPABASE_ENABLED,
   SUPABASE_URL,
@@ -27,7 +28,8 @@ if (!SUPABASE_ENABLED && path.resolve(DATA_DIR) !== path.resolve(BUNDLE_DATA_DIR
   JSON_COLLECTIONS.forEach(name => {
     const src = path.join(BUNDLE_DATA_DIR, `${name}.json`);
     const dst = path.join(DATA_DIR, `${name}.json`);
-    if (fs.existsSync(src) && !fs.existsSync(dst)) {
+    const shouldRefreshVolatileSeed = IS_VERCEL && STORAGE_MODE === 'vercel-tmp';
+    if (fs.existsSync(src) && (shouldRefreshVolatileSeed || !fs.existsSync(dst))) {
       fs.copyFileSync(src, dst);
     }
   });
