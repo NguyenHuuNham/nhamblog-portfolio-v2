@@ -8,7 +8,15 @@ const express   = require('express');
 const cors      = require('cors');
 const path      = require('path');
 const fs        = require('fs');
-const { IS_VERCEL, ROOT_DIR, DATA_DIR, UPLOADS_DIR, STORAGE_MODE } = require('./config/paths');
+const {
+  IS_VERCEL,
+  ROOT_DIR,
+  DATA_DIR,
+  UPLOADS_DIR,
+  STORAGE_MODE,
+  BUNDLE_DATA_DIR,
+  SUPABASE_ENABLED,
+} = require('./config/paths');
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
@@ -20,6 +28,26 @@ uploadSubdirs.forEach(sub => {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 });
 
+function copySeedUploads(srcDir, dstDir) {
+  if (!fs.existsSync(srcDir)) return;
+  fs.mkdirSync(dstDir, { recursive: true });
+  fs.readdirSync(srcDir, { withFileTypes: true }).forEach(entry => {
+    const src = path.join(srcDir, entry.name);
+    const dst = path.join(dstDir, entry.name);
+    if (entry.isDirectory()) {
+      copySeedUploads(src, dst);
+    } else if (!fs.existsSync(dst)) {
+      fs.copyFileSync(src, dst);
+    }
+  });
+}
+
+if (!SUPABASE_ENABLED) {
+  const bundledUploads = path.join(BUNDLE_DATA_DIR, 'uploads');
+  if (path.resolve(UPLOADS_DIR) !== path.resolve(bundledUploads)) {
+    copySeedUploads(bundledUploads, UPLOADS_DIR);
+  }
+}
 
 // ---- Seed default data if not exists ----
 require('./data/seed');

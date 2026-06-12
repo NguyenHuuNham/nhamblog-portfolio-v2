@@ -12,6 +12,7 @@
           "public/**",
           "admin/**",
           "backend/data/*.json",
+          "backend/data/uploads/**",
           "*.html"
         ]
       }
