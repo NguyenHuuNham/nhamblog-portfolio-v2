@@ -14,6 +14,7 @@ const {
   DATA_DIR,
   UPLOADS_DIR,
   STORAGE_MODE,
+  PERSISTENT_STORAGE_CONFIGURED,
   BUNDLE_DATA_DIR,
   SUPABASE_ENABLED,
 } = require('./config/paths');
@@ -64,6 +65,21 @@ app.use('/api', (req, res, next) => {
   res.setHeader('Pragma', 'no-cache');
   res.setHeader('Expires', '0');
   next();
+});
+
+app.use('/api', (req, res, next) => {
+  const writesData = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method);
+  const authOnly = req.path === '/auth/login' || req.path === '/auth/logout';
+
+  if (IS_VERCEL && !PERSISTENT_STORAGE_CONFIGURED && writesData && !authOnly) {
+    return res.status(503).json({
+      error: 'Production storage is not configured. Add BLOB_READ_WRITE_TOKEN, DATABASE_URL, or Supabase env vars in Vercel Production, then redeploy.',
+      storage: STORAGE_MODE,
+      action: 'set-production-storage-env',
+    });
+  }
+
+  return next();
 });
 
 // Serve uploaded files from PostgreSQL first when DATABASE_URL is configured.
@@ -119,6 +135,8 @@ app.get('/api/health', (req, res) => {
     version: '1.0.0',
     env: IS_VERCEL ? 'vercel' : 'node',
     storage: STORAGE_MODE,
+    persistent: PERSISTENT_STORAGE_CONFIGURED,
+    needsStorageSetup: IS_VERCEL && !PERSISTENT_STORAGE_CONFIGURED,
     cwd: ROOT_DIR,
     dataDir: DATA_DIR,
   });

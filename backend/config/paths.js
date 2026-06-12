@@ -33,6 +33,8 @@ const STORAGE_MODE = BLOB_ENABLED
     ? 'postgres'
     : (SUPABASE_ENABLED ? 'supabase' : (PERSIST_DIR ? 'persistent-disk' : (IS_VERCEL ? 'vercel-tmp' : 'local'))));
 
+const PERSISTENT_STORAGE_CONFIGURED = BLOB_ENABLED || POSTGRES_ENABLED || SUPABASE_ENABLED || !!PERSIST_DIR || !IS_VERCEL;
+
 module.exports = {
   IS_VERCEL,
   ROOT_DIR,
@@ -41,6 +43,7 @@ module.exports = {
   DATA_DIR,
   UPLOADS_DIR,
   STORAGE_MODE,
+  PERSISTENT_STORAGE_CONFIGURED,
   SUPABASE_URL,
   SUPABASE_SERVICE_ROLE_KEY,
   SUPABASE_BUCKET,
