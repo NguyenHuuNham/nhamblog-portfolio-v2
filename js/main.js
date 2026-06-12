@@ -35,6 +35,8 @@ window.addEventListener('storage', e => {
 // ============ BACKGROUND MUSIC ============
 let globalAudio    = null;
 let isMusicPlaying = false;
+let currentMusicSrc = '';
+let musicBeforeUnloadBound = false;
 let maintenanceActive = false;
 let publicDataSyncStarted = false;
 let publicDataRefreshInFlight = null;
@@ -48,18 +50,47 @@ async function initMusicPlayer() {
     const musicUrl  = settingsData?.musicUrl  || null;
     const musicSrc  = resolveAssetUrl(musicUrl);
 
-    if (!musicSrc) return;
+    const musicBox = document.getElementById('musicToggle');
+    if (!musicSrc) {
+      if (globalAudio) {
+        globalAudio.pause();
+        globalAudio.src = '';
+      }
+      globalAudio = null;
+      currentMusicSrc = '';
+      isMusicPlaying = false;
+      if (musicBox) {
+        musicBox.classList.remove('playing');
+        musicBox.removeEventListener('click', toggleMusic);
+        const title = musicBox.querySelector('.music-info h3');
+        const infoP = musicBox.querySelector('.music-info p');
+        if (title) title.textContent = 'Chưa có nhạc';
+        if (infoP) infoP.textContent = 'Admin chưa upload';
+      }
+      return;
+    }
+
+    if (globalAudio && currentMusicSrc === musicSrc) {
+      if (musicBox) {
+        musicBox.removeEventListener('click', toggleMusic);
+        musicBox.addEventListener('click', toggleMusic);
+      }
+      updateMusicIcons();
+      return;
+    }
 
     if (window.__bgAudioInstance) { window.__bgAudioInstance.pause(); window.__bgAudioInstance.src = ''; }
     globalAudio       = new Audio(musicSrc);
     globalAudio.loop  = true;
     globalAudio.volume = 0.5;
+    currentMusicSrc = musicSrc;
     window.__bgAudioInstance = globalAudio;
 
-    const musicBox = document.getElementById('musicToggle');
     if (musicBox) {
       musicBox.removeEventListener('click', toggleMusic);
       musicBox.addEventListener('click', toggleMusic);
+      const title = musicBox.querySelector('.music-info h3');
+      if (title) title.textContent = settingsData?.musicName || 'Nhạc nền';
     }
 
     const shouldPlay   = sessionStorage.getItem('music_playing') === 'true';
@@ -78,12 +109,15 @@ async function initMusicPlayer() {
       showMusicPrompt();
     }
 
-    window.addEventListener('beforeunload', () => {
-      if (globalAudio) {
-        sessionStorage.setItem('music_playing', isMusicPlaying ? 'true' : 'false');
-        sessionStorage.setItem('music_time', globalAudio.currentTime);
-      }
-    });
+    if (!musicBeforeUnloadBound) {
+      musicBeforeUnloadBound = true;
+      window.addEventListener('beforeunload', () => {
+        if (globalAudio) {
+          sessionStorage.setItem('music_playing', isMusicPlaying ? 'true' : 'false');
+          sessionStorage.setItem('music_time', globalAudio.currentTime);
+        }
+      });
+    }
   } catch (e) { console.warn('Music player error:', e); }
 }
 
@@ -133,11 +167,40 @@ function initNavScroll() {
 }
 
 function initActiveNav() {
+  ensureCvNavItem();
   const current = (window.location.pathname.split('/').pop() || 'index.html').toLowerCase();
   document.querySelectorAll('.nav-item').forEach(link => {
     const href = (link.getAttribute('href') || '').split('/').pop().toLowerCase() || 'index.html';
     const isPost = current === 'post.html' && href === 'blog.html';
     link.classList.toggle('active', href === current || isPost);
+  });
+}
+
+function ensureCvNavItem() {
+  document.querySelectorAll('.floating-nav').forEach(nav => {
+    if (!nav.querySelector('.nav-cv-link')) {
+      const link = document.createElement('a');
+      link.href = '#cv';
+      link.className = 'nav-item nav-cv-link';
+      link.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <path d="M14 2v6h6"/>
+          <path d="M8 13h8"/>
+          <path d="M8 17h5"/>
+        </svg>
+        <span>CV</span>`;
+
+      const themeBtn = nav.querySelector('#themeToggle');
+      const divider = themeBtn?.previousElementSibling?.classList?.contains('nav-divider')
+        ? themeBtn.previousElementSibling
+        : null;
+      nav.insertBefore(link, divider || themeBtn || null);
+    }
+
+    const themeBtn = nav.querySelector('#themeToggle');
+    const divider = themeBtn?.previousElementSibling;
+    if (divider?.classList?.contains('nav-divider')) divider.classList.add('nav-divider-compact');
   });
 }
 
@@ -528,7 +591,7 @@ function updateProfileUI() {
 
 // ============ CV VIEWER MODAL ============
 function initCvViewerModal() {
-  const cvLinks = document.querySelectorAll('#nav-cv-link');
+  const cvLinks = document.querySelectorAll('#nav-cv-link, .nav-cv-link');
   if (!cvLinks.length) return;
 
   let cvModal = document.getElementById('cv-viewer-modal');
@@ -568,10 +631,11 @@ function initCvViewerModal() {
   }
 
   const openCV = async () => {
+    await loadPublicData().catch(() => {});
     // Use cvUrl from profile — backend stores as relative path like /uploads/cv/cv-xxx.pdf
     const cvUrl  = PROFILE.cvUrl  || null;
 
-    if (!cvUrl) { alert('Chưa có CV nào được cập nhật! Vui lòng quay lại sau.'); return; }
+    if (!cvUrl) { alert('Admin chưa upload CV. Vào Admin > Hồ sơ để thêm CV trước.'); return; }
 
     if (currentBlobUrl) { URL.revokeObjectURL(currentBlobUrl); currentBlobUrl = null; }
 
@@ -642,6 +706,7 @@ async function refreshPublicData(reason = 'poll') {
 
     updateProfileUI();
     initHomepage();
+    await initMusicPlayer();
 
     if (typeof renderBlogPosts === 'function' && document.getElementById('blogPostList')) {
       renderBlogPosts();
@@ -831,6 +896,7 @@ function reinitPage(path) {
   updateProfileUI();
   initTheme();
   initActiveNav();
+  initCvViewerModal();
   initBackToTop();
   initScrollAnimations();
   
